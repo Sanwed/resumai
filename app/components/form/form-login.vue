@@ -22,7 +22,7 @@ const toast = useToast();
 const showPassword = ref(false);
 
 const onSuccess = async () => {
-  await navigateTo('/');
+  await navigateTo('/overview');
 }
 
 const onError = (ctx: ErrorContext) => {
@@ -39,7 +39,7 @@ async function onSubmit(event: FormSubmitEvent<z.infer<typeof schema>>) {
     email: event.data.email,
     password: event.data.password,
     rememberMe: event.data.rememberMe,
-    callbackURL: '/'
+    callbackURL: '/overview'
   }, {
     onSuccess,
     onError,
@@ -49,7 +49,7 @@ async function onSubmit(event: FormSubmitEvent<z.infer<typeof schema>>) {
 async function onGoogleAuth() {
   await authClient.signIn.social({
     provider: 'google',
-    callbackURL: '/',
+    callbackURL: '/overview',
   }, {
     onError,
   })
@@ -82,7 +82,7 @@ async function onGoogleAuth() {
     <UButton loading-auto class="mt-2 w-full justify-center" size="xl" type="submit">Войти</UButton>
   </UForm>
   <div class="pt-4 border-t border-primary/20">
-    <UButton color="secondary" icon="mdi:google" size="xl" class="w-full justify-center" @click="onGoogleAuth">Google
+    <UButton loading-auto color="secondary" icon="mdi:google" size="xl" class="w-full justify-center" @click="onGoogleAuth">Google
     </UButton>
   </div>
   <div class="pt-4 border-t border-primary/20">

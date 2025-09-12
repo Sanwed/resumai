@@ -5,6 +5,4 @@ definePageMeta({
 })
 </script>
 
-<template>
-  <PageOverview />
-</template>
+<template></template>
