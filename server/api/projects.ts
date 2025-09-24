@@ -2,7 +2,7 @@ import z from "zod";
 import { auth, prisma } from "~/lib/auth";
 
 const projectQuerySchema = z.object({
-  userId: z.string(),
+  projectId: z.string().nullish(),
 });
 
 const projectCreateSchema = z.object({
@@ -30,12 +30,21 @@ export default defineEventHandler(async (event) => {
       );
 
       if (!query.data) {
-        throw new Error("Пользователь не найден");
+        throw new Error("Не переданы все необходимые данные");
+      }
+
+      const session = await auth.api.getSession({
+        headers: event.headers,
+      });
+
+      if (!session) {
+        throw new Error("Необходимо авторизоваться");
       }
 
       const projects = await prisma.projects.findMany({
         where: {
-          userId: query.data.userId,
+          userId: session.user.id,
+          id: query.data.projectId || undefined,
         },
       });
 
@@ -55,7 +64,9 @@ export default defineEventHandler(async (event) => {
         throw new Error("Необходимо авторизоваться");
       }
 
-      const body = await readValidatedBody(event, (body) => projectCreateSchema.safeParse(body));
+      const body = await readValidatedBody(event, (body) =>
+        projectCreateSchema.safeParse(body)
+      );
 
       if (body.error) {
         throw new Error("Не заполнены обязательные поля");
@@ -66,7 +77,10 @@ export default defineEventHandler(async (event) => {
           ...body.data,
           userId: session.user.id,
           tags: {
-            connect: body.data.tags && body.data.tags.map((tag) => ({ id: tag.id }))
+            connect:
+              body.data.tags?.length > 0
+                ? body.data.tags.map((tag) => ({ id: tag.id }))
+                : undefined,
           },
         },
       });
@@ -75,7 +89,8 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
       throw createError({
         statusCode: 500,
-        statusMessage: error instanceof Error ? error.message : 'Ошибка сервера',
+        statusMessage:
+          error instanceof Error ? error.message : "Ошибка сервера",
       });
     }
   }

@@ -65,24 +65,24 @@ const onSubmit = async (event: FormSubmitEvent<z.infer<typeof schema>>) => {
     ...event.data,
   }
 
-  const { error } = await useFetch('/api/projects', {
-    method: 'POST',
-    body,
-  });
+  try {
+    await $fetch('/api/projects', {
+      method: 'POST',
+      body,
+    });
 
-  if (error.value) {
+    open.value = false;
+    emit('on-success');
+  } catch (err) {
+    const error = err as Error;
+
     toast.add({
       title: 'Что-то пошло не так',
-      description: error.value?.message,
+      description: error.message,
       icon: 'ic:baseline-dangerous',
       color: 'error',
     })
-    console.error(error.value);
-    return;
   }
-
-  open.value = false;
-  emit('on-success');
 }
 
 watch(endDate, (newVal) => {
@@ -97,7 +97,7 @@ watch(endDate, (newVal) => {
     <slot name="toggle" />
 
     <template #body>
-      <UForm :state :schema class="space-y-4" @submit="onSubmit">
+      <UForm :state="state" :schema="schema" class="space-y-4" @submit="onSubmit">
         <UCarousel drag-free v-slot="{ item }" :ui="{
           viewport: 'overflow-visible scrollbar-none',
           item: 'basis-auto'

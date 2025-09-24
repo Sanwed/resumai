@@ -32,7 +32,10 @@ export default defineEventHandler(async (event) => {
       return project.tags;
     } catch (error) {
       console.error("Ошибка при получении проектов:", error);
-      return [];
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Ошибка при получении проектов",
+      });
     }
   }
 });
