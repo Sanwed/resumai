@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String     @id
   name          String
   email         String
   emailVerified Boolean
@@ -24,6 +24,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  Projects      Projects[]
 
   @@unique([email])
   @@map("user")
@@ -72,4 +73,38 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Projects {
+  id              String    @id @default(uuid())
+  name            String
+  description     String?
+  image           String?
+  vacancyText     String
+  userId          String
+  tags            Tags[]    @relation("project_tags")
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  endDate         DateTime?
+  importanceLevel Int?      @default(0)
+
+  @@map("projects")
+}
+
+model Tags {
+  id       String      @id @default(uuid())
+  name     String
+  variant  TagVariant?
+  projects Projects[]  @relation("project_tags")
+
+  @@map("tags")
+}
+
+enum TagVariant {
+  green
+  red
+  orange
+  blue
+  neutral
 }

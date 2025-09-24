@@ -15,7 +15,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   } else {
     if (to.path.includes("/auth")) {
-      return navigateTo("/");
+      return navigateTo("/overview");
     }
   }
 });
