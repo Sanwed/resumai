@@ -10,11 +10,17 @@ defineProps<Props>();
 
 <template>
   <div class="flex flex-col gap-y-8 p-4 md:px-8 max-w-7xl mx-auto">
-    <h1 class="font-medium text-2xl">{{ project?.name }}</h1>
+    <div class="flex flex-col gap-y-2">
+      <NuxtLink to="/overview" class="flex items-center text-sm text-muted">
+        <UIcon name="i-material-symbols-arrow-back-ios" />
+        <p>Назад к проектам</p>
+      </NuxtLink>
+      <h1 class="font-medium text-2xl">{{ project.name }}</h1>
+    </div>
     <div class="relative rounded-lg overflow-hidden bg-white border border-primary-200">
       <div class="border-b border-primary-200 py-1 px-3 flex items-center justify-between">
         <h2 class="font-medium text-lg">Описание вакансии</h2>
-        <UButton variant="ghost" class="size-11 p-2 items-center justify-center">
+        <UButton variant="ghost" class="size-8 p-2 items-center justify-center">
           <UIcon name="i-material-symbols-edit" class="size-full" />
         </UButton>
       </div>

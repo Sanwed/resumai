@@ -1,5 +1,6 @@
 import z from "zod";
 import { auth, prisma } from "~/lib/auth";
+import {MAX_USER_PROJECTS} from '@/constants';
 
 const projectQuerySchema = z.object({
   projectId: z.string().nullish(),
@@ -30,7 +31,10 @@ export default defineEventHandler(async (event) => {
       );
 
       if (!query.data) {
-        throw new Error("Не переданы все необходимые данные");
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'Не заполнено поле: projectId',
+        })
       }
 
       const session = await auth.api.getSession({
@@ -38,7 +42,10 @@ export default defineEventHandler(async (event) => {
       });
 
       if (!session) {
-        throw new Error("Необходимо авторизоваться");
+        throw createError({
+          statusCode: 403,
+          statusMessage: 'Необходимо зарегистрироваться',
+        })
       }
 
       const projects = await prisma.projects.findMany({
@@ -50,8 +57,11 @@ export default defineEventHandler(async (event) => {
 
       return projects;
     } catch (error) {
-      console.error("Ошибка при получении проектов:", error);
-      return [];
+      throw createError({
+        statusCode: 500,
+        statusMessage:
+          error instanceof Error ? error.message : "Ошибка сервера",
+      });
     }
   }
   if (event.method === "POST") {
@@ -61,7 +71,23 @@ export default defineEventHandler(async (event) => {
       });
 
       if (!session) {
-        throw new Error("Необходимо авторизоваться");
+        throw createError({
+          statusCode: 403,
+          statusMessage: 'Необходимо зарегистрироваться',
+        })
+      }
+
+      const existingPropjects = await prisma.projects.findMany({
+        where: {
+          userId: session.user.id,
+        },
+      });
+
+      if (existingPropjects.length >= MAX_USER_PROJECTS) {
+        throw createError({
+          statusCode: 400,
+          message: 'Превышен лимит созданных проектов',
+        })
       }
 
       const body = await readValidatedBody(event, (body) =>
@@ -69,7 +95,56 @@ export default defineEventHandler(async (event) => {
       );
 
       if (body.error) {
-        throw new Error("Не заполнены обязательные поля");
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'Не заполнены обязательные поля',
+        })
+      }
+
+      const project = await prisma.projects.create({
+        data: {
+          ...body.data,
+          userId: session.user.id,
+          tags: {
+            connect:
+              body.data.tags?.length > 0
+                ? body.data.tags.map((tag) => ({ id: tag.id }))
+                : undefined,
+          },
+        },
+      });
+
+      return project;
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage:
+          error instanceof Error ? error.message : "Ошибка сервера",
+      });
+    }
+  }
+  if (event.method === "PATCH") {
+    try {
+      const session = await auth.api.getSession({
+        headers: event.headers,
+      });
+
+      if (!session) {
+        throw createError({
+          statusCode: 403,
+          statusMessage: 'Необходимо зарегистрироваться',
+        })
+      }
+
+      const body = await readValidatedBody(event, (body) =>
+        projectCreateSchema.safeParse(body)
+      );
+
+      if (body.error) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'Не заполнены обязательные поля',
+        })
       }
 
       const project = await prisma.projects.create({

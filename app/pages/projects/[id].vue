@@ -25,5 +25,6 @@ useHead({
 </script>
 
 <template>
-  <PageProject :project="project" />
+  <PageLoader v-if="!project" />
+  <PageProject v-else :project="project" />
 </template>

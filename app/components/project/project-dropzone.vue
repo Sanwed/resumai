@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useDropZone } from '@vueuse/core';
-import { AllowedFileTypes } from '~/constants';
+import { AllowedFileTypes, MAX_FILES_COUNT } from '~/constants';
 
 const dropZoneRef = ref<HTMLElement>();
 const fileInputRef = ref<HTMLInputElement>();
@@ -58,7 +58,8 @@ const deleteFile = (file: File) => {
     }]" @click="fileInputRef?.click()">
       <p v-if="isOverDropZone" class="md:text-xl text-center">Отпустите файл здесь</p>
       <p v-else class="md:text-xl text-center">Перетащите файл или нажмите для выбора</p>
-      <p class="text-sm md:text-base text-center text-primary">Разрешенные форматы: docx, doc, pdf</p>
+      <p class="text-sm md:text-base text-center text-primary">Разрешенные форматы: {{ Object.keys(AllowedFileTypes).join(', ') }}</p>
+      <p class="text-sm md:text-base text-center text-primary">Максимум до {{ MAX_FILES_COUNT }} {{ pluralize(MAX_FILES_COUNT, ['файла', 'файлов', 'файлов']) }}</p>
     </button>
     <input ref="fileInputRef" class="hidden" type="file" accept=".pdf,.doc,.docx" multiple @change="onFileChange">
     <ul v-if="filesData && filesData.length !== 0" class="flex flex-col gap-y-2">

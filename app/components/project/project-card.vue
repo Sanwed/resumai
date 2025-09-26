@@ -7,7 +7,7 @@ type Props = {
 
 const { project } = defineProps<Props>();
 
-const { data: tags } = useFetch<Tags[]>('/api/project-tags', {
+const { data: tags } = useFetch<Tags[]>('/api/tags', {
   query: { projectId: project.id },
 });
 
@@ -24,7 +24,7 @@ const createdDate = computed(() => new Intl.DateTimeFormat('ru', {
     role="button"
     tabindex="0"
     :ui="{
-      root: ['w-sm block ring-transparent cursor-pointer group focus:outline-none'],
+      root: ['w-[343px] md:w-sm lg:w-md block ring-transparent cursor-pointer group focus:outline-none'],
       header: ['border-none p-4 sm:px-4 transition-colors', project.importanceLevel ? 'group-hover:bg-warning/70 group-focus-visible:bg-warning/70 bg-warning/50' : 'group-hover:bg-slate-300 group-focus-visible:bg-slate-300 bg-slate-200'],
       body: 'sm:p-4',
       footer: 'sm:p-4',
@@ -61,7 +61,7 @@ const createdDate = computed(() => new Intl.DateTimeFormat('ru', {
       <div class="flex justify-between items-center">
         <ul v-if="tags" class="flex gap-2 items-center">
           <li v-for="tag in tags" :key="tag.id">
-            <Tag :tag="tag" tabindex="-1" />
+            <TagCard :tag="tag" tabindex="-1" />
           </li>
         </ul>
         <p class="ml-auto text-muted text-sm">{{ createdDate }}</p>

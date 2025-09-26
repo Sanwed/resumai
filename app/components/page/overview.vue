@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { MAX_USER_PROJECTS } from '~/constants';
 import type { Projects } from '~/generated/prisma';
 import { authClient } from '~/lib/auth-client';
 
@@ -10,7 +11,6 @@ const { data: projects, pending, refresh } = await useFetch<Projects[]>('/api/pr
 <template>
   <div v-if="session" class="flex flex-col gap-y-4 md:gap-y-6 p-4 md:px-8 max-w-7xl mx-auto">
     <h1 class="font-medium text-2xl">Привет, {{ session.user.name }}!</h1>
-
     <div class="flex gap-4">
       <FormCreateProject @on-success="refresh()">
         <template #toggle>
@@ -22,7 +22,10 @@ const { data: projects, pending, refresh } = await useFetch<Projects[]>('/api/pr
       </FormCreateProject>
     </div>
     <div class="flex flex-col gap-y-2 md:gap-y-4">
-      <h2 class="font-medium text-xl">Проекты</h2>
+      <div class="flex items-center justify-between gap-x-2">
+        <h2 class="font-medium text-xl">Проекты</h2>
+        <p class="text-sm text-muted">{{ projects?.length }} из {{ MAX_USER_PROJECTS }}</p>
+      </div>
       <ProjectCarouselSkeleton v-if="pending" />
       <ProjectEmpty v-else-if="!projects || projects.length === 0" />
       <ProjectCarousel v-else :projects="projects" />

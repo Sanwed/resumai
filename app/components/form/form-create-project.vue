@@ -1,6 +1,5 @@
-<!-- TODO: Доработать форму создания -->
-
 <script lang="ts" setup>
+import type { FetchError } from 'ofetch';
 import { DateFormatter, type CalendarDate, getLocalTimeZone } from '@internationalized/date';
 import type { FormSubmitEvent } from '@nuxt/ui';
 import z from 'zod';
@@ -18,7 +17,7 @@ const df = new DateFormatter('ru-RU', {
 
 const toast = useToast();
 
-const { data: tags } = await useFetch<Tags[]>('/api/tags');
+const { data: tags } = await useFetch<Tags[]>('/api/tags/');
 
 const open = ref(false);
 const endDate = shallowRef<CalendarDate | null>(null);
@@ -28,7 +27,7 @@ const schema = z.object({
     .string()
     .min(1, "Введите имя")
     .max(255, "Превышено максимальное количество символов"),
-  description: z.string().nullish(),
+  description: z.string().max(500, { error: 'Превышено максимальное количество символов' }).nullish(),
   tags: z.array(
     z.object({
       id: z.string(),
@@ -46,7 +45,15 @@ const state = reactive<z.infer<typeof schema>>({
   tags: [],
   vacancyText: '',
   endDate: null,
-})
+});
+
+const resetForm = () => {
+  state.name = '';
+  state.description = '';
+  state.tags = [];
+  state.vacancyText = '';
+  state.endDate = null;
+}
 
 const toggleTag = (id: string) => {
   const selectedIndex = state.tags.findIndex((tag) => tag.id === id);
@@ -73,12 +80,12 @@ const onSubmit = async (event: FormSubmitEvent<z.infer<typeof schema>>) => {
 
     open.value = false;
     emit('on-success');
+    resetForm();
   } catch (err) {
-    const error = err as Error;
-
+    const error = err as FetchError;
     toast.add({
       title: 'Что-то пошло не так',
-      description: error.message,
+      description: error.data.statusMessage,
       icon: 'ic:baseline-dangerous',
       color: 'error',
     })
@@ -102,7 +109,7 @@ watch(endDate, (newVal) => {
           viewport: 'overflow-visible scrollbar-none',
           item: 'basis-auto'
         }" :items="tags">
-          <Tag :tag="item" :selected="state.tags.some((tag) => tag.id === item.id)" @click="toggleTag" />
+          <TagCard :tag="item" :selected="state.tags.some((tag) => tag.id === item.id)" @click="toggleTag" />
         </UCarousel>
         <UFormField label="Название" name="name" required>
           <UInput v-model="state.name" class="w-full" />
@@ -119,7 +126,9 @@ watch(endDate, (newVal) => {
               {{ endDate ? df.format(endDate.toDate(getLocalTimeZone())) : 'Выберите дату' }}
 
               <template #trailing>
-                <button v-if="endDate" type="button" aria-label="Очистить дату" class="size-5 flex justify-center items-center ml-auto transition-transform hover:scale-110" @click.stop="endDate = null">
+                <button v-if="endDate" type="button" aria-label="Очистить дату"
+                  class="size-5 flex justify-center items-center ml-auto transition-transform hover:scale-110"
+                  @click.stop="endDate = null">
                   <UIcon name="i-lucide-x" class="size-5" />
                 </button>
               </template>
