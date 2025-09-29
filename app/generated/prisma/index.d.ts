@@ -1334,12 +1334,14 @@ export namespace Prisma {
     sessions: number
     accounts: number
     Projects: number
+    Tags: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     Projects?: boolean | UserCountOutputTypeCountProjectsArgs
+    Tags?: boolean | UserCountOutputTypeCountTagsArgs
   }
 
   // Custom InputTypes
@@ -1372,6 +1374,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectsWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TagsWhereInput
   }
 
 
@@ -1624,6 +1633,7 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     Projects?: boolean | User$ProjectsArgs<ExtArgs>
+    Tags?: boolean | User$TagsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1662,6 +1672,7 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     Projects?: boolean | User$ProjectsArgs<ExtArgs>
+    Tags?: boolean | User$TagsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1673,6 +1684,7 @@ export namespace Prisma {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       Projects: Prisma.$ProjectsPayload<ExtArgs>[]
+      Tags: Prisma.$TagsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2079,6 +2091,7 @@ export namespace Prisma {
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Projects<T extends User$ProjectsArgs<ExtArgs> = {}>(args?: Subset<T, User$ProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Tags<T extends User$TagsArgs<ExtArgs> = {}>(args?: Subset<T, User$TagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2572,6 +2585,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectsScalarFieldEnum | ProjectsScalarFieldEnum[]
+  }
+
+  /**
+   * User.Tags
+   */
+  export type User$TagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tags
+     */
+    select?: TagsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tags
+     */
+    omit?: TagsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagsInclude<ExtArgs> | null
+    where?: TagsWhereInput
+    orderBy?: TagsOrderByWithRelationInput | TagsOrderByWithRelationInput[]
+    cursor?: TagsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TagsScalarFieldEnum | TagsScalarFieldEnum[]
   }
 
   /**
@@ -5917,6 +5954,7 @@ export namespace Prisma {
     updatedAt: number
     endDate: number
     importanceLevel: number
+    files: number
     _all: number
   }
 
@@ -5966,6 +6004,7 @@ export namespace Prisma {
     updatedAt?: true
     endDate?: true
     importanceLevel?: true
+    files?: true
     _all?: true
   }
 
@@ -6066,6 +6105,7 @@ export namespace Prisma {
     updatedAt: Date
     endDate: Date | null
     importanceLevel: number | null
+    files: Uint8Array[]
     _count: ProjectsCountAggregateOutputType | null
     _avg: ProjectsAvgAggregateOutputType | null
     _sum: ProjectsSumAggregateOutputType | null
@@ -6098,6 +6138,7 @@ export namespace Prisma {
     updatedAt?: boolean
     endDate?: boolean
     importanceLevel?: boolean
+    files?: boolean
     tags?: boolean | Projects$tagsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | ProjectsCountOutputTypeDefaultArgs<ExtArgs>
@@ -6114,6 +6155,7 @@ export namespace Prisma {
     updatedAt?: boolean
     endDate?: boolean
     importanceLevel?: boolean
+    files?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["projects"]>
 
@@ -6128,6 +6170,7 @@ export namespace Prisma {
     updatedAt?: boolean
     endDate?: boolean
     importanceLevel?: boolean
+    files?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["projects"]>
 
@@ -6142,9 +6185,10 @@ export namespace Prisma {
     updatedAt?: boolean
     endDate?: boolean
     importanceLevel?: boolean
+    files?: boolean
   }
 
-  export type ProjectsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "image" | "vacancyText" | "userId" | "createdAt" | "updatedAt" | "endDate" | "importanceLevel", ExtArgs["result"]["projects"]>
+  export type ProjectsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "image" | "vacancyText" | "userId" | "createdAt" | "updatedAt" | "endDate" | "importanceLevel" | "files", ExtArgs["result"]["projects"]>
   export type ProjectsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tags?: boolean | Projects$tagsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6174,6 +6218,7 @@ export namespace Prisma {
       updatedAt: Date
       endDate: Date | null
       importanceLevel: number | null
+      files: Uint8Array[]
     }, ExtArgs["result"]["projects"]>
     composites: {}
   }
@@ -6609,6 +6654,7 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Projects", 'DateTime'>
     readonly endDate: FieldRef<"Projects", 'DateTime'>
     readonly importanceLevel: FieldRef<"Projects", 'Int'>
+    readonly files: FieldRef<"Projects", 'Bytes[]'>
   }
     
 
@@ -7060,18 +7106,21 @@ export namespace Prisma {
   export type TagsMinAggregateOutputType = {
     id: string | null
     name: string | null
+    userId: string | null
     variant: $Enums.TagVariant | null
   }
 
   export type TagsMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    userId: string | null
     variant: $Enums.TagVariant | null
   }
 
   export type TagsCountAggregateOutputType = {
     id: number
     name: number
+    userId: number
     variant: number
     _all: number
   }
@@ -7080,18 +7129,21 @@ export namespace Prisma {
   export type TagsMinAggregateInputType = {
     id?: true
     name?: true
+    userId?: true
     variant?: true
   }
 
   export type TagsMaxAggregateInputType = {
     id?: true
     name?: true
+    userId?: true
     variant?: true
   }
 
   export type TagsCountAggregateInputType = {
     id?: true
     name?: true
+    userId?: true
     variant?: true
     _all?: true
   }
@@ -7171,7 +7223,8 @@ export namespace Prisma {
   export type TagsGroupByOutputType = {
     id: string
     name: string
-    variant: $Enums.TagVariant | null
+    userId: string
+    variant: $Enums.TagVariant
     _count: TagsCountAggregateOutputType | null
     _min: TagsMinAggregateOutputType | null
     _max: TagsMaxAggregateOutputType | null
@@ -7194,7 +7247,9 @@ export namespace Prisma {
   export type TagsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    userId?: boolean
     variant?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     projects?: boolean | Tags$projectsArgs<ExtArgs>
     _count?: boolean | TagsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tags"]>
@@ -7202,38 +7257,50 @@ export namespace Prisma {
   export type TagsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    userId?: boolean
     variant?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tags"]>
 
   export type TagsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    userId?: boolean
     variant?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tags"]>
 
   export type TagsSelectScalar = {
     id?: boolean
     name?: boolean
+    userId?: boolean
     variant?: boolean
   }
 
-  export type TagsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "variant", ExtArgs["result"]["tags"]>
+  export type TagsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userId" | "variant", ExtArgs["result"]["tags"]>
   export type TagsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
     projects?: boolean | Tags$projectsArgs<ExtArgs>
     _count?: boolean | TagsCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type TagsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type TagsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TagsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TagsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $TagsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Tags"
     objects: {
+      user: Prisma.$UserPayload<ExtArgs>
       projects: Prisma.$ProjectsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
-      variant: $Enums.TagVariant | null
+      userId: string
+      variant: $Enums.TagVariant
     }, ExtArgs["result"]["tags"]>
     composites: {}
   }
@@ -7628,6 +7695,7 @@ export namespace Prisma {
    */
   export interface Prisma__TagsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     projects<T extends Tags$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Tags$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7660,6 +7728,7 @@ export namespace Prisma {
   interface TagsFieldRefs {
     readonly id: FieldRef<"Tags", 'String'>
     readonly name: FieldRef<"Tags", 'String'>
+    readonly userId: FieldRef<"Tags", 'String'>
     readonly variant: FieldRef<"Tags", 'TagVariant'>
   }
     
@@ -7910,6 +7979,10 @@ export namespace Prisma {
      */
     data: TagsCreateManyInput | TagsCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagsIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -7980,6 +8053,10 @@ export namespace Prisma {
      * Limit how many Tags to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagsIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8173,7 +8250,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     endDate: 'endDate',
-    importanceLevel: 'importanceLevel'
+    importanceLevel: 'importanceLevel',
+    files: 'files'
   };
 
   export type ProjectsScalarFieldEnum = (typeof ProjectsScalarFieldEnum)[keyof typeof ProjectsScalarFieldEnum]
@@ -8182,6 +8260,7 @@ export namespace Prisma {
   export const TagsScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    userId: 'userId',
     variant: 'variant'
   };
 
@@ -8267,6 +8346,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Bytes[]'
+   */
+  export type ListBytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Bytes'
+   */
+  export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
+    
+
+
+  /**
    * Reference to a field of type 'TagVariant'
    */
   export type EnumTagVariantFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TagVariant'>
@@ -8311,6 +8404,7 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     Projects?: ProjectsListRelationFilter
+    Tags?: TagsListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8324,6 +8418,7 @@ export namespace Prisma {
     sessions?: SessionOrderByRelationAggregateInput
     accounts?: AccountOrderByRelationAggregateInput
     Projects?: ProjectsOrderByRelationAggregateInput
+    Tags?: TagsOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8340,6 +8435,7 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     Projects?: ProjectsListRelationFilter
+    Tags?: TagsListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -8604,6 +8700,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Projects"> | Date | string
     endDate?: DateTimeNullableFilter<"Projects"> | Date | string | null
     importanceLevel?: IntNullableFilter<"Projects"> | number | null
+    files?: BytesNullableListFilter<"Projects">
     tags?: TagsListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -8619,6 +8716,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     endDate?: SortOrderInput | SortOrder
     importanceLevel?: SortOrderInput | SortOrder
+    files?: SortOrder
     tags?: TagsOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
   }
@@ -8637,6 +8735,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Projects"> | Date | string
     endDate?: DateTimeNullableFilter<"Projects"> | Date | string | null
     importanceLevel?: IntNullableFilter<"Projects"> | number | null
+    files?: BytesNullableListFilter<"Projects">
     tags?: TagsListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -8652,6 +8751,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     endDate?: SortOrderInput | SortOrder
     importanceLevel?: SortOrderInput | SortOrder
+    files?: SortOrder
     _count?: ProjectsCountOrderByAggregateInput
     _avg?: ProjectsAvgOrderByAggregateInput
     _max?: ProjectsMaxOrderByAggregateInput
@@ -8673,6 +8773,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Projects"> | Date | string
     endDate?: DateTimeNullableWithAggregatesFilter<"Projects"> | Date | string | null
     importanceLevel?: IntNullableWithAggregatesFilter<"Projects"> | number | null
+    files?: BytesNullableListFilter<"Projects">
   }
 
   export type TagsWhereInput = {
@@ -8681,14 +8782,18 @@ export namespace Prisma {
     NOT?: TagsWhereInput | TagsWhereInput[]
     id?: StringFilter<"Tags"> | string
     name?: StringFilter<"Tags"> | string
-    variant?: EnumTagVariantNullableFilter<"Tags"> | $Enums.TagVariant | null
+    userId?: StringFilter<"Tags"> | string
+    variant?: EnumTagVariantFilter<"Tags"> | $Enums.TagVariant
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     projects?: ProjectsListRelationFilter
   }
 
   export type TagsOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    variant?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    variant?: SortOrder
+    user?: UserOrderByWithRelationInput
     projects?: ProjectsOrderByRelationAggregateInput
   }
 
@@ -8698,14 +8803,17 @@ export namespace Prisma {
     OR?: TagsWhereInput[]
     NOT?: TagsWhereInput | TagsWhereInput[]
     name?: StringFilter<"Tags"> | string
-    variant?: EnumTagVariantNullableFilter<"Tags"> | $Enums.TagVariant | null
+    userId?: StringFilter<"Tags"> | string
+    variant?: EnumTagVariantFilter<"Tags"> | $Enums.TagVariant
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     projects?: ProjectsListRelationFilter
   }, "id">
 
   export type TagsOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    variant?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    variant?: SortOrder
     _count?: TagsCountOrderByAggregateInput
     _max?: TagsMaxOrderByAggregateInput
     _min?: TagsMinOrderByAggregateInput
@@ -8717,7 +8825,8 @@ export namespace Prisma {
     NOT?: TagsScalarWhereWithAggregatesInput | TagsScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Tags"> | string
     name?: StringWithAggregatesFilter<"Tags"> | string
-    variant?: EnumTagVariantNullableWithAggregatesFilter<"Tags"> | $Enums.TagVariant | null
+    userId?: StringWithAggregatesFilter<"Tags"> | string
+    variant?: EnumTagVariantWithAggregatesFilter<"Tags"> | $Enums.TagVariant
   }
 
   export type UserCreateInput = {
@@ -8731,6 +8840,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     Projects?: ProjectsCreateNestedManyWithoutUserInput
+    Tags?: TagsCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -8744,6 +8854,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     Projects?: ProjectsUncheckedCreateNestedManyWithoutUserInput
+    Tags?: TagsUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -8757,6 +8868,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     Projects?: ProjectsUpdateManyWithoutUserNestedInput
+    Tags?: TagsUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -8770,6 +8882,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     Projects?: ProjectsUncheckedUpdateManyWithoutUserNestedInput
+    Tags?: TagsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9062,6 +9175,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
     tags?: TagsCreateNestedManyWithoutProjectsInput
     user: UserCreateNestedOneWithoutProjectsInput
   }
@@ -9077,6 +9191,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
     tags?: TagsUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -9090,6 +9205,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
     tags?: TagsUpdateManyWithoutProjectsNestedInput
     user?: UserUpdateOneRequiredWithoutProjectsNestedInput
   }
@@ -9105,6 +9221,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
     tags?: TagsUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -9119,6 +9236,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
   }
 
   export type ProjectsUpdateManyMutationInput = {
@@ -9131,6 +9249,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
   }
 
   export type ProjectsUncheckedUpdateManyInput = {
@@ -9144,52 +9263,59 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
   }
 
   export type TagsCreateInput = {
     id?: string
     name: string
-    variant?: $Enums.TagVariant | null
+    variant?: $Enums.TagVariant
+    user: UserCreateNestedOneWithoutTagsInput
     projects?: ProjectsCreateNestedManyWithoutTagsInput
   }
 
   export type TagsUncheckedCreateInput = {
     id?: string
     name: string
-    variant?: $Enums.TagVariant | null
+    userId: string
+    variant?: $Enums.TagVariant
     projects?: ProjectsUncheckedCreateNestedManyWithoutTagsInput
   }
 
   export type TagsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    variant?: NullableEnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant | null
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
+    user?: UserUpdateOneRequiredWithoutTagsNestedInput
     projects?: ProjectsUpdateManyWithoutTagsNestedInput
   }
 
   export type TagsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    variant?: NullableEnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant | null
+    userId?: StringFieldUpdateOperationsInput | string
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
     projects?: ProjectsUncheckedUpdateManyWithoutTagsNestedInput
   }
 
   export type TagsCreateManyInput = {
     id?: string
     name: string
-    variant?: $Enums.TagVariant | null
+    userId: string
+    variant?: $Enums.TagVariant
   }
 
   export type TagsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    variant?: NullableEnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant | null
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
   }
 
   export type TagsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    variant?: NullableEnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant | null
+    userId?: StringFieldUpdateOperationsInput | string
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -9256,6 +9382,12 @@ export namespace Prisma {
     none?: ProjectsWhereInput
   }
 
+  export type TagsListRelationFilter = {
+    every?: TagsWhereInput
+    some?: TagsWhereInput
+    none?: TagsWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9270,6 +9402,10 @@ export namespace Prisma {
   }
 
   export type ProjectsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TagsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9510,14 +9646,12 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type TagsListRelationFilter = {
-    every?: TagsWhereInput
-    some?: TagsWhereInput
-    none?: TagsWhereInput
-  }
-
-  export type TagsOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type BytesNullableListFilter<$PrismaModel = never> = {
+    equals?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel> | null
+    has?: Uint8Array | BytesFieldRefInput<$PrismaModel> | null
+    hasEvery?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel>
+    hasSome?: Uint8Array[] | ListBytesFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type ProjectsCountOrderByAggregateInput = {
@@ -9531,6 +9665,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     endDate?: SortOrder
     importanceLevel?: SortOrder
+    files?: SortOrder
   }
 
   export type ProjectsAvgOrderByAggregateInput = {
@@ -9583,39 +9718,42 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type EnumTagVariantNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel> | null
-    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumTagVariantNullableFilter<$PrismaModel> | $Enums.TagVariant | null
+  export type EnumTagVariantFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel>
+    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagVariantFilter<$PrismaModel> | $Enums.TagVariant
   }
 
   export type TagsCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    userId?: SortOrder
     variant?: SortOrder
   }
 
   export type TagsMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    userId?: SortOrder
     variant?: SortOrder
   }
 
   export type TagsMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    userId?: SortOrder
     variant?: SortOrder
   }
 
-  export type EnumTagVariantNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel> | null
-    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumTagVariantNullableWithAggregatesFilter<$PrismaModel> | $Enums.TagVariant | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumTagVariantNullableFilter<$PrismaModel>
-    _max?: NestedEnumTagVariantNullableFilter<$PrismaModel>
+  export type EnumTagVariantWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel>
+    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagVariantWithAggregatesFilter<$PrismaModel> | $Enums.TagVariant
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTagVariantFilter<$PrismaModel>
+    _max?: NestedEnumTagVariantFilter<$PrismaModel>
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -9639,6 +9777,13 @@ export namespace Prisma {
     connect?: ProjectsWhereUniqueInput | ProjectsWhereUniqueInput[]
   }
 
+  export type TagsCreateNestedManyWithoutUserInput = {
+    create?: XOR<TagsCreateWithoutUserInput, TagsUncheckedCreateWithoutUserInput> | TagsCreateWithoutUserInput[] | TagsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TagsCreateOrConnectWithoutUserInput | TagsCreateOrConnectWithoutUserInput[]
+    createMany?: TagsCreateManyUserInputEnvelope
+    connect?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -9658,6 +9803,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectsCreateOrConnectWithoutUserInput | ProjectsCreateOrConnectWithoutUserInput[]
     createMany?: ProjectsCreateManyUserInputEnvelope
     connect?: ProjectsWhereUniqueInput | ProjectsWhereUniqueInput[]
+  }
+
+  export type TagsUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TagsCreateWithoutUserInput, TagsUncheckedCreateWithoutUserInput> | TagsCreateWithoutUserInput[] | TagsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TagsCreateOrConnectWithoutUserInput | TagsCreateOrConnectWithoutUserInput[]
+    createMany?: TagsCreateManyUserInputEnvelope
+    connect?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -9718,6 +9870,20 @@ export namespace Prisma {
     deleteMany?: ProjectsScalarWhereInput | ProjectsScalarWhereInput[]
   }
 
+  export type TagsUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TagsCreateWithoutUserInput, TagsUncheckedCreateWithoutUserInput> | TagsCreateWithoutUserInput[] | TagsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TagsCreateOrConnectWithoutUserInput | TagsCreateOrConnectWithoutUserInput[]
+    upsert?: TagsUpsertWithWhereUniqueWithoutUserInput | TagsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TagsCreateManyUserInputEnvelope
+    set?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    disconnect?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    delete?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    connect?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    update?: TagsUpdateWithWhereUniqueWithoutUserInput | TagsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TagsUpdateManyWithWhereWithoutUserInput | TagsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TagsScalarWhereInput | TagsScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -9760,6 +9926,20 @@ export namespace Prisma {
     deleteMany?: ProjectsScalarWhereInput | ProjectsScalarWhereInput[]
   }
 
+  export type TagsUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TagsCreateWithoutUserInput, TagsUncheckedCreateWithoutUserInput> | TagsCreateWithoutUserInput[] | TagsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TagsCreateOrConnectWithoutUserInput | TagsCreateOrConnectWithoutUserInput[]
+    upsert?: TagsUpsertWithWhereUniqueWithoutUserInput | TagsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TagsCreateManyUserInputEnvelope
+    set?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    disconnect?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    delete?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    connect?: TagsWhereUniqueInput | TagsWhereUniqueInput[]
+    update?: TagsUpdateWithWhereUniqueWithoutUserInput | TagsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TagsUpdateManyWithWhereWithoutUserInput | TagsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TagsScalarWhereInput | TagsScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutSessionsInput = {
     create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
@@ -9792,6 +9972,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
   }
 
+  export type ProjectsCreatefilesInput = {
+    set: Uint8Array[]
+  }
+
   export type TagsCreateNestedManyWithoutProjectsInput = {
     create?: XOR<TagsCreateWithoutProjectsInput, TagsUncheckedCreateWithoutProjectsInput> | TagsCreateWithoutProjectsInput[] | TagsUncheckedCreateWithoutProjectsInput[]
     connectOrCreate?: TagsCreateOrConnectWithoutProjectsInput | TagsCreateOrConnectWithoutProjectsInput[]
@@ -9816,6 +10000,11 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ProjectsUpdatefilesInput = {
+    set?: Uint8Array[]
+    push?: Uint8Array | Uint8Array[]
   }
 
   export type TagsUpdateManyWithoutProjectsNestedInput = {
@@ -9852,6 +10041,12 @@ export namespace Prisma {
     deleteMany?: TagsScalarWhereInput | TagsScalarWhereInput[]
   }
 
+  export type UserCreateNestedOneWithoutTagsInput = {
+    create?: XOR<UserCreateWithoutTagsInput, UserUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTagsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type ProjectsCreateNestedManyWithoutTagsInput = {
     create?: XOR<ProjectsCreateWithoutTagsInput, ProjectsUncheckedCreateWithoutTagsInput> | ProjectsCreateWithoutTagsInput[] | ProjectsUncheckedCreateWithoutTagsInput[]
     connectOrCreate?: ProjectsCreateOrConnectWithoutTagsInput | ProjectsCreateOrConnectWithoutTagsInput[]
@@ -9864,8 +10059,16 @@ export namespace Prisma {
     connect?: ProjectsWhereUniqueInput | ProjectsWhereUniqueInput[]
   }
 
-  export type NullableEnumTagVariantFieldUpdateOperationsInput = {
-    set?: $Enums.TagVariant | null
+  export type EnumTagVariantFieldUpdateOperationsInput = {
+    set?: $Enums.TagVariant
+  }
+
+  export type UserUpdateOneRequiredWithoutTagsNestedInput = {
+    create?: XOR<UserCreateWithoutTagsInput, UserUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTagsInput
+    upsert?: UserUpsertWithoutTagsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTagsInput, UserUpdateWithoutTagsInput>, UserUncheckedUpdateWithoutTagsInput>
   }
 
   export type ProjectsUpdateManyWithoutTagsNestedInput = {
@@ -10068,21 +10271,21 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedEnumTagVariantNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel> | null
-    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumTagVariantNullableFilter<$PrismaModel> | $Enums.TagVariant | null
+  export type NestedEnumTagVariantFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel>
+    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagVariantFilter<$PrismaModel> | $Enums.TagVariant
   }
 
-  export type NestedEnumTagVariantNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel> | null
-    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumTagVariantNullableWithAggregatesFilter<$PrismaModel> | $Enums.TagVariant | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumTagVariantNullableFilter<$PrismaModel>
-    _max?: NestedEnumTagVariantNullableFilter<$PrismaModel>
+  export type NestedEnumTagVariantWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TagVariant | EnumTagVariantFieldRefInput<$PrismaModel>
+    in?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TagVariant[] | ListEnumTagVariantFieldRefInput<$PrismaModel>
+    not?: NestedEnumTagVariantWithAggregatesFilter<$PrismaModel> | $Enums.TagVariant
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTagVariantFilter<$PrismaModel>
+    _max?: NestedEnumTagVariantFilter<$PrismaModel>
   }
 
   export type SessionCreateWithoutUserInput = {
@@ -10165,6 +10368,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
     tags?: TagsCreateNestedManyWithoutProjectsInput
   }
 
@@ -10178,6 +10382,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
     tags?: TagsUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -10188,6 +10393,30 @@ export namespace Prisma {
 
   export type ProjectsCreateManyUserInputEnvelope = {
     data: ProjectsCreateManyUserInput | ProjectsCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TagsCreateWithoutUserInput = {
+    id?: string
+    name: string
+    variant?: $Enums.TagVariant
+    projects?: ProjectsCreateNestedManyWithoutTagsInput
+  }
+
+  export type TagsUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    variant?: $Enums.TagVariant
+    projects?: ProjectsUncheckedCreateNestedManyWithoutTagsInput
+  }
+
+  export type TagsCreateOrConnectWithoutUserInput = {
+    where: TagsWhereUniqueInput
+    create: XOR<TagsCreateWithoutUserInput, TagsUncheckedCreateWithoutUserInput>
+  }
+
+  export type TagsCreateManyUserInputEnvelope = {
+    data: TagsCreateManyUserInput | TagsCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -10286,6 +10515,33 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Projects"> | Date | string
     endDate?: DateTimeNullableFilter<"Projects"> | Date | string | null
     importanceLevel?: IntNullableFilter<"Projects"> | number | null
+    files?: BytesNullableListFilter<"Projects">
+  }
+
+  export type TagsUpsertWithWhereUniqueWithoutUserInput = {
+    where: TagsWhereUniqueInput
+    update: XOR<TagsUpdateWithoutUserInput, TagsUncheckedUpdateWithoutUserInput>
+    create: XOR<TagsCreateWithoutUserInput, TagsUncheckedCreateWithoutUserInput>
+  }
+
+  export type TagsUpdateWithWhereUniqueWithoutUserInput = {
+    where: TagsWhereUniqueInput
+    data: XOR<TagsUpdateWithoutUserInput, TagsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TagsUpdateManyWithWhereWithoutUserInput = {
+    where: TagsScalarWhereInput
+    data: XOR<TagsUpdateManyMutationInput, TagsUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TagsScalarWhereInput = {
+    AND?: TagsScalarWhereInput | TagsScalarWhereInput[]
+    OR?: TagsScalarWhereInput[]
+    NOT?: TagsScalarWhereInput | TagsScalarWhereInput[]
+    id?: StringFilter<"Tags"> | string
+    name?: StringFilter<"Tags"> | string
+    userId?: StringFilter<"Tags"> | string
+    variant?: EnumTagVariantFilter<"Tags"> | $Enums.TagVariant
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -10298,6 +10554,7 @@ export namespace Prisma {
     updatedAt: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
     Projects?: ProjectsCreateNestedManyWithoutUserInput
+    Tags?: TagsCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -10310,6 +10567,7 @@ export namespace Prisma {
     updatedAt: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     Projects?: ProjectsUncheckedCreateNestedManyWithoutUserInput
+    Tags?: TagsUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -10338,6 +10596,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
     Projects?: ProjectsUpdateManyWithoutUserNestedInput
+    Tags?: TagsUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -10350,6 +10609,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     Projects?: ProjectsUncheckedUpdateManyWithoutUserNestedInput
+    Tags?: TagsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -10362,6 +10622,7 @@ export namespace Prisma {
     updatedAt: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     Projects?: ProjectsCreateNestedManyWithoutUserInput
+    Tags?: TagsCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -10374,6 +10635,7 @@ export namespace Prisma {
     updatedAt: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     Projects?: ProjectsUncheckedCreateNestedManyWithoutUserInput
+    Tags?: TagsUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -10402,6 +10664,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     Projects?: ProjectsUpdateManyWithoutUserNestedInput
+    Tags?: TagsUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -10414,18 +10677,21 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     Projects?: ProjectsUncheckedUpdateManyWithoutUserNestedInput
+    Tags?: TagsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TagsCreateWithoutProjectsInput = {
     id?: string
     name: string
-    variant?: $Enums.TagVariant | null
+    variant?: $Enums.TagVariant
+    user: UserCreateNestedOneWithoutTagsInput
   }
 
   export type TagsUncheckedCreateWithoutProjectsInput = {
     id?: string
     name: string
-    variant?: $Enums.TagVariant | null
+    userId: string
+    variant?: $Enums.TagVariant
   }
 
   export type TagsCreateOrConnectWithoutProjectsInput = {
@@ -10443,6 +10709,7 @@ export namespace Prisma {
     updatedAt: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
+    Tags?: TagsCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsInput = {
@@ -10455,6 +10722,7 @@ export namespace Prisma {
     updatedAt: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    Tags?: TagsUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsInput = {
@@ -10478,15 +10746,6 @@ export namespace Prisma {
     data: XOR<TagsUpdateManyMutationInput, TagsUncheckedUpdateManyWithoutProjectsInput>
   }
 
-  export type TagsScalarWhereInput = {
-    AND?: TagsScalarWhereInput | TagsScalarWhereInput[]
-    OR?: TagsScalarWhereInput[]
-    NOT?: TagsScalarWhereInput | TagsScalarWhereInput[]
-    id?: StringFilter<"Tags"> | string
-    name?: StringFilter<"Tags"> | string
-    variant?: EnumTagVariantNullableFilter<"Tags"> | $Enums.TagVariant | null
-  }
-
   export type UserUpsertWithoutProjectsInput = {
     update: XOR<UserUpdateWithoutProjectsInput, UserUncheckedUpdateWithoutProjectsInput>
     create: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
@@ -10508,6 +10767,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    Tags?: TagsUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -10520,6 +10780,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    Tags?: TagsUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutTagsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    createdAt: Date | string
+    updatedAt: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    Projects?: ProjectsCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTagsInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    createdAt: Date | string
+    updatedAt: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    Projects?: ProjectsUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTagsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTagsInput, UserUncheckedCreateWithoutTagsInput>
   }
 
   export type ProjectsCreateWithoutTagsInput = {
@@ -10532,6 +10824,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
     user: UserCreateNestedOneWithoutProjectsInput
   }
 
@@ -10546,11 +10839,49 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
   }
 
   export type ProjectsCreateOrConnectWithoutTagsInput = {
     where: ProjectsWhereUniqueInput
     create: XOR<ProjectsCreateWithoutTagsInput, ProjectsUncheckedCreateWithoutTagsInput>
+  }
+
+  export type UserUpsertWithoutTagsInput = {
+    update: XOR<UserUpdateWithoutTagsInput, UserUncheckedUpdateWithoutTagsInput>
+    create: XOR<UserCreateWithoutTagsInput, UserUncheckedCreateWithoutTagsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTagsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTagsInput, UserUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type UserUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    Projects?: ProjectsUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    Projects?: ProjectsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectsUpsertWithWhereUniqueWithoutTagsInput = {
@@ -10604,6 +10935,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     endDate?: Date | string | null
     importanceLevel?: number | null
+    files?: ProjectsCreatefilesInput | Uint8Array[]
+  }
+
+  export type TagsCreateManyUserInput = {
+    id?: string
+    name: string
+    variant?: $Enums.TagVariant
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -10691,6 +11029,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
     tags?: TagsUpdateManyWithoutProjectsNestedInput
   }
 
@@ -10704,6 +11043,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
     tags?: TagsUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -10717,24 +11057,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
+  }
+
+  export type TagsUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
+    projects?: ProjectsUpdateManyWithoutTagsNestedInput
+  }
+
+  export type TagsUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
+    projects?: ProjectsUncheckedUpdateManyWithoutTagsNestedInput
+  }
+
+  export type TagsUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
   }
 
   export type TagsUpdateWithoutProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    variant?: NullableEnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant | null
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
+    user?: UserUpdateOneRequiredWithoutTagsNestedInput
   }
 
   export type TagsUncheckedUpdateWithoutProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    variant?: NullableEnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant | null
+    userId?: StringFieldUpdateOperationsInput | string
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
   }
 
   export type TagsUncheckedUpdateManyWithoutProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    variant?: NullableEnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant | null
+    userId?: StringFieldUpdateOperationsInput | string
+    variant?: EnumTagVariantFieldUpdateOperationsInput | $Enums.TagVariant
   }
 
   export type ProjectsUpdateWithoutTagsInput = {
@@ -10747,6 +11111,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
     user?: UserUpdateOneRequiredWithoutProjectsNestedInput
   }
 
@@ -10761,6 +11126,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
   }
 
   export type ProjectsUncheckedUpdateManyWithoutTagsInput = {
@@ -10774,6 +11140,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     importanceLevel?: NullableIntFieldUpdateOperationsInput | number | null
+    files?: ProjectsUpdatefilesInput | Uint8Array[]
   }
 
 

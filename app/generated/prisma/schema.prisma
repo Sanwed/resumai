@@ -25,6 +25,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   Projects      Projects[]
+  Tags          Tags[]
 
   @@unique([email])
   @@map("user")
@@ -88,15 +89,18 @@ model Projects {
   updatedAt       DateTime  @updatedAt
   endDate         DateTime?
   importanceLevel Int?      @default(0)
+  files           Bytes[]
 
   @@map("projects")
 }
 
 model Tags {
-  id       String      @id @default(uuid())
+  id       String     @id @default(uuid())
   name     String
-  variant  TagVariant?
-  projects Projects[]  @relation("project_tags")
+  userId   String
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  variant  TagVariant @default(neutral)
+  projects Projects[] @relation("project_tags")
 
   @@map("tags")
 }

@@ -6,6 +6,8 @@ type Props = {
 }
 
 defineProps<Props>();
+
+
 </script>
 
 <template>

@@ -16,7 +16,6 @@ const onFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
     filesData.value = [...target.files, ...filesData.value,];
-    console.log(filesData.value);
   }
 }
 
@@ -73,5 +72,6 @@ const deleteFile = (file: File) => {
           aria-label="Удалить файл" @click="deleteFile(file)" />
       </li>
     </ul>
+    <Button></Button>
   </div>
 </template>

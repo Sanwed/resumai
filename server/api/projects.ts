@@ -1,6 +1,6 @@
 import z from "zod";
-import { auth, prisma } from "~/lib/auth";
-import {MAX_USER_PROJECTS} from '@/constants';
+import { prisma } from "~/lib/auth";
+import {MAX_USER_PROJECTS, TAG_VARIANT_NAMES} from '@/constants';
 
 const projectQuerySchema = z.object({
   projectId: z.string().nullish(),
@@ -16,7 +16,7 @@ const projectCreateSchema = z.object({
     z.object({
       id: z.string(),
       name: z.string(),
-      variant: z.enum(["green", "red", "orange", "blue", "neutral"]).nullable(),
+      variant: z.enum(TAG_VARIANT_NAMES),
     })
   ),
   vacancyText: z.string().min(1, "Введите корректное описание вакансии"),
@@ -37,20 +37,9 @@ export default defineEventHandler(async (event) => {
         })
       }
 
-      const session = await auth.api.getSession({
-        headers: event.headers,
-      });
-
-      if (!session) {
-        throw createError({
-          statusCode: 403,
-          statusMessage: 'Необходимо зарегистрироваться',
-        })
-      }
-
       const projects = await prisma.projects.findMany({
         where: {
-          userId: session.user.id,
+          userId: event.context.user?.id,
           id: query.data.projectId || undefined,
         },
       });
@@ -66,20 +55,20 @@ export default defineEventHandler(async (event) => {
   }
   if (event.method === "POST") {
     try {
-      const session = await auth.api.getSession({
-        headers: event.headers,
-      });
+      const body = await readValidatedBody(event, (body) =>
+        projectCreateSchema.safeParse(body)
+      );
 
-      if (!session) {
+      if (body.error) {
         throw createError({
-          statusCode: 403,
-          statusMessage: 'Необходимо зарегистрироваться',
+          statusCode: 400,
+          statusMessage: 'Не заполнены обязательные поля',
         })
       }
 
       const existingPropjects = await prisma.projects.findMany({
         where: {
-          userId: session.user.id,
+          userId: event.context.user?.id,
         },
       });
 
@@ -90,67 +79,10 @@ export default defineEventHandler(async (event) => {
         })
       }
 
-      const body = await readValidatedBody(event, (body) =>
-        projectCreateSchema.safeParse(body)
-      );
-
-      if (body.error) {
-        throw createError({
-          statusCode: 400,
-          statusMessage: 'Не заполнены обязательные поля',
-        })
-      }
-
       const project = await prisma.projects.create({
         data: {
           ...body.data,
-          userId: session.user.id,
-          tags: {
-            connect:
-              body.data.tags?.length > 0
-                ? body.data.tags.map((tag) => ({ id: tag.id }))
-                : undefined,
-          },
-        },
-      });
-
-      return project;
-    } catch (error) {
-      throw createError({
-        statusCode: 500,
-        statusMessage:
-          error instanceof Error ? error.message : "Ошибка сервера",
-      });
-    }
-  }
-  if (event.method === "PATCH") {
-    try {
-      const session = await auth.api.getSession({
-        headers: event.headers,
-      });
-
-      if (!session) {
-        throw createError({
-          statusCode: 403,
-          statusMessage: 'Необходимо зарегистрироваться',
-        })
-      }
-
-      const body = await readValidatedBody(event, (body) =>
-        projectCreateSchema.safeParse(body)
-      );
-
-      if (body.error) {
-        throw createError({
-          statusCode: 400,
-          statusMessage: 'Не заполнены обязательные поля',
-        })
-      }
-
-      const project = await prisma.projects.create({
-        data: {
-          ...body.data,
-          userId: session.user.id,
+          userId: event.context.user?.id ?? '',
           tags: {
             connect:
               body.data.tags?.length > 0

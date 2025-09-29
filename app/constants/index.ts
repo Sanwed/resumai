@@ -1,13 +1,20 @@
+import type { TagVariant } from "~/generated/prisma";
+
 export const MIN_PASSWORD_LENGTH = 8;
 export const MAX_PASSWORD_LENGTH = 32;
+export const MAX_TAG_NAME_LENGTH = 32;
+
 
 export const BASE_IMPORTANCE_VALUE = 10;
 
 export const MAX_FILES_COUNT = 5;
 export const MAX_USER_PROJECTS = 2;
+export const MAX_USER_TAGS = 2;
 
 export const AllowedFileTypes = {
   PDF: 'application/pdf',
   DOC: 'application/msword',
   DOCX: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 }
+
+export const TAG_VARIANT_NAMES: TagVariant[] = ['green', 'red', 'orange', 'blue', 'neutral'];

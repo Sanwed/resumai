@@ -176,12 +176,14 @@ exports.Prisma.ProjectsScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   endDate: 'endDate',
-  importanceLevel: 'importanceLevel'
+  importanceLevel: 'importanceLevel',
+  files: 'files'
 };
 
 exports.Prisma.TagsScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  userId: 'userId',
   variant: 'variant'
 };
 

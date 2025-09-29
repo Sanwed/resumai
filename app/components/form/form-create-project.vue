@@ -4,6 +4,7 @@ import { DateFormatter, type CalendarDate, getLocalTimeZone } from '@internation
 import type { FormSubmitEvent } from '@nuxt/ui';
 import z from 'zod';
 import type { Tags } from '~/generated/prisma';
+import { TAG_VARIANT_NAMES } from '~/constants';
 
 type Emits = {
   (e: 'on-success'): void
@@ -17,7 +18,7 @@ const df = new DateFormatter('ru-RU', {
 
 const toast = useToast();
 
-const { data: tags } = await useFetch<Tags[]>('/api/tags/');
+const { data: tags, refresh: refreshTags } = await useFetch<Tags[]>('/api/tags/');
 
 const open = ref(false);
 const endDate = shallowRef<CalendarDate | null>(null);
@@ -32,7 +33,7 @@ const schema = z.object({
     z.object({
       id: z.string(),
       name: z.string(),
-      variant: z.enum(["green", "red", "orange", "blue", "neutral"]).nullable(),
+      variant: z.enum(TAG_VARIANT_NAMES),
     })
   ),
   vacancyText: z.string().min(1, "Введите корректное описание вакансии"),
@@ -99,17 +100,28 @@ watch(endDate, (newVal) => {
 
 <template>
   <UModal v-model:open="open" :ui="{
-    body: 'overflow-x-hidden'
+    body: 'overflow-x-hidden flex flex-col gap-y-2'
   }" title="Создание проекта">
     <slot name="toggle" />
 
     <template #body>
+      <div class="flex items-center gap-x-2">
+        <p class="text-sm text-muted">Создать новый тег</p>
+        <FormCreateTag @on-success="refreshTags()">
+          <template #toggle>
+            <UButton variant="soft" size="sm" icon="i-material-symbols-add"
+              class="size-5 outline outline-primary-300 rounded-full justify-center" aria-label="Создать тег" />
+          </template>
+        </FormCreateTag>
+      </div>
       <UForm :state="state" :schema="schema" class="space-y-4" @submit="onSubmit">
-        <UCarousel drag-free v-slot="{ item }" :ui="{
+        <UCarousel v-slot="{ item }" drag-free :ui="{
           viewport: 'overflow-visible scrollbar-none',
           item: 'basis-auto'
         }" :items="tags">
-          <TagCard :tag="item" :selected="state.tags.some((tag) => tag.id === item.id)" @click="toggleTag" />
+          <div class="flex gap-x-4">
+            <TagCard :tag="item" :selected="state.tags.some((tag) => tag.id === item.id)" @click="toggleTag" />
+          </div>
         </UCarousel>
         <UFormField label="Название" name="name" required>
           <UInput v-model="state.name" class="w-full" />
