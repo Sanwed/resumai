@@ -1,0 +1,63 @@
+<script lang="ts" setup>
+  import type { PageCollections } from '@nuxt/content';
+
+  type Props = {
+    collection: keyof PageCollections;
+  };
+  const props = defineProps<Props>();
+
+  const route = useRoute();
+
+  const { data: navigation } = await useAsyncData(
+    `${props.collection}-navigation`,
+    () => queryCollectionNavigation(props.collection),
+    {
+      transform: (data) => data.find((item) => item.path === `/${props.collection}`)?.children || [],
+    },
+  );
+
+  const { data: page } = await useAsyncData(route.path, () =>
+    queryCollection(props.collection).path(route.path).first(),
+  );
+  if (!page.value) {
+    throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true });
+  }
+
+  const { data: surround } = await useAsyncData(`${route.path}-surround`, () => {
+    return queryCollectionItemSurroundings(props.collection, route.path, {
+      fields: ['description'],
+    });
+  });
+
+  const title = page.value.seo?.title || page.value.title;
+  const description = page.value.seo?.description || page.value.description;
+
+  useSeoMeta({
+    title,
+    ogTitle: title,
+    description,
+    ogDescription: description,
+  });
+
+  defineOgImage('Saas', { title, description, headline: title });
+</script>
+
+<template>
+  <UContainer v-if="page">
+    <UPage>
+      <template #left>
+        <UPageAside>
+          <UContentNavigation :navigation="navigation" />
+        </UPageAside>
+      </template>
+
+      <UPageHeader :title="page.title" :description="page.description" />
+
+      <UPageBody>
+        <ContentRenderer v-if="page.body" :value="page" />
+        <USeparator v-if="surround?.length" />
+        <UContentSurround :surround="surround" />
+      </UPageBody>
+    </UPage>
+  </UContainer>
+</template>

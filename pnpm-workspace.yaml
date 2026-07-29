@@ -1,0 +1,12 @@
+allowBuilds:
+  sharp: true
+  '@parcel/watcher': false
+  '@tailwindcss/oxide': false
+  esbuild: false
+  unrs-resolver: false
+  vue-demi: false
+  '@prisma/engines': set this to true or false
+  prisma: set this to true or false
+
+overrides:
+  h3: 1.15.11

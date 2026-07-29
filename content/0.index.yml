@@ -1,0 +1,142 @@
+title: Analyze Candidates with [ResumAI]{class="text-primary"}
+description: AI-powered resume screening for recruiters and job seekers. Instantly evaluate resumes, match candidates to job descriptions, identify strengths and weaknesses, and make smarter hiring decisions in minutes.
+seo:
+  title: Home Page
+  description: Create stunning, fast and production-ready SaaS applications with Nuxt UI. 100+ Vue components, authentication, dark mode, and enterprise features built on Tailwind CSS.
+navigation: false
+hero:
+  links:
+    - label: Get started
+      icon: i-lucide-arrow-right
+      trailing: true
+      to: /dashboard
+      size: xl
+sections:
+  - title: AI-Powered Resume Analysis
+    description: Create hiring projects, analyze resumes with AI, and receive detailed insights that help recruiters and candidates make better decisions.
+    id: features
+    orientation: horizontal
+    features:
+      - name: Project-Based Hiring
+        description: Organize every hiring process into dedicated projects with job descriptions, candidate lists, and analysis history in one place.
+        icon: i-lucide-folder-kanban
+
+      - name: Comprehensive AI Reports
+        description: Generate detailed resume analyses covering skills, experience, strengths, weaknesses, missing qualifications, and overall candidate fit.
+        icon: i-lucide-file-search
+
+      - name: Smart Candidate Matching
+        description: Compare resumes against your job requirements and instantly receive compatibility scores with actionable hiring recommendations.
+        icon: i-lucide-user-round-search
+  - title: Designed for Recruiters & Job Seekers
+    description: Whether you're building a stronger team or improving your career opportunities, ResumAI provides the insights you need to make confident decisions.
+    orientation: horizontal
+    reverse: true
+    features:
+      - name: Faster Resume Screening
+        description: Save hours of manual review by automatically ranking candidates and highlighting the most qualified applicants first.
+        icon: i-lucide-timer
+
+      - name: Actionable Insights
+        description: Understand exactly why a candidate matches a position with AI-generated summaries, recommendations, and interview focus points.
+        icon: i-lucide-lightbulb
+
+      - name: Track Every Analysis
+        description: Keep every project, uploaded resume, and AI report organized so you can revisit and compare candidates at any time.
+        icon: i-lucide-history
+features:
+  title: Everything You Need for Smarter Hiring
+  description: Streamline your recruitment workflow with AI-powered tools that help you analyze resumes, compare candidates, and make confident hiring decisions.
+
+  items:
+    - title: AI Resume Analysis
+      description: Generate comprehensive reports that evaluate skills, experience, strengths, weaknesses, and overall candidate suitability.
+      icon: i-lucide-file-search
+
+    - title: Job Match Scoring
+      description: Compare every resume against your job description and receive an AI-powered compatibility score with detailed reasoning.
+      icon: i-lucide-target
+
+    - title: Project Organization
+      description: Manage multiple hiring campaigns with dedicated projects, keeping resumes, analyses, and candidate progress organized.
+      icon: i-lucide-folder-kanban
+
+    - title: Candidate Insights
+      description: Discover key strengths, potential risks, missing qualifications, and interview recommendations before scheduling interviews.
+      icon: i-lucide-lightbulb
+
+    - title: Fast & Secure
+      description: Upload resumes securely, process them in minutes, and access your reports whenever you need them.
+      icon: i-lucide-shield-check
+
+    - title: Built for Recruiters & Job Seekers
+      description: Whether you're hiring the best talent or improving your own resume, ResumAI delivers clear, actionable AI insights.
+      icon: i-lucide-users
+testimonials:
+  headline: Trusted by Recruiters & Professionals
+  title: Helping Teams Hire Smarter
+  description: See how recruiters and job seekers use ResumAI to save time, improve hiring quality, and make better career decisions.
+
+  items:
+    - quote: ResumAI reduced our resume screening time from hours to minutes. The AI reports helped us identify the strongest candidates much faster.
+      user:
+        name: Sarah Chen
+        description: Senior Technical Recruiter
+        avatar:
+          src: https://i.pravatar.cc/120?img=1
+
+    - quote: The candidate matching feature made it easy to compare applicants against our job requirements. It became an essential part of our hiring workflow.
+      user:
+        name: Marcus Rodriguez
+        description: Head of Talent Acquisition
+        avatar:
+          src: https://i.pravatar.cc/120?img=7
+
+    - quote: I used ResumAI to improve my resume before applying for jobs. The AI highlighted weak areas I hadn't noticed and helped me receive more interview invitations.
+      user:
+        name: Emily Zhang
+        description: Software Engineer
+        avatar:
+          src: https://i.pravatar.cc/120?img=5
+
+    - quote: Managing multiple hiring projects is effortless. Everything stays organized, and every resume includes a detailed AI analysis.
+      user:
+        name: David Kumar
+        description: HR Manager
+        avatar:
+          src: https://i.pravatar.cc/120?img=3
+
+    - quote: The AI recommendations gave our hiring team much more confidence before interviews. We now spend time speaking with the right candidates instead of filtering resumes.
+      user:
+        name: James Wilson
+        description: Talent Acquisition Partner
+        avatar:
+          src: https://i.pravatar.cc/120?img=8
+
+    - quote: As a recruiter handling dozens of open positions, ResumAI keeps every project organized and makes comparing candidates incredibly simple.
+      user:
+        name: Lisa Patel
+        description: Recruitment Lead
+        avatar:
+          src: https://i.pravatar.cc/120?img=9
+
+    - quote: The detailed skill analysis and candidate scoring helped us quickly shortlist applicants that closely matched our technical requirements.
+      user:
+        name: Michael Torres
+        description: Engineering Manager
+        avatar:
+          src: https://i.pravatar.cc/120?img=11
+
+    - quote: Before submitting applications, I analyzed my resume with ResumAI and improved it based on the AI suggestions. It made a noticeable difference in recruiter responses.
+      user:
+        name: Rachel Kim
+        description: Frontend Developer
+        avatar:
+          src: https://i.pravatar.cc/120?img=10
+cta:
+  title: Ready to make smarter hiring decisions?
+  description: Join recruiters and professionals using ResumAI to analyze resumes, match candidates, and get AI-powered insights in minutes.
+  links:
+    - label: Start analyzing
+      to: '/dashboard'
+      trailingIcon: i-lucide-arrow-right
