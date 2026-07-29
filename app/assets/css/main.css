@@ -4,19 +4,80 @@
 @source "../../../content/**/*";
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
+  /* Fonts */
+  --font-sans: "Public Sans", sans-serif;
 
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
-  --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
+  --color-indigo-50: #F5F4FF;
+  --color-indigo-100: #ECEAFF;
+  --color-indigo-200: #DDD9FF;
+  --color-indigo-300: #C4BCFF;
+  --color-indigo-400: #A69AFF;
+  --color-indigo-500: #5E5CE6;
+  --color-indigo-600: #4D4AD4;
+  --color-indigo-700: #3E3CB8;
+  --color-indigo-800: #31308F;
+  --color-indigo-900: #242568;
+  --color-indigo-950: #15163C;
+
+  --color-sky-50: #F0FBFF;
+  --color-sky-100: #DCF7FF;
+  --color-sky-200: #B8EFFF;
+  --color-sky-300: #8AE5FF;
+  --color-sky-400: #64D2FF;
+  --color-sky-500: #41BDF2;
+  --color-sky-600: #2198D4;
+  --color-sky-700: #1679AB;
+  --color-sky-800: #105B82;
+  --color-sky-900: #0C425D;
+  --color-sky-950: #072535;
+
+  --color-emerald-50: #EEFFF5;
+  --color-emerald-100: #D6FFE7;
+  --color-emerald-200: #AFFFCE;
+  --color-emerald-300: #7AF0A8;
+  --color-emerald-400: #4BDD7F;
+  --color-emerald-500: #30D158;
+  --color-emerald-600: #22B94A;
+  --color-emerald-700: #1A953D;
+  --color-emerald-800: #166F31;
+  --color-emerald-900: #125126;
+  --color-emerald-950: #082D14;
+
+  --color-amber-50: #FFF8EB;
+  --color-amber-100: #FFF0C7;
+  --color-amber-200: #FFE08D;
+  --color-amber-300: #FFD055;
+  --color-amber-400: #FFBB26;
+  --color-amber-500: #FF9F0A;
+  --color-amber-600: #E08400;
+  --color-amber-700: #B86800;
+  --color-amber-800: #8F5100;
+  --color-amber-900: #6B3D00;
+  --color-amber-950: #3B2100;
+
+  --color-red-50: #FFF2F2;
+  --color-red-100: #FFE2E1;
+  --color-red-200: #FFC8C5;
+  --color-red-300: #FFA19A;
+  --color-red-400: #FF7268;
+  --color-red-500: #FF453A;
+  --color-red-600: #E1362A;
+  --color-red-700: #B72A22;
+  --color-red-800: #8D211B;
+  --color-red-900: #681814;
+  --color-red-950: #390C0A;
+
+  --color-neutral-50: #FCFCFD;
+  --color-neutral-100: #F7F8FA;
+  --color-neutral-200: #EFF1F4;
+  --color-neutral-300: #E2E5EA;
+  --color-neutral-400: #C9CED6;
+  --color-neutral-500: #A0A8B4;
+  --color-neutral-600: #757F8F;
+  --color-neutral-700: #56606F;
+  --color-neutral-800: #3A4451;
+  --color-neutral-900: #1F2937;
+  --color-neutral-950: #0F1115;
 }
 
 .dark {

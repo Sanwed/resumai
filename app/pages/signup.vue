@@ -1,60 +1,129 @@
 <script setup lang="ts">
-import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+  import * as z from 'zod';
+  import type { FormSubmitEvent } from '@nuxt/ui';
+  import { authClient } from '~/lib/auth-client';
+  import { MIN_PASSWORD_LENGTH } from '~/constants';
 
-definePageMeta({
-  layout: 'auth'
-})
+  definePageMeta({
+    layout: 'auth',
+  });
 
-useSeoMeta({
-  title: 'Sign up',
-  description: 'Create an account to get started'
-})
+  useSeoMeta({
+    title: 'Sign up',
+    description: 'Create an account to get started',
+  });
 
-const toast = useToast()
+  const toast = useToast();
 
-const fields = [{
-  name: 'name',
-  type: 'text' as const,
-  label: 'Name',
-  placeholder: 'Enter your name'
-}, {
-  name: 'email',
-  type: 'text' as const,
-  label: 'Email',
-  placeholder: 'Enter your email'
-}, {
-  name: 'password',
-  label: 'Password',
-  type: 'password' as const,
-  placeholder: 'Enter your password'
-}]
+  const fields = [
+    {
+      name: 'name',
+      type: 'text' as const,
+      label: 'Name',
+      placeholder: 'Enter your name',
+      required: true,
+    },
+    {
+      name: 'email',
+      type: 'text' as const,
+      label: 'Email',
+      placeholder: 'Enter your email',
+      required: true,
+    },
+    {
+      name: 'password',
+      label: 'Password',
+      type: 'password' as const,
+      placeholder: 'Enter your password',
+      required: true,
+    },
+  ];
 
-const providers = [{
-  label: 'Google',
-  icon: 'i-simple-icons-google',
-  onClick: () => {
-    toast.add({ title: 'Google', description: 'Login with Google' })
+  const providers = [
+    {
+      icon: 'i-simple-icons-github',
+      square: true,
+      'aria-label': 'Sign in by GitHub',
+      size: 'xl' as const,
+      loadingAuto: true,
+      ui: {
+        base: 'w-auto rounded-full m-0',
+      },
+      onClick: async () => {
+        try {
+          await signInWithProvider('github');
+        } catch (error) {
+          handleApiError(error, toast);
+        }
+      },
+    },
+    {
+      icon: 'i-simple-icons-google',
+      square: true,
+      'aria-label': 'Sign in by GitHub',
+      size: 'xl' as const,
+      loadingAuto: true,
+      ui: {
+        base: 'w-auto rounded-full m-0',
+      },
+      onClick: async () => {
+        try {
+          await signInWithProvider('github');
+        } catch (error) {
+          handleApiError(error, toast);
+        }
+      },
+    },
+    {
+      icon: 'i-simple-icons-linkedin',
+      square: true,
+      'aria-label': 'Sign in by LinkedIn',
+      size: 'xl' as const,
+      loadingAuto: true,
+      ui: {
+        base: 'w-auto rounded-full m-0',
+      },
+      onClick: async () => {
+        try {
+          await signInWithProvider('linkedin');
+        } catch (error) {
+          handleApiError(error, toast);
+        }
+      },
+    },
+  ];
+
+  const schema = z.object({
+    name: z.string({ error: 'Name is required' }).min(1, 'Name is required'),
+    email: z.email('Invalid email'),
+    password: z
+      .string({ error: 'Password required' })
+      .min(MIN_PASSWORD_LENGTH, `Password must contain at least ${MIN_PASSWORD_LENGTH} characters`),
+  });
+
+  type Schema = z.output<typeof schema>;
+
+  async function onSubmit(payload: FormSubmitEvent<Schema>) {
+    try {
+      await authClient.signUp.email({
+        name: payload.data.name,
+        email: payload.data.email,
+        password: payload.data.password,
+        callbackURL: '/dashboard',
+        fetchOptions: {
+          onError: (error) => {
+            toast.add({
+              description: error.error.message,
+              icon: 'i-lucide-circle-x',
+              color: 'error',
+            });
+          },
+        },
+      });
+    } catch (error) {
+      handleApiError(error, toast);
+    }
   }
-}, {
-  label: 'GitHub',
-  icon: 'i-simple-icons-github',
-  onClick: () => {
-    toast.add({ title: 'GitHub', description: 'Login with GitHub' })
-  }
-}]
-
-const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.email('Invalid email'),
-  password: z.string().min(8, 'Must be at least 8 characters')
-})
-
-type Schema = z.output<typeof schema>
-
-function onSubmit(payload: FormSubmitEvent<Schema>) {
-  console.log('Submitted', payload)
-}
 </script>
 
 <template>
@@ -64,20 +133,17 @@ function onSubmit(payload: FormSubmitEvent<Schema>) {
     :providers="providers"
     title="Create an account"
     :submit="{ label: 'Create account' }"
+    loading-auto
+    icon="i-lucide-log-in"
+    :ui="{ providers: 'flex items-center gap-2 justify-center' }"
     @submit="onSubmit"
   >
     <template #description>
-      Already have an account? <ULink
-        to="/login"
-        class="text-primary font-medium"
-      >Login</ULink>.
+      Already have an account? <ULink to="/login" class="text-primary font-medium">Login</ULink>.
     </template>
 
     <template #footer>
-      By signing up, you agree to our <ULink
-        to="/"
-        class="text-primary font-medium"
-      >Terms of Service</ULink>.
+      By signing up, you agree to our <ULink to="/terms" class="text-primary font-medium">Terms of Service</ULink>.
     </template>
   </UAuthForm>
 </template>

@@ -17,7 +17,9 @@
   <div v-if="page">
     <UPageHero :title="page.title" :description="page.description" :links="page.hero.links" class="relative">
       <template #top>
-        <div class="bg-linear-to-b from-primary/20 to-transparent h-40 w-full absolute top-0" />
+        <div
+          class="bg-radial to-transparent from-primary/20 dark:from-primary/30 pointer-events-none h-full max-h-screen w-full absolute top-0"
+        />
       </template>
 
       <template #title>

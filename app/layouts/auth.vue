@@ -1,19 +1,23 @@
+<script lang="ts" setup>
+  const route = useRoute();
+
+  const backRoute = computed(() => route.meta.backRoute ?? '/');
+</script>
+
 <template>
-  <div class="h-screen flex items-center justify-center px-4">
+  <UMain class="h-screen flex items-center justify-center px-4">
     <UButton
       icon="i-lucide-chevron-left"
-      to="/"
+      aria-label="Вернуться назад"
+      :to="backRoute"
       size="xl"
       color="neutral"
       variant="subtle"
       class="absolute left-8 top-8 rounded-full z-10"
     />
 
-    <UPageCard
-      variant="subtle"
-      class="max-w-sm w-full"
-    >
+    <UPageCard variant="subtle" class="max-w-sm w-full">
       <slot />
     </UPageCard>
-  </div>
+  </UMain>
 </template>

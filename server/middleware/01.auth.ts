@@ -1,10 +1,17 @@
 import { auth } from '~/lib/auth';
 
+const protectedPrefixes: string[] = [];
+
 export default defineEventHandler(async (event) => {
+  const isProtected = protectedPrefixes.some((prefix) => event.path.startsWith(prefix));
+
+  if (!isProtected) return;
+
   const session = await auth.api.getSession({ headers: event.headers });
 
-  if (!session?.user) {
+  if (!session) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
   }
-  return { user: session.user };
+
+  event.context.user = session.user;
 });
