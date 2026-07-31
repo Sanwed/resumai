@@ -79,7 +79,7 @@ model Project {
   userId      String
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   files       ProjectFile[]
-  color       ProjectColor
+  color       ProjectColor  @default(grey)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   Analysis    Analysis[]

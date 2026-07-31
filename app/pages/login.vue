@@ -5,6 +5,7 @@
 
   definePageMeta({
     layout: 'auth',
+    middleware: 'auth',
   });
 
   useSeoMeta({
@@ -127,6 +128,7 @@
     :schema="schema"
     :providers="providers"
     loading-auto
+    loading-icon="i-lucide-loader"
     title="Login to your account"
     icon="i-lucide-log-in"
     :ui="{ providers: 'flex items-center gap-2 justify-center' }"

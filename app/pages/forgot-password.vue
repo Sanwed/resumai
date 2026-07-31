@@ -56,6 +56,7 @@
     title="Forgot your password?"
     :submit="{ label: 'Get reset link' }"
     loading-auto
+    loading-icon="i-lucide-loader"
     icon="i-lucide-rotate-ccw"
     @submit="onSubmit"
   >

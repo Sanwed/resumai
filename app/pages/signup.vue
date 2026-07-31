@@ -6,6 +6,7 @@
 
   definePageMeta({
     layout: 'auth',
+    middleware: 'auth',
   });
 
   useSeoMeta({
@@ -134,6 +135,7 @@
     title="Create an account"
     :submit="{ label: 'Create account' }"
     loading-auto
+    loading-icon="i-lucide-loader"
     icon="i-lucide-log-in"
     :ui="{ providers: 'flex items-center gap-2 justify-center' }"
     @submit="onSubmit"

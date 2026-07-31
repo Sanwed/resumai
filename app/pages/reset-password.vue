@@ -59,6 +59,7 @@
     :schema="schema"
     title="Reset password"
     loading-auto
+    loading-icon="i-lucide-loader"
     icon="i-lucide-rotate-ccw"
     @submit="onSubmit"
   >

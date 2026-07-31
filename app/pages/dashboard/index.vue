@@ -1,9 +1,16 @@
 <script lang="ts" setup>
   import { authClient } from '~/lib/auth-client';
 
-  definePageMeta({ middleware: 'auth' });
+  definePageMeta({ layout: 'dashboard', middleware: 'auth' });
 
-  const { data: session } = await authClient.useSession(useAuthFetch);
+  useSeoMeta({
+    title: 'Dashboard',
+    ogTitle: 'Dashboard',
+    description:
+      'Manage your recruitment projects, analyze resumes, compare candidates, and review AI-powered hiring insights.',
+    ogDescription:
+      'Manage your recruitment projects, analyze resumes, compare candidates, and review AI-powered hiring insights.',
+  });
 
   const logout = async () => {
     await authClient.signOut({

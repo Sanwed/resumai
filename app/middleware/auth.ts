@@ -1,8 +1,17 @@
 import { authClient } from '~/lib/auth-client';
 
-export default defineNuxtRouteMiddleware(async () => {
+const authRoutes = ['/login', '/signup'];
+
+export default defineNuxtRouteMiddleware(async (to) => {
   const { data: session } = await authClient.useSession(useAuthFetch);
-  if (!session.value) {
-    return navigateTo({ path: '/login/' });
+
+  const isAuthRoute = authRoutes.some((route) => to.path.startsWith(route));
+
+  if (isAuthRoute && session.value) {
+    return navigateTo('/dashboard');
+  }
+
+  if (!session.value && !isAuthRoute) {
+    return navigateTo('/login');
   }
 });

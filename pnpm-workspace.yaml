@@ -5,8 +5,8 @@ allowBuilds:
   esbuild: false
   unrs-resolver: false
   vue-demi: false
-  '@prisma/engines': set this to true or false
-  prisma: set this to true or false
+  '@prisma/engines': true
+  prisma: true
 
 overrides:
   h3: 1.15.11
