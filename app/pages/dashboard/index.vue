@@ -33,6 +33,10 @@
       </UDashboardNavbar>
     </template>
 
-    <template #body> Dashboard </template>
+    <template #body>
+      <div class="size-full flex items-center justify-center">
+        <p class="text-lg">Create or choose existing project on the sidebar</p>
+      </div>
+    </template>
   </UDashboardPanel>
 </template>

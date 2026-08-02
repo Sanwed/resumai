@@ -8,7 +8,7 @@
   <UMain class="h-screen flex items-center justify-center px-4">
     <UButton
       icon="i-lucide-chevron-left"
-      aria-label="Вернуться назад"
+      aria-label="Go back"
       :to="backRoute"
       size="xl"
       color="neutral"

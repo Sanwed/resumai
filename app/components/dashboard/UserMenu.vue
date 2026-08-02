@@ -7,20 +7,21 @@
   };
   defineProps<Props>();
 
-  const { data: session } = await authClient.useSession(useAuthFetch);
+  const session = authClient.useSession();
 
   const items = computed<DropdownMenuItem[][]>(() => [
     [
       {
         type: 'label',
-        label: session.value?.user.name,
-        avatar: { src: session.value?.user.image ?? undefined },
+        label: session.value.data?.user.name,
+        avatar: { src: session.value.data?.user.image ?? '/avatar-placeholder.png' },
       },
     ],
     [
       {
         label: 'Profile',
-        icon: 'i-lucide-user',
+        icon: 'i-lucide-settings',
+        to: '/profile',
       },
       {
         label: 'Billing',
@@ -63,8 +64,8 @@
     :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
   >
     <UButton
-      :avatar="{ src: session?.user.image ?? undefined }"
-      :label="collapsed ? undefined : session?.user.name"
+      :avatar="{ src: session.data?.user.image ?? '/avatar-placeholder.png' }"
+      :label="collapsed ? undefined : session.data?.user.name"
       :trailing-icon="collapsed ? undefined : 'i-lucide-chevrons-up-down'"
       color="neutral"
       variant="ghost"

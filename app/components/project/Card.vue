@@ -231,7 +231,7 @@
     v-model="deleteConfirmationOpen"
     title="Delete project"
     :loading="loading"
-    description="Are you sure you want to delete this project. This action can be reverted"
+    description="Are you sure you want to delete this project. This action can not be reverted"
     :action="{ color: 'error', label: 'Delete' }"
     @submit="onDelete"
   />

@@ -37,10 +37,14 @@
       <UIcon name="i-lucide-circle-x" size="30" />
       <p class="text-lg">{{ error.statusMessage }}</p>
     </div>
-    <div v-else-if="!projects?.length" class="h-60 w-full flex items-center justify-center flex-col gap-2 text-muted">
-      <UIcon name="i-lucide-folder-x" size="30" />
-      <p class="text-lg">Projects not found</p>
-    </div>
+    <template v-else-if="!projects?.length">
+      <ProjectButtonCreate :collapsed="collapsed" />
+
+      <div class="h-60 w-full flex items-center justify-center flex-col gap-2 text-muted">
+        <UIcon name="i-lucide-folder-x" size="30" />
+        <p class="text-lg">Projects not found</p>
+      </div>
+    </template>
     <div v-else class="flex flex-col gap-4">
       <ProjectButtonCreate :collapsed="collapsed" />
       <UNavigationMenu

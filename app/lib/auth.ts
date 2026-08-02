@@ -18,6 +18,48 @@ const auth = betterAuth({
   advanced: {
     cookiePrefix: 'resumai',
   },
+  logger: {
+    level: 'debug',
+  },
+  user: {
+    deleteUser: {
+      enabled: true,
+      sendDeleteAccountVerification: async ({ user, url }) => {
+        void resend.emails.send({
+          from: 'onboarding@resend.dev',
+          to: user.email,
+          subject: 'Account deletion',
+          text: `Click the link to permanently delete your account. After this action the changes can not be undone and you can lose all data on this account - ${url}`,
+        });
+      },
+    },
+    changeEmail: {
+      enabled: true,
+      sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
+        void resend.emails.send({
+          from: 'onboarding@resend.dev',
+          to: user.email,
+          subject: 'Approve email change',
+          text: `Click the link to approve the change to ${newEmail}: ${url}`,
+        });
+      },
+    },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      void resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: user.email,
+        subject: 'Verification letter',
+        text: `Click <a href="${url}">here</a> to verify your email.`,
+      });
+    },
+  },
+  account: {
+    accountLinking: {
+      allowDifferentEmails: true,
+    },
+  },
   emailAndPassword: {
     enabled: true,
     revokeSessionsOnPasswordReset: true,

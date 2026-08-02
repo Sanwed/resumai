@@ -2,13 +2,13 @@ import { isAPIError } from 'better-auth/api';
 import { authClient } from '~/lib/auth-client';
 
 type Provider = 'github' | 'google' | 'linkedin';
-export const signInWithProvider = async (provider: Provider, errorCallbackURL = '/login') => {
+export async function signInWithProvider(provider: Provider, errorCallbackURL = '/login') {
   await authClient.signIn.social({
     provider,
     callbackURL: '/dashboard',
     errorCallbackURL: errorCallbackURL,
   });
-};
+}
 
 export function handleApiError(error: unknown, toast: ReturnType<typeof useToast>) {
   if (isAPIError(error)) {
@@ -19,4 +19,8 @@ export function handleApiError(error: unknown, toast: ReturnType<typeof useToast
       color: 'error',
     });
   }
+}
+
+export function createObjectUrl(file: File): string {
+  return URL.createObjectURL(file);
 }
