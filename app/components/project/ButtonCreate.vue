@@ -2,6 +2,11 @@
   import type { FetchError } from 'ofetch';
   import type { Project } from '~/generated/prisma/client';
 
+  type Props = {
+    collapsed?: boolean;
+  };
+  defineProps<Props>();
+
   const { create } = useProject();
 
   const { data: projects } = useNuxtData<Project[]>('projects');
@@ -28,12 +33,12 @@
 
 <template>
   <UButton
-    label="Create new"
+    :label="collapsed ? undefined : 'Create new'"
     loading-auto
     loading-icon="i-lucide-loader"
     leading-icon="i-lucide-plus"
     type="button"
-    class="w-max"
+    :class="['w-max', { 'rounded-full': collapsed }]"
     @click="onCreate"
   />
 </template>

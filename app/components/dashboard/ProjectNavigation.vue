@@ -41,21 +41,23 @@
       <UIcon name="i-lucide-folder-x" size="30" />
       <p class="text-lg">Projects not found</p>
     </div>
-    <UNavigationMenu
-      v-else
-      :collapsed="collapsed"
-      :items="linkProjects"
-      orientation="vertical"
-      :ui="{
-        root: '[&>div]:w-full',
-        list: 'w-full',
-        item: 'w-full mb-4',
-        link: 'p-0 bg-neutral-100 border border-neutral-400 hover:bg-primary-100 hover:border-primary-400 hover:text-primary focus-visible:bg-primary-100 focus-visible:border-primary-400 focus-visible:before:outline-0 focus-visible:text-primary rounded-lg',
-      }"
-    >
-      <template #item="{ item }">
-        <ProjectCard :project-id="item.id" :icon="item.icon" />
-      </template>
-    </UNavigationMenu>
+    <div v-else class="flex flex-col gap-4">
+      <ProjectButtonCreate :collapsed="collapsed" />
+      <UNavigationMenu
+        :collapsed="collapsed"
+        :items="linkProjects"
+        orientation="vertical"
+        :ui="{
+          root: '[&>div]:w-full',
+          list: 'w-full',
+          item: 'w-full mb-4',
+          link: 'p-0 bg-neutral-100 border border-neutral-400 hover:bg-primary-100 hover:border-primary-400 hover:text-primary focus-visible:bg-primary-100 focus-visible:border-primary-400 focus-visible:before:outline-0 focus-visible:text-primary rounded-lg',
+        }"
+      >
+        <template #item="{ item }">
+          <ProjectCard :project-id="item.id" :icon="item.icon" :collapsed="collapsed" />
+        </template>
+      </UNavigationMenu>
+    </div>
   </div>
 </template>

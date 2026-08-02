@@ -2,7 +2,7 @@
   const toast = useToast();
 
   onMounted(async () => {
-    const cookie = useCookie('cookie-consent');
+    const cookie = useCookie('cookie-consent', { maxAge: 60 * 60 * 24 * 30 });
     if (cookie.value === 'accepted') {
       return;
     }

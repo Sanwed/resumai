@@ -9,6 +9,7 @@
   type Props = {
     projectId: string;
     icon?: string;
+    collapsed?: boolean;
   };
 
   const props = defineProps<Props>();
@@ -146,6 +147,7 @@
       {
         label: 'Rename',
         icon: 'i-lucide-pen',
+        disabled: props.collapsed,
         onSelect: () => {
           contextOpen.value = false;
           editMode.value = true;
@@ -177,23 +179,32 @@
 <template>
   <UContextMenu v-model:open="contextOpen" :items="contextMenuItems" :ui="{ content: 'min-w-45' }">
     <template #default>
-      <div class="flex items-center gap-2 w-full py-4 px-4">
-        <UIcon size="20" :name="icon" :class="[currentProject ? projectColorsClasses[currentProject.color] : '']" />
-        <UForm v-if="editMode" ref="editForm" :schema="projectUpdateSchema" :state="editState" @submit="onSubmit">
-          <UFormField name="name">
-            <UInput
-              ref="editInput"
-              v-model="editState.name"
-              size="xs"
-              :loading="loading"
-              loading-icon="i-lucide-loader"
-              :default-value="currentProject?.name"
-              @blur="onBlur"
-            />
-          </UFormField>
-        </UForm>
-        <span v-else class="text-base">{{ currentProject?.name }}</span>
-      </div>
+      <UTooltip
+        :delay-duration="0"
+        :disabled="!collapsed"
+        :text="currentProject?.name"
+        :content="{ align: 'center', side: 'right' }"
+      >
+        <div :class="['flex items-center gap-2 w-full', { 'p-4': !collapsed, 'p-1 justify-center': collapsed }]">
+          <UIcon size="20" :name="icon" :class="[currentProject ? projectColorsClasses[currentProject.color] : '']" />
+          <template v-if="!collapsed">
+            <UForm v-if="editMode" ref="editForm" :schema="projectUpdateSchema" :state="editState" @submit="onSubmit">
+              <UFormField name="name">
+                <UInput
+                  ref="editInput"
+                  v-model="editState.name"
+                  size="xs"
+                  :loading="loading"
+                  loading-icon="i-lucide-loader"
+                  :default-value="currentProject?.name"
+                  @blur="onBlur"
+                />
+              </UFormField>
+            </UForm>
+            <span v-else class="text-base">{{ currentProject?.name }}</span>
+          </template>
+        </div>
+      </UTooltip>
     </template>
 
     <template #colors>

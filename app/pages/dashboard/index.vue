@@ -24,7 +24,15 @@
 </script>
 
 <template>
-  <div>
-    <UButton label="Logout" @click="logout" />
-  </div>
+  <UDashboardPanel id="home">
+    <template #header>
+      <UDashboardNavbar title="Home" :ui="{ right: 'gap-3' }">
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+      </UDashboardNavbar>
+    </template>
+
+    <template #body> Dashboard </template>
+  </UDashboardPanel>
 </template>

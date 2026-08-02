@@ -5,18 +5,19 @@
 <template>
   <UDashboardGroup unit="rem">
     <UDashboardSidebar v-model:open="open" collapsible :default-size="20">
-      <template #header>
+      <template #header="{ collapsed }">
         <NuxtLink to="/dashboard" class="hover:text-primary focus-visible:text-primary transition-colors">
-          <AppLogo class="h-10 max-w-full" />
+          <AppLogo :collapsed="collapsed" class="h-10 max-w-full" />
         </NuxtLink>
       </template>
 
       <template #default="{ collapsed }">
         <UDashboardSearchButton :collapsed="collapsed" />
-
-        <ProjectButtonCreate />
-
         <DashboardProjectNavigation :collapsed="collapsed" />
+      </template>
+
+      <template #footer="{ collapsed }">
+        <DashboardUserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
 
