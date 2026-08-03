@@ -3,7 +3,6 @@ import type { Project } from '~/generated/prisma/client';
 import type { projectUpdateSchema, projectCreateSchema } from '~/types/schema';
 
 export function useProject() {
-  const selectedProjectId = useState<string | undefined>('project', undefined);
   const loading = ref(false);
 
   const update = async (projectId: string, body: Partial<z.infer<typeof projectUpdateSchema>>) => {
@@ -63,5 +62,5 @@ export function useProject() {
     }
   };
 
-  return { selectedProjectId, loading, update, create, remove };
+  return { loading, update, create, remove };
 }

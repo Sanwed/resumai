@@ -127,6 +127,7 @@
       if (projects.value) {
         projects.value = projects.value.filter((p) => p.id !== deleted?.id);
       }
+      deleteConfirmationOpen.value = false;
     } catch (e) {
       const error = e as FetchError;
       toast.add({
