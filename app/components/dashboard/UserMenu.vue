@@ -53,6 +53,15 @@
         label: 'Log out',
         icon: 'i-lucide-log-out',
         color: 'error',
+        onSelect: async () => {
+          await authClient.signOut({
+            fetchOptions: {
+              onSuccess: () => {
+                navigateTo('/login');
+              },
+            },
+          });
+        },
       },
     ],
   ]);
