@@ -15,6 +15,12 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+    },
+  },
+
   css: ['~/assets/css/main.css'],
 
   content: {

@@ -10,9 +10,6 @@
       { key: 'theme-color', name: 'theme-color', content: color },
     ],
     link: [{ rel: 'icon', href: '/favicon.ico' }],
-    htmlAttrs: {
-      lang: 'en',
-    },
   });
 
   useSeoMeta({

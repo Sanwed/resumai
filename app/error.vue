@@ -7,12 +7,6 @@
 
   defineProps<Props>();
 
-  useHead({
-    htmlAttrs: {
-      lang: 'en',
-    },
-  });
-
   useSeoMeta({
     title: 'Page not found',
     description: 'We are sorry but this page could not be found.',

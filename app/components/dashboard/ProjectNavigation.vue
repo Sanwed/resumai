@@ -55,7 +55,7 @@
           root: '[&>div]:w-full',
           list: 'w-full',
           item: 'w-full mb-4',
-          link: 'p-0 bg-neutral-100 border border-neutral-400 hover:bg-primary-100 hover:border-primary-400 hover:text-primary focus-visible:bg-primary-100 focus-visible:border-primary-400 focus-visible:before:outline-0 focus-visible:text-primary rounded-lg',
+          link: 'p-0 bg-neutral-100 border border-neutral-400 hover:bg-primary-100 hover:border-primary-400 hover:text-primary focus-visible:bg-primary-100 focus-visible:border-primary-400 focus-visible:before:outline-0 focus-visible:text-primary rounded-lg dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:border-neutral-400',
         }"
       >
         <template #item="{ item }">
