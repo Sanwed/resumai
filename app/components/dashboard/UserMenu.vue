@@ -26,6 +26,7 @@
       {
         label: 'Billing',
         icon: 'i-lucide-credit-card',
+        to: '/billing',
       },
       {
         label: 'Home',

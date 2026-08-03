@@ -137,6 +137,21 @@
     }
   };
 
+  const onEllipsisClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const target = event.currentTarget as HTMLElement;
+    target.dispatchEvent(
+      new MouseEvent('contextmenu', {
+        bubbles: true,
+        cancelable: true,
+        clientX: event.clientX,
+        clientY: event.clientY,
+      }),
+    );
+  };
+
   const contextMenuItems = ref<ContextMenuItem[][]>([
     [
       {
@@ -203,6 +218,16 @@
             </UForm>
             <span v-else class="text-base">{{ currentProject?.name }}</span>
           </template>
+          <UButton
+            v-if="!collapsed"
+            variant="ghost"
+            color="neutral"
+            icon="i-lucide-ellipsis-vertical"
+            type="button"
+            aria-label="Open context menu"
+            class="group-hover:text-primary ml-auto"
+            @click="onEllipsisClick"
+          />
         </div>
       </UTooltip>
     </template>

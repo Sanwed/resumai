@@ -22,24 +22,6 @@
     ogSiteName: 'ResumAI',
     robots: 'index, follow',
   });
-
-  const links = [
-    {
-      label: 'Pricing',
-      icon: 'i-lucide-credit-card',
-      to: '/pricing',
-    },
-    {
-      label: 'Blog',
-      icon: 'i-lucide-pencil',
-      to: '/blog',
-    },
-    {
-      label: 'Changelog',
-      icon: 'i-lucide-history',
-      to: '/changelog',
-    },
-  ];
 </script>
 
 <template>
@@ -49,9 +31,5 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-
-    <ClientOnly>
-      <LazyUContentSearch shortcut="meta_k" :links="links" :fuse="{ resultLimit: 42 }" />
-    </ClientOnly>
   </UApp>
 </template>
