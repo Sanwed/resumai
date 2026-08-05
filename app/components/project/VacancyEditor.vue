@@ -40,13 +40,10 @@
 
   const onSave = async () => {
     try {
-      await update(props.projectId, { vacancyText: currentText.value });
+      const updated = await update(props.projectId, { vacancyText: currentText.value });
 
-      if (projects.value) {
-        const index = projects.value.findIndex((p) => p.id === props.projectId);
-        if (index !== -1 && projects.value[index]) {
-          projects.value[index] = { ...projects.value[index], vacancyText: currentText.value };
-        }
+      if (projects.value && updated) {
+        projects.value = projects.value.map((p) => (p.id === props.projectId ? updated : p));
       }
 
       prevText.value = currentText.value;

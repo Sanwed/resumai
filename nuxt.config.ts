@@ -28,6 +28,10 @@ export default defineNuxtConfig({
     },
   },
 
+  runtimeConfig: {
+    aiGatewayApiKey: '',
+  },
+
   routeRules: {
     '/privacy': { redirect: '/privacy/introduction', prerender: false },
     '/terms': { redirect: '/terms/acceptance-of-terms', prerender: false },

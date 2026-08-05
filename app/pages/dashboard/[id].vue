@@ -49,6 +49,7 @@
         </div>
         <ProjectFileUpload
           :project-id="currentProject.id"
+          :has-vacancy-text="!currentProject.vacancyText"
           :loading="loading"
           :error="error"
           class="self-start sticky top-0"

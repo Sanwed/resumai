@@ -11,6 +11,7 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@ai-sdk/vue": "^4.0.51",
     "@better-auth/prisma-adapter": "^1.6.25",
     "@iconify-json/lucide": "^1.2.120",
     "@iconify-json/simple-icons": "^1.2.92",
@@ -25,6 +26,7 @@
     "@takumi-rs/core": "^1.8.7",
     "@vercel/blob": "^2.6.1",
     "@vueuse/nuxt": "^14.3.0",
+    "ai": "^7.0.51",
     "better-auth": "^1.6.25",
     "md-editor-v3": "^6.5.5",
     "nuxt": "^4.4.8",
@@ -48,5 +50,5 @@
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.8"
   },
-  "packageManager": "pnpm@11.17.0"
+  "packageManager": "pnpm@11.20.0"
 }

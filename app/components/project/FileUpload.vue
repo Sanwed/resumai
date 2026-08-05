@@ -7,6 +7,7 @@
     projectId: string;
     loading?: boolean;
     error?: FetchError;
+    hasVacancyText?: boolean;
   };
   const props = defineProps<Props>();
 
@@ -119,7 +120,7 @@
     <UFileUpload
       v-model="files"
       multiple
-      :disabled="loading || fileLoading"
+      :disabled="hasVacancyText || loading || fileLoading"
       label="Click or drop your files"
       :description="`${Object.keys(AvailableFileFormats).join(', ')} (max ${MAX_RESUME_FILE_SIZE / 1024 ** 2}MB)`"
       size="lg"
