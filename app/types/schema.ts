@@ -19,7 +19,7 @@ export const projectCreateSchema = projectSchema.pick({ name: true }).extend({
 });
 
 export const projectUpdateSchema = projectSchema
-  .pick({ name: true, color: true })
+  .pick({ name: true, color: true, vacancyText: true })
   .partial()
   .extend({
     name: z
@@ -27,6 +27,7 @@ export const projectUpdateSchema = projectSchema
       .min(1, 'Enter project name')
       .max(255, 'Max characters limit exceeded')
       .optional(),
+    vacancyText: z.string().optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
     message: 'At least one field must be provided',

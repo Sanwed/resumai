@@ -24,3 +24,32 @@ export function handleApiError(error: unknown, toast: ReturnType<typeof useToast
 export function createObjectUrl(file: File): string {
   return URL.createObjectURL(file);
 }
+
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+
+  const kb = bytes / 1024;
+  if (kb < 1024) {
+    return `${kb.toFixed(1)} KB`;
+  }
+
+  const mb = kb / 1024;
+  return `${mb.toFixed(1)} MB`;
+}
+
+export function parseExperienceDuration(value: number): string {
+  let years = Math.trunc(value);
+
+  const decimalPart = value.toFixed(2).split('.')[1]?.replace(/0+$/, '');
+
+  let months = decimalPart ? Number(decimalPart) : 0;
+
+  if (months >= 12) {
+    years += Math.floor(months / 12);
+    months = months % 12;
+  }
+
+  return `${years} y, ${months} mon`;
+}

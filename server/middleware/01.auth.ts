@@ -1,6 +1,6 @@
 import { auth } from '~/lib/auth';
 
-const protectedPrefixes: string[] = ['/api/project', '/api/upload'];
+const protectedPrefixes: string[] = ['/api/project', '/api/upload', '/api/file'];
 
 export default defineEventHandler(async (event) => {
   const isProtected = protectedPrefixes.some((prefix) => event.path.startsWith(prefix));

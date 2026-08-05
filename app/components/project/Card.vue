@@ -10,6 +10,7 @@
     projectId: string;
     icon?: string;
     collapsed?: boolean;
+    active?: boolean;
   };
 
   const props = defineProps<Props>();
@@ -75,7 +76,7 @@
     red: { textClass: 'text-error', uiColor: 'bg-error ring-error' },
     blue: { textClass: 'text-primary', uiColor: 'bg-primary ring-primary' },
     green: { textClass: 'text-success', uiColor: 'bg-success ring-success' },
-    grey: { textClass: 'text-neutral', uiColor: 'bg-neutral-500 ring-neutral-300' },
+    grey: { textClass: 'text-neutral-600', uiColor: 'bg-neutral-500 ring-neutral-300' },
     orange: { textClass: 'text-warning', uiColor: 'bg-warning ring-warning' },
     purple: { textClass: 'text-purple-500', uiColor: 'bg-purple-500 ring-purple-300' },
     yellow: { textClass: 'text-yellow-500', uiColor: 'bg-yellow-500 ring-yellow-300' },
@@ -201,7 +202,12 @@
         :text="currentProject?.name"
         :content="{ align: 'center', side: 'right' }"
       >
-        <div :class="['flex items-center gap-2 w-full', { 'p-4': !collapsed, 'p-1 justify-center': collapsed }]">
+        <div
+          :class="[
+            'flex items-center gap-2 w-full rounded-lg',
+            { 'p-4': !collapsed, 'p-1 justify-center': collapsed, 'bg-primary-100': active },
+          ]"
+        >
           <UIcon size="20" :name="icon" :class="[currentProject ? projectColorsClasses[currentProject.color] : '']" />
           <template v-if="!collapsed">
             <UForm v-if="editMode" ref="editForm" :schema="projectUpdateSchema" :state="editState" @submit="onSubmit">
@@ -226,7 +232,7 @@
             icon="i-lucide-ellipsis-vertical"
             type="button"
             aria-label="Open context menu"
-            class="group-hover:text-primary ml-auto"
+            :class="['group-hover:text-primary ml-auto', { 'text-primary': active }]"
             @click="onEllipsisClick"
           />
         </div>

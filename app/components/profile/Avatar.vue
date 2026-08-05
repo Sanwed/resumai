@@ -20,7 +20,7 @@
     if (newAvatar?.size > MAX_AVATAR_FILE_SIZE) {
       toast.add({
         title: 'Max file size exceeded',
-        description: 'Please, select new file not greater than 2MB',
+        description: `Please, select new file not greater than ${formatFileSize(MAX_AVATAR_FILE_SIZE)}`,
         color: 'error',
       });
       avatarFile.value = null;
@@ -32,7 +32,7 @@
       const formData = new FormData();
       formData.append('file', newAvatar);
 
-      const { url } = await $fetch('/api/upload/avatar', {
+      const url = await $fetch('/api/upload/avatar', {
         method: 'POST',
         body: formData,
       });

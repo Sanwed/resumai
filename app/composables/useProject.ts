@@ -1,5 +1,4 @@
 import type z from 'zod';
-import type { Project } from '~/generated/prisma/client';
 import type { projectUpdateSchema, projectCreateSchema } from '~/types/schema';
 
 export function useProject() {
@@ -52,7 +51,7 @@ export function useProject() {
   const remove = async (projectId: string) => {
     try {
       loading.value = true;
-      const deleted = await $fetch<Project>(`/api/project/${projectId}`, { method: 'DELETE' });
+      const deleted = await $fetch(`/api/project/${projectId}`, { method: 'DELETE' });
 
       return deleted;
     } catch (e) {

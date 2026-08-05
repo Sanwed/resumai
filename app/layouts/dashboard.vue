@@ -1,10 +1,9 @@
 <script lang="ts" setup>
   import type { NavigationMenuItem } from '@nuxt/ui';
-  import type { Project } from '~/generated/prisma/client';
 
   const sidebarOpen = ref(false);
 
-  const { data: projects } = useNuxtData<Project[]>('projects');
+  const { data: projects, pending, error } = await useLazyFetch('/api/project', { key: 'projects' });
 
   const links = [
     {
@@ -82,7 +81,7 @@
 
       <template #default="{ collapsed }">
         <UDashboardSearchButton :collapsed="collapsed" />
-        <DashboardProjectNavigation :collapsed="collapsed" />
+        <DashboardProjectNavigation :collapsed="collapsed" :pending="pending" :error="error" />
       </template>
 
       <template #footer="{ collapsed }">

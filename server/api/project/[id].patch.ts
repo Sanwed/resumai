@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     return updatedProject;
   } catch (error) {
-    console.error('[GET /api/project/:id]', error);
+    console.error('[PATCH /api/project/:id]', error);
 
     throw createError({
       statusCode: 500,

@@ -1,0 +1,40 @@
+export function useFile() {
+  const loading = ref(false);
+
+  const create = async (projectId: string, body: File[]) => {
+    try {
+      loading.value = true;
+
+      const formData = new FormData();
+      for (const file of body) {
+        formData.append('file', file);
+      }
+
+      const files = await $fetch(`/api/file/${projectId}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      return files;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const remove = async (fileId: string) => {
+    try {
+      loading.value = true;
+      const deleted = await $fetch(`/api/file/${fileId}`, { method: 'DELETE' });
+
+      return deleted;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return { loading, create, remove };
+}

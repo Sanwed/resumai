@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', 'md-editor-v3/lib/style.css'],
 
   content: {
     experimental: {

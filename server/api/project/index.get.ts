@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
     return projects;
   } catch (error) {
-    console.error('[PATCH] /api/project]', error);
+    console.error('[GET] /api/project]', error);
 
     throw createError({
       statusCode: 500,

@@ -26,6 +26,7 @@
     "@vercel/blob": "^2.6.1",
     "@vueuse/nuxt": "^14.3.0",
     "better-auth": "^1.6.25",
+    "md-editor-v3": "^6.5.5",
     "nuxt": "^4.4.8",
     "nuxt-og-image": "^6.7.4",
     "pg": "^8.22.0",

@@ -18,11 +18,20 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'File too large' });
   }
 
-  const { url } = await put(`avatar/${event.context.user.id}-${file.filename}`, file.data, {
-    access: 'public',
-    addRandomSuffix: true,
-    contentType: file.type,
-  });
+  try {
+    const { url } = await put(`avatar/${event.context.user.id}-${file.filename}`, file.data, {
+      access: 'public',
+      addRandomSuffix: true,
+      contentType: file.type,
+    });
 
-  return { url };
+    return url;
+  } catch (error) {
+    console.error('[POST] /api/upload/avatar]', error);
+
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to upload avatar',
+    });
+  }
 });
