@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { ProjectColor } from '~/generated/prisma/enums';
+import { AnalysisStatus, ProjectColor } from '~/generated/prisma/enums';
 
 export const projectSchema = z.object({
   name: z.string(),
@@ -57,3 +57,9 @@ export const userUpdateSchema = userSchema
   .refine((data) => Object.keys(data).length > 0, {
     message: 'At least one field must be provided',
   });
+
+export const analysisRealtimeSchema = z.object({
+  fileId: z.string(),
+  status: z.enum(AnalysisStatus),
+  statusMessage: z.string().optional(),
+});

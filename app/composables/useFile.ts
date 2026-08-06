@@ -1,7 +1,11 @@
-export function useFile() {
+import type { ProjectFile } from '~/generated/prisma/client';
+
+export function useFile(projectId: string) {
+  const selectedFileId = useState<string | undefined>(`selected-file-${projectId}`, () => undefined);
+
   const loading = ref(false);
 
-  const create = async (projectId: string, body: File[]) => {
+  const create = async (body: File[]) => {
     try {
       loading.value = true;
 
@@ -36,5 +40,5 @@ export function useFile() {
     }
   };
 
-  return { loading, create, remove };
+  return { selectedFileId, loading, create, remove };
 }

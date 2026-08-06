@@ -15,7 +15,8 @@
 
   const files = ref<File[]>([]);
 
-  const { create, remove, loading: fileLoading } = useFile();
+  const { create, remove, loading: fileLoading, selectedFileId } = useFile(props.projectId);
+  const { create: createAnalysis } = useAnalysis();
 
   const toast = useToast();
 
@@ -27,10 +28,10 @@
       fetchedFiles.value?.map((file) => ({
         id: file.id,
         title: file.filename,
-        titleLower: file.filename.toLowerCase(),
         size: file.size,
         type: file.type,
         url: file.url,
+        active: file.id === selectedFileId.value,
       })) ?? [],
   );
 
@@ -39,7 +40,7 @@
 
     if (!q) return items.value;
 
-    return items.value.filter((item) => item.titleLower.includes(q));
+    return items.value.filter((item) => item.title.toLowerCase().includes(q));
   });
 
   const onChange = async (newFiles: File[] | null | undefined) => {
@@ -80,10 +81,17 @@
     files.value = [...validFiles];
 
     try {
-      const uploaded = await create(props.projectId, files.value);
+      const uploaded = await create(files.value);
 
-      if (fetchedFiles.value) {
-        fetchedFiles.value = [...fetchedFiles.value, ...(uploaded?.map((file) => ({ ...file })) ?? [])];
+      if (fetchedFiles.value && uploaded) {
+        fetchedFiles.value = [...fetchedFiles.value, ...uploaded];
+      }
+
+      if (uploaded) {
+        await createAnalysis(
+          props.projectId,
+          uploaded.map((file) => file.id),
+        );
       }
 
       files.value = [];
@@ -154,7 +162,19 @@
       <UIcon name="i-lucide-loader" size="30" class="animate-spin" />
     </div>
     <UScrollArea v-else v-slot="{ item }" :items="displayedItems" shadow virtualize class="h-full max-h-90">
-      <UCard variant="soft" :ui="{ body: 'sm:p-2 group' }" class="bg-neutral-200 mb-2 relative">
+      <UCard
+        as="button"
+        type="button"
+        variant="soft"
+        :ui="{
+          root: [
+            'text-left bg-neutral-200 mb-2 relative hover:bg-primary-100 focus-visible:bg-primary-100 focus-visible:outline-0 active:bg-primary-200',
+            item.active ? 'bg-primary-100' : '',
+          ],
+          body: 'sm:p-2 group',
+        }"
+        @click="selectedFileId = item.id"
+      >
         <div class="flex items-center gap-2">
           <NuxtImg v-if="item.type.includes('image/')" :src="item.url" alt="" width="20" height="20" class="shrink-0" />
           <UIcon v-else name="i-lucide-file" size="20" class="shrink-0" />
@@ -172,8 +192,8 @@
           loading-icon="i-lucide-loader"
           icon="i-lucide-x"
           type="button"
-          class="absolute top-0 right-0 pointer-events-none opacity-0 transition-opacity group-hover:opacity-100 group-hover:pointer-events-auto"
-          @click="onDelete(item.id)"
+          class="absolute top-0 right-0 pointer-events-none opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 group-hover:pointer-events-auto focus-visible:pointer-events-auto"
+          @click.prevent.stop="onDelete(item.id)"
         />
       </UCard>
     </UScrollArea>

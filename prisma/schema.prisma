@@ -106,8 +106,8 @@ model Analysis {
   fileId                  String      @unique
   file                    ProjectFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
   candidateName           String?
-  compatibility           Int
-  verdict                 String
+  compatibility           Int?
+  verdict                 String?
   strengths               String[]
   gaps                    String[]
   skills                  String[]
@@ -134,4 +134,12 @@ enum ProjectColor {
   blue
   purple
   grey
+}
+
+enum AnalysisStatus {
+  fetching
+  parsing
+  analyzing
+  succeed
+  failed
 }
