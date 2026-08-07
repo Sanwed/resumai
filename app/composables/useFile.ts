@@ -26,7 +26,7 @@ export function useFile(projectId: string) {
     }
   };
 
-  const remove = async (fileId: string) => {
+  const removeOne = async (fileId: string) => {
     try {
       loading.value = true;
       const deleted = await $fetch(`/api/file/${fileId}`, { method: 'DELETE' });
@@ -39,5 +39,23 @@ export function useFile(projectId: string) {
     }
   };
 
-  return { selectedFileId, loading, create, remove };
+  const removeMany = async (fileIds: string[]) => {
+    try {
+      loading.value = true;
+      const deleted = await $fetch(`/api/file/`, {
+        method: 'DELETE',
+        body: {
+          fileIds,
+        },
+      });
+
+      return deleted;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return { selectedFileId, loading, create, removeOne, removeMany };
 }

@@ -8,3 +8,10 @@ export const fileUploaded = eventType('app/file.uploaded', {
     fileId: z.string(),
   }),
 });
+
+export const fileDeleted = eventType('app/file.deleted', {
+  schema: z.object({
+    userId: z.string(),
+    fileId: z.string(),
+  }),
+});

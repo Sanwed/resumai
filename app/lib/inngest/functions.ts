@@ -6,7 +6,17 @@ import { analysisChannel } from './channels';
 import { getDocumentProxy, extractText } from 'unpdf';
 
 export const analyzeResume = inngest.createFunction(
-  { id: 'analyze-resume', name: 'Analyze Resume', triggers: [fileUploaded] },
+  {
+    id: 'analyze-resume',
+    name: 'Analyze Resume',
+    triggers: [fileUploaded],
+    cancelOn: [
+      {
+        event: 'app/file.deleted',
+        if: 'async.data.fileId == event.data.fileId',
+      },
+    ],
+  },
   async ({ event, step }) => {
     const ch = analysisChannel({ projectId: event.data.projectId });
 

@@ -16,7 +16,7 @@
 
   const files = ref<File[]>([]);
 
-  const { create, remove, loading: fileLoading, selectedFileId } = useFile(props.projectId);
+  const { create, removeOne, removeMany, loading: fileLoading, selectedFileId } = useFile(props.projectId);
   const { create: createAnalysis } = useAnalysis();
 
   const toast = useToast();
@@ -49,6 +49,32 @@
 
     return items.value.filter((item) => item.title.toLowerCase().includes(q));
   });
+
+  const selectMode = ref(false);
+  const selectedFileIds = ref<string[]>([]);
+
+  const selectFile = (fileId: string) => {
+    if (!selectMode.value) {
+      selectedFileId.value = fileId;
+      return;
+    }
+
+    const existingId = selectedFileIds.value.findIndex((id) => fileId === id);
+    if (existingId !== -1) {
+      selectedFileIds.value.splice(existingId, 1);
+    } else {
+      selectedFileIds.value.push(fileId);
+    }
+  };
+
+  const toggleSelectMode = (active: boolean) => {
+    if (active) {
+      selectMode.value = false;
+      selectedFileIds.value = [];
+    } else {
+      selectMode.value = true;
+    }
+  };
 
   const onChange = async (newFiles: File[] | null | undefined) => {
     if (!newFiles) return;
@@ -112,9 +138,29 @@
     }
   };
 
+  const deleteMany = async () => {
+    try {
+      const deleted = await removeMany(selectedFileIds.value);
+
+      if (fetchedFiles.value) {
+        fetchedFiles.value = fetchedFiles.value.filter((file) => !deleted?.includes(file.id));
+      }
+
+      selectedFileIds.value = [];
+      selectMode.value = false;
+    } catch (e) {
+      const error = e as FetchError;
+      toast.add({
+        description: error.statusMessage,
+        color: 'error',
+        icon: 'i-lucide-circle-x',
+      });
+    }
+  };
+
   const onDelete = async (fileId: string) => {
     try {
-      const deleted = await remove(fileId);
+      const deleted = await removeOne(fileId);
 
       if (fetchedFiles.value) {
         fetchedFiles.value = fetchedFiles.value.filter((file) => file.id !== deleted?.id);
@@ -166,7 +212,32 @@
       </template>
     </UFileUpload>
     <p class="text-xs text-muted">AI can make mistakes. Please double-check responses.</p>
-    <UInput v-model="search" icon="i-lucide-search" placeholder="Search candidates or files..." class="mb-1" />
+    <div class="flex flex-col gap-1 mb-1">
+      <div class="flex items-center gap-2">
+        <UInput v-model="search" icon="i-lucide-search" placeholder="Search candidates or files..." class="w-full" />
+        <UButton
+          :label="selectMode ? 'Cancel' : 'Select'"
+          variant="soft"
+          type="button"
+          @click="toggleSelectMode(selectMode)"
+        />
+      </div>
+      <div v-if="selectMode" class="flex items-center gap-2">
+        <p class="text-muted text-sm mr-auto">{{ selectedFileIds.length }} files</p>
+        <UButton
+          variant="soft"
+          color="error"
+          icon="i-lucide-trash-2"
+          loading-auto
+          loading-icon="i-lucide-loader"
+          size="xs"
+          square
+          type="button"
+          aria-label="Delete selected files"
+          @click="deleteMany"
+        />
+      </div>
+    </div>
     <div v-if="loading" class="h-20 flex flex-col items-center justify-center">
       <UIcon name="i-lucide-loader" size="30" class="animate-spin" />
     </div>
@@ -179,10 +250,11 @@
           root: [
             'relative w-full text-left bg-neutral-200 mb-2 relative hover:bg-primary-100 focus-visible:bg-primary-100 focus-visible:outline-0 active:bg-primary-200',
             item.active ? 'bg-primary-100' : '',
+            selectedFileIds.includes(item.id) ? 'bg-primary-200' : '',
           ],
           body: 'sm:p-2 group',
         }"
-        @click="selectedFileId = item.id"
+        @click="selectFile(item.id)"
       >
         <div class="flex items-center gap-2">
           <UProgress

@@ -1,3 +1,6 @@
+import { inngest } from '~/lib/inngest/client';
+import { fileDeleted } from '~/lib/inngest/event-types';
+
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
 
@@ -15,6 +18,13 @@ export default defineEventHandler(async (event) => {
         userId: event.context.user.id,
       },
     });
+
+    await inngest.send(
+      fileDeleted.create({
+        userId: event.context.user.id,
+        fileId: deletedFile.id,
+      }),
+    );
 
     return deletedFile;
   } catch (error) {
