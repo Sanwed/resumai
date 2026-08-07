@@ -58,8 +58,35 @@ export const userUpdateSchema = userSchema
     message: 'At least one field must be provided',
   });
 
+export const analysisSchema = z.object({
+  id: z.string(),
+  projectId: z.string(),
+  fileId: z.string(),
+  candidateName: z.string().nullable(),
+  compatibility: z.number().int().nullable(),
+  verdict: z.string().nullable(),
+  strengths: z.array(z.string()),
+  gaps: z.array(z.string()),
+  skills: z.array(z.string()),
+  relevantExperienceYears: z.number().nullable(),
+  redFlags: z.array(z.string()),
+  interviewQuestions: z.array(z.string()),
+  phone: z.string().nullable(),
+  email: z.string().nullable(),
+  linkedin: z.string().nullable(),
+  github: z.string().nullable(),
+  vacancyHash: z.string().nullable(),
+  status: z.enum(AnalysisStatus),
+  statusMessage: z.string().nullable(),
+  progress: z.number().int().nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+
 export const analysisRealtimeSchema = z.object({
   fileId: z.string(),
   status: z.enum(AnalysisStatus),
   statusMessage: z.string().optional(),
+  progress: z.number().optional(),
+  newAnalysis: analysisSchema.optional(),
 });

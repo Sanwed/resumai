@@ -112,6 +112,8 @@
       if (fetchedFiles.value) {
         fetchedFiles.value = fetchedFiles.value.filter((file) => file.id !== deleted?.id);
       }
+
+      selectedFileId.value = undefined;
     } catch (e) {
       const error = e as FetchError;
       toast.add({

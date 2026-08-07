@@ -2,13 +2,10 @@
   import type { NavigationMenuItem } from '@nuxt/ui';
   import type { Analysis } from '~/generated/prisma/client';
   import type { FetchError } from 'ofetch';
-  import type z from 'zod';
-  import type { analysisRealtimeSchema } from '~/types/schema';
 
   type Props = {
     projectId: string;
     loading?: boolean;
-    message?: z.infer<typeof analysisRealtimeSchema>;
     error?: FetchError;
   };
   const props = defineProps<Props>();
@@ -18,9 +15,13 @@
 
   const currentAnalysis = computed(() => analysis.value?.find((el) => el.fileId === selectedFileId.value));
 
-  const currentMessage = computed(() =>
-    currentAnalysis.value?.fileId === props.message?.fileId ? props.message : undefined,
-  );
+  const targetProgress = computed(() => currentAnalysis.value?.progress ?? 0);
+
+  const animatedProgress = useTransition(targetProgress, {
+    duration: 600,
+  });
+
+  const roundedProgress = computed(() => Math.round(animatedProgress.value));
 
   const analysisMock: Analysis = {
     id: crypto.randomUUID(),
@@ -48,6 +49,8 @@
     github: 'https://github.com/example',
     vacancyHash: null,
     status: 'fetching',
+    statusMessage: '',
+    progress: 0,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -119,14 +122,34 @@
         description="Error while fetching analysis"
       />
     </UCard>
-    <UCard v-else-if="currentMessage?.status !== 'succeed'" :ui="{ body: 'sm:p-4' }">
+    <UCard v-else-if="!selectedFileId" :ui="{ body: 'sm:p-4' }">
+      <UEmpty
+        icon="i-lucide-file"
+        size="xl"
+        variant="naked"
+        title="Select file"
+        description="Click on the file on the right sidebar to see analysis results"
+      />
+    </UCard>
+    <UCard v-else-if="!currentAnalysis" :ui="{ body: 'sm:p-4' }">
       <UEmpty
         icon="i-lucide-file"
         loading
         loading-icon="i-lucide-loader"
         size="xl"
         variant="naked"
-        :title="currentMessage?.status"
+        title="Analysis creating"
+      />
+    </UCard>
+    <UCard v-else-if="currentAnalysis.status !== 'succeed'" :ui="{ body: 'sm:p-4' }">
+      <UEmpty
+        icon="i-lucide-file"
+        loading
+        loading-icon="i-lucide-loader"
+        size="xl"
+        variant="naked"
+        :title="currentAnalysis.statusMessage ?? ''"
+        :description="`${roundedProgress}%`"
       />
     </UCard>
     <UCard v-else :ui="{ header: 'sm:py-2 sm:px-4', body: 'sm:p-4', footer: 'bg-muted' }">

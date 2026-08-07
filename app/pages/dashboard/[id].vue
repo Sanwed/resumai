@@ -20,7 +20,7 @@
     key: `project-analysis-${currentProject?.value?.id}`,
   });
 
-  const { message, connect, disconnect } = useRealtimeConnection(currentProject.value?.id ?? '');
+  const { connect, disconnect } = useRealtimeConnection(currentProject.value?.id ?? '');
 
   onMounted(() => {
     connect();
@@ -63,12 +63,7 @@
       <div v-else class="flex gap-4">
         <div class="flex flex-col gap-4 grow">
           <ProjectVacancyEditor :project-id="currentProject.id" :initial-text="currentProject.vacancyText ?? ''" />
-          <ProjectAnalysis
-            :message="message?.data"
-            :project-id="currentProject.id"
-            :loading="loadingAnalysis"
-            :error="errorAnalysis"
-          />
+          <ProjectAnalysis :project-id="currentProject.id" :loading="loadingAnalysis" :error="errorAnalysis" />
         </div>
         <ProjectFileUpload
           :project-id="currentProject.id"
