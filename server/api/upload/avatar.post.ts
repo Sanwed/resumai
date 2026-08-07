@@ -1,5 +1,6 @@
 import { put } from '@vercel/blob';
 import { MAX_AVATAR_FILE_SIZE } from '~/constants';
+import { sanitizeFilename } from '~~/server/utils/files';
 
 export default defineEventHandler(async (event) => {
   const files = await readMultipartFormData(event);
@@ -19,7 +20,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { url } = await put(`avatar/${event.context.user.id}-${file.filename}`, file.data, {
+    const filename = sanitizeFilename(file.filename ?? '');
+    const { url } = await put(`avatar/${event.context.user.id}-${filename}`, file.data, {
       access: 'public',
       addRandomSuffix: true,
       contentType: file.type,

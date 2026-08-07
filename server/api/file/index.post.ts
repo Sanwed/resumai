@@ -1,13 +1,19 @@
 import { del, put } from '@vercel/blob';
+import z from 'zod';
 import { AvailableFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
+import { sanitizeFilename } from '~~/server/utils/files';
+
+const querySchema = z.object({
+  projectId: z.string(),
+});
 
 export default defineEventHandler(async (event) => {
-  const projectId = getRouterParam(event, 'id');
+  const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
 
-  if (!projectId) {
+  if (!query.data || query.error) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Project id is required',
+      message: 'Project id is required',
     });
   }
 
@@ -31,7 +37,8 @@ export default defineEventHandler(async (event) => {
 
   try {
     for (const file of files) {
-      const { url } = await put(`resume/${event.context.user.id}-${file.filename}`, file.data, {
+      const filename = sanitizeFilename(file.filename ?? '');
+      const { url } = await put(`resume/${event.context.user.id}-${filename}`, file.data, {
         access: 'public',
         addRandomSuffix: true,
         contentType: file.type,
@@ -39,13 +46,13 @@ export default defineEventHandler(async (event) => {
 
       uploaded.push({
         url,
-        filename: file.filename ?? '',
+        filename: filename,
         size: file.data.length,
         type: file.type ?? '',
       });
     }
   } catch (error) {
-    console.error('[POST] /api/file/:id]', error);
+    console.error('[POST] /api/file]', error);
 
     await Promise.allSettled(uploaded.map((file) => del(file.url)));
 
@@ -59,13 +66,14 @@ export default defineEventHandler(async (event) => {
     const createdFiles = await prisma.projectFile.createManyAndReturn({
       data: uploaded.map((file) => ({
         ...file,
-        projectId: projectId,
+        userId: event.context.user.id,
+        projectId: query.data.projectId,
       })),
     });
 
     return createdFiles;
   } catch (error) {
-    console.error('[POST] /api/file/:id]', error);
+    console.error('[POST] /api/file/]', error);
 
     await Promise.allSettled(uploaded.map((file) => del(file.url)));
 

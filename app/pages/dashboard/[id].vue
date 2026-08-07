@@ -9,8 +9,9 @@
 
   const currentProject = computed(() => projects.value?.find((project) => project.id === route.params.id));
 
-  const { pending: loading, error } = await useLazyFetch(`/api/file/${currentProject.value?.id}`, {
+  const { pending: loading, error } = await useLazyFetch('/api/file', {
     key: `project-files-${currentProject.value?.id}`,
+    query: { projectId: currentProject.value?.id },
   });
 
   const { pending: loadingAnalysis, error: errorAnalysis } = await useLazyFetch('/api/analysis', {
@@ -20,7 +21,7 @@
     key: `project-analysis-${currentProject?.value?.id}`,
   });
 
-  const { connect, disconnect } = useRealtimeConnection(currentProject.value?.id ?? '');
+  const { error: realtimeError, connect, disconnect } = useRealtimeConnection(currentProject.value?.id ?? '');
 
   onMounted(() => {
     connect();
@@ -63,7 +64,11 @@
       <div v-else class="flex gap-4">
         <div class="flex flex-col gap-4 grow">
           <ProjectVacancyEditor :project-id="currentProject.id" :initial-text="currentProject.vacancyText ?? ''" />
-          <ProjectAnalysis :project-id="currentProject.id" :loading="loadingAnalysis" :error="errorAnalysis" />
+          <ProjectAnalysis
+            :project-id="currentProject.id"
+            :loading="loadingAnalysis"
+            :error="realtimeError || errorAnalysis?.statusMessage"
+          />
         </div>
         <ProjectFileUpload
           :project-id="currentProject.id"

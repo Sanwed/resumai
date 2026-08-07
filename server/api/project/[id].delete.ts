@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
     const deletedProject = await prisma.project.delete({
       where: {
         id,
+        userId: event.context.user.id,
       },
     });
 

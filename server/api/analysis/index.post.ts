@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
   for (const id of body.data.fileIds) {
     await inngest.send(
       fileUploaded.create({
+        userId: event.context.user.id,
         projectId: query.data.projectId,
         fileId: id,
       }),

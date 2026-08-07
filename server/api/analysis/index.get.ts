@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
     const analysis = await prisma.analysis.findMany({
       where: {
         projectId: query.data.projectId,
+        userId: event.context.user.id,
       },
     });
 

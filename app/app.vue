@@ -14,7 +14,7 @@
 
   useSeoMeta({
     titleTemplate: '%s - ResumAI',
-    description: 'Your best assistant with analysis of candidates resume and finding the best for you vacancy',
+    description: 'Your best assistant with analyses of candidates resume and finding the best for you vacancy',
     twitterCard: 'summary_large_image',
     ogSiteName: 'ResumAI',
     robots: 'index, follow',

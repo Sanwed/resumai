@@ -11,11 +11,14 @@ export function useRealtimeConnection(projectId: string) {
 
   const { data: analyses } = useNuxtData<Analysis[]>(`project-analysis-${projectId}`);
 
+  const error = ref<string>();
+
   const connect = () => {
     source?.close();
     source = new EventSource(`/api/realtime/analysis?projectId=${projectId}`);
-    source.onerror = (err) => {
-      console.error('[realtime] connection error', err);
+    source.onerror = () => {
+      error.value = 'Realtime connection lost. Please refresh to reconnect.';
+      console.error('[realtime] connection closed permanently', { projectId });
     };
     source.onmessage = (e) => {
       const message = JSON.parse(e.data) as Response;
@@ -51,6 +54,7 @@ export function useRealtimeConnection(projectId: string) {
   };
 
   return {
+    error,
     connect,
     disconnect,
   };

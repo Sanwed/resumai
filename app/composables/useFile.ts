@@ -1,5 +1,3 @@
-import type { ProjectFile } from '~/generated/prisma/client';
-
 export function useFile(projectId: string) {
   const selectedFileId = useState<string | undefined>(`selected-file-${projectId}`, () => undefined);
 
@@ -14,8 +12,9 @@ export function useFile(projectId: string) {
         formData.append('file', file);
       }
 
-      const files = await $fetch(`/api/file/${projectId}`, {
+      const files = await $fetch(`/api/file/`, {
         method: 'POST',
+        query: { projectId },
         body: formData,
       });
 

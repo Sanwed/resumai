@@ -46,6 +46,7 @@ export const analyzeResume = inngest.createFunction(
       async () =>
         await prisma.analysis.create({
           data: {
+            userId: event.data.userId,
             projectId: event.data.projectId,
             fileId: event.data.fileId,
             status,

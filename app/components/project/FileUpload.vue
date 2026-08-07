@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { AvailableFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
-  import type { ProjectFile } from '~/generated/prisma/client';
+  import type { Analysis, ProjectFile } from '~/generated/prisma/client';
   import type { FetchError } from 'ofetch';
 
   type Props = {
@@ -12,6 +12,7 @@
   const props = defineProps<Props>();
 
   const { data: fetchedFiles } = useNuxtData<ProjectFile[]>(`project-files-${props.projectId}`);
+  const { data: analyses } = useNuxtData<Analysis[]>(`project-analysis-${props.projectId}`);
 
   const files = ref<File[]>([]);
 
@@ -25,14 +26,20 @@
 
   const items = computed(
     () =>
-      fetchedFiles.value?.map((file) => ({
-        id: file.id,
-        title: file.filename,
-        size: file.size,
-        type: file.type,
-        url: file.url,
-        active: file.id === selectedFileId.value,
-      })) ?? [],
+      fetchedFiles.value?.map((file) => {
+        const analysis = analyses.value?.find((an) => an.fileId === file.id);
+
+        return {
+          id: file.id,
+          title: file.filename,
+          size: file.size,
+          type: file.type,
+          url: file.url,
+          active: file.id === selectedFileId.value,
+          progress: analysis?.progress ?? 0,
+          status: analysis?.status,
+        };
+      }) ?? [],
   );
 
   const displayedItems = computed(() => {
@@ -170,7 +177,7 @@
         variant="soft"
         :ui="{
           root: [
-            'text-left bg-neutral-200 mb-2 relative hover:bg-primary-100 focus-visible:bg-primary-100 focus-visible:outline-0 active:bg-primary-200',
+            'relative w-full text-left bg-neutral-200 mb-2 relative hover:bg-primary-100 focus-visible:bg-primary-100 focus-visible:outline-0 active:bg-primary-200',
             item.active ? 'bg-primary-100' : '',
           ],
           body: 'sm:p-2 group',
@@ -178,6 +185,15 @@
         @click="selectedFileId = item.id"
       >
         <div class="flex items-center gap-2">
+          <UProgress
+            v-model="item.progress"
+            animation="swing"
+            :class="[
+              'absolute bottom-0 left-0 right-0 transition-opacity',
+              { 'opacity-0': item.status === 'failed' || item.status === 'succeed' },
+            ]"
+            size="sm"
+          />
           <NuxtImg v-if="item.type.includes('image/')" :src="item.url" alt="" width="20" height="20" class="shrink-0" />
           <UIcon v-else name="i-lucide-file" size="20" class="shrink-0" />
           <div>

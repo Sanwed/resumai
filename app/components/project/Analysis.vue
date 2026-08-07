@@ -1,19 +1,18 @@
 <script lang="ts" setup>
   import type { NavigationMenuItem } from '@nuxt/ui';
   import type { Analysis } from '~/generated/prisma/client';
-  import type { FetchError } from 'ofetch';
 
   type Props = {
     projectId: string;
     loading?: boolean;
-    error?: FetchError;
+    error?: string;
   };
   const props = defineProps<Props>();
 
   const { selectedFileId } = useFile(props.projectId);
-  const { data: analysis } = useNuxtData<Analysis[]>(`project-analysis-${props.projectId}`);
+  const { data: analyses } = useNuxtData<Analysis[]>(`project-analysis-${props.projectId}`);
 
-  const currentAnalysis = computed(() => analysis.value?.find((el) => el.fileId === selectedFileId.value));
+  const currentAnalysis = computed(() => analyses.value?.find((el) => el.fileId === selectedFileId.value));
 
   const targetProgress = computed(() => currentAnalysis.value?.progress ?? 0);
 
@@ -25,6 +24,7 @@
 
   const analysisMock: Analysis = {
     id: crypto.randomUUID(),
+    userId: '1',
     projectId: crypto.randomUUID(),
     fileId: crypto.randomUUID(),
     candidateName: 'Александр Козюков',
@@ -114,13 +114,7 @@
       </div>
     </UCard>
     <UCard v-else-if="error" :ui="{ body: 'sm:p-4' }">
-      <UEmpty
-        icon="i-lucide-file"
-        size="xl"
-        variant="naked"
-        title="Analysis not found"
-        description="Error while fetching analysis"
-      />
+      <UEmpty icon="i-lucide-x" size="xl" variant="naked" title="Error" :description="error" />
     </UCard>
     <UCard v-else-if="!selectedFileId" :ui="{ body: 'sm:p-4' }">
       <UEmpty

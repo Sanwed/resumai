@@ -17,17 +17,26 @@ export default defineEventHandler(async (event) => {
 
   const ch = analysisChannel({ projectId: query.data.projectId });
 
-  const stream = await subscribe({
-    app: inngest,
-    channel: ch,
-    topics: ['status'],
-  });
+  try {
+    const stream = await subscribe({
+      app: inngest,
+      channel: ch,
+      topics: ['status'],
+    });
 
-  setResponseHeaders(event, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    Connection: 'keep-alive',
-  });
+    setResponseHeaders(event, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
+    });
 
-  return stream.getEncodedStream();
+    return stream.getEncodedStream();
+  } catch (error) {
+    console.error('[realtime] subscribe failed', error);
+
+    throw createError({
+      statusCode: 503,
+      statusMessage: 'Realtime subscription unavailable',
+    });
+  }
 });
