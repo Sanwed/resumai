@@ -140,6 +140,10 @@
     }
   };
 
+  const restart = async (fileIds: string[]) => {
+    await createAnalysis(props.projectId, fileIds);
+  };
+
   const deleteMany = async () => {
     try {
       const deleted = await removeMany(selectedFileIds.value);
@@ -228,6 +232,18 @@
         <p class="text-muted text-sm mr-auto">{{ selectedFileIds.length }} files</p>
         <UButton
           variant="soft"
+          color="secondary"
+          icon="i-lucide-refresh-ccw"
+          loading-auto
+          loading-icon="i-lucide-loader"
+          size="xs"
+          square
+          type="button"
+          aria-label="Restart analysis for selected files"
+          @click="restart(selectedFileIds)"
+        />
+        <UButton
+          variant="soft"
           color="error"
           icon="i-lucide-trash-2"
           loading-auto
@@ -281,18 +297,33 @@
         </div>
         <UBadge v-if="item.rate" :label="item.rate" variant="soft" class="absolute bottom-0 right-0" />
 
-        <UButton
-          size="xs"
-          square
-          variant="soft"
-          color="error"
-          loading-auto
-          loading-icon="i-lucide-loader"
-          icon="i-lucide-x"
-          type="button"
-          class="absolute top-0 right-0 pointer-events-none opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 group-hover:pointer-events-auto focus-visible:pointer-events-auto"
-          @click.prevent.stop="onDelete(item.id)"
-        />
+        <div class="absolute top-0 right-0 flex items-center gap-1">
+          <UButton
+            size="xs"
+            square
+            variant="soft"
+            color="secondary"
+            loading-auto
+            loading-icon="i-lucide-loader"
+            icon="i-lucide-refresh-ccw"
+            type="button"
+            class="pointer-events-none opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 group-hover:pointer-events-auto focus-visible:pointer-events-auto"
+            @click.prevent.stop="restart([item.id])"
+          />
+
+          <UButton
+            size="xs"
+            square
+            variant="soft"
+            color="error"
+            loading-auto
+            loading-icon="i-lucide-loader"
+            icon="i-lucide-x"
+            type="button"
+            class="pointer-events-none opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 group-hover:pointer-events-auto focus-visible:pointer-events-auto"
+            @click.prevent.stop="onDelete(item.id)"
+          />
+        </div>
       </UCard>
     </UScrollArea>
   </div>

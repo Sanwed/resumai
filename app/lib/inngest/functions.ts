@@ -57,10 +57,13 @@ export const analyzeResume = inngest.createFunction(
 
     let newAnalysis: Analysis | undefined;
     try {
-      const response = await step.run(
-        'create-analysis',
-        async () =>
-          await prisma.analysis.create({
+      const response = await step.run('create-analysis', async () => {
+        const existingAnalysis = await prisma.analysis.findUnique({
+          where: { userId: event.data.userId, projectId: event.data.projectId, fileId: event.data.fileId },
+        });
+
+        if (!existingAnalysis) {
+          return await prisma.analysis.create({
             data: {
               userId: event.data.userId,
               projectId: event.data.projectId,
@@ -69,8 +72,11 @@ export const analyzeResume = inngest.createFunction(
               statusMessage,
               progress,
             },
-          }),
-      );
+          });
+        }
+
+        return existingAnalysis;
+      });
 
       newAnalysis = {
         ...response,
@@ -222,12 +228,9 @@ export const analyzeResume = inngest.createFunction(
           }),
         });
 
-        const response = Response.json(result.output);
-        const data = (await response.json()) as z.infer<typeof analysisAIResponseSchema>;
-
         const finalObject: z.infer<typeof analysisSchema> = {
           ...newAnalysis,
-          ...data,
+          ...result.output,
           status: 'succeed',
           statusMessage: '',
           progress: 100,
@@ -255,7 +258,7 @@ export const analyzeResume = inngest.createFunction(
         });
       });
 
-      await step.realtime.publish('text-parse-error', ch.status, {
+      await step.realtime.publish('analysis-error', ch.status, {
         fileId: event.data.fileId,
         status: 'failed',
         statusMessage: 'Error during analyzing with AI',

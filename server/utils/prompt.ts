@@ -203,7 +203,7 @@ export const buildAnalysisPrompt = (vacancyText: string, resumeText: string) => 
   - Output ONLY valid JSON matching the required schema. No markdown, no commentary, no code fences.
 
   ## Schema fields rules MUST to follow:
-  - candidateName<string>: Try to find candidate full name or set "Not specified" if name was not found
+  - candidateName<string>: Try to find candidate full name, use English transcription for every name. Do not include this field in final object if name was not found
   - compatibility<int>: ${COMPATIBILITY_INSTRUCTIONS}
   - verdict<string>: ${VERDICT_INSTRUCTIONS}
   - strengths<string[]> and gaps<string[]>: ${STRENGTHS_GAPS_INSTRUCTIONS}
