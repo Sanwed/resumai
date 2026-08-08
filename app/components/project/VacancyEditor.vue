@@ -74,7 +74,11 @@
           <p class="mr-auto ml-2 font-medium text-sm">Vacancy description</p>
           <UButton icon="i-lucide-pencil" label="Edit" size="xs" @click="editMode = true" />
         </div>
-        <MdPreview v-if="!collapsed" v-model="currentText" class="h-91.75! border-none! bg-transparent! p-4" />
+        <MdPreview
+          v-if="!collapsed"
+          v-model="currentText"
+          class="h-91.75! overflow-auto! border-none! bg-transparent! p-4"
+        />
       </div>
       <MdEditor
         v-else

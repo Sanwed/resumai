@@ -124,12 +124,15 @@ model Analysis {
   email                   String?
   linkedin                String?
   github                  String?
+  website                 String?
   vacancyHash             String?
   status                  AnalysisStatus @default(fetching)
   statusMessage           String?
   progress                Int?           @default(0)
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @updatedAt
+  incomplete              Boolean?
+  incompleteReason        String?
 
   @@index([projectId])
   @@map("analysis")

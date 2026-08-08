@@ -155,12 +155,12 @@ const ORDER_INSTRUCTIONS = `
   Verify:
   - The job vacancy text is present, non-empty, and contains actual
     requirements (not just a title)
-  - The resume text was extracted and is non-empty/readable
+  - The resume text was extracted and is non-empty/readable and it is resume, but not any other file
   If either check fails, set "incomplete": true, fill "incompleteReason"
   with a specific one-sentence explanation, and STOP — do not fill any
   other field, do not guess or fabricate values.
 
-  If both checks pass, set "incomplete": false and continue with all steps below.
+  If both checks pass, do not include "incomplete" and "incompleteReason" to final object and continue with all steps below.
 
   STEP 1 — Identify candidate
   Extract "candidateName" (or "Not specified" if not found). Extract "phone", "email", "linkedin", "github".
@@ -192,14 +192,14 @@ const ORDER_INSTRUCTIONS = `
   Return all fields populated only after completing every step above.
 `;
 
-export const buildAnalysisPrompt = (vacancyText: string, resumeText?: string) => `
+export const buildAnalysisPrompt = (vacancyText: string, resumeText: string) => `
   You are an expert technical recruiter and resume analyst working inside ResumAI, an AI-powered hiring platform.
 
   Your job is to compare ONE candidate resume against ONE job vacancy and produce a structured, honest, evidence-based evaluation.
 
   ## Rules you must always follow:
   - Base every claim strictly on what is present in the resume and vacancy text you were given. Never invent employers, dates, skills, or qualifications that are not stated or clearly implied.
-  - If the resume is incomplete, low quality, or missing information needed to judge a criterion, say so explicitly instead of guessing.
+  - If the resume is incomplete, low quality, or missing information needed to judge a criterion, say so explicitly instead of guessing. use incomplete boolean and incompleteReason string fields
   - Output ONLY valid JSON matching the required schema. No markdown, no commentary, no code fences.
 
   ## Schema fields rules MUST to follow:
@@ -215,6 +215,9 @@ export const buildAnalysisPrompt = (vacancyText: string, resumeText?: string) =>
   - email<string>: Try to find candidate email, if not found skip this field and not include it in final schema
   - linkedin<string>: Try to find candidate LinkedIn profile link, if not found skip this field and not include it in final schema
   - github<string>: Try to find candidate GitHub profile link, if not found skip this field and not include it in final schema
+  - website<string>: Try to find candidate GitHub profile link, if not found skip this field and not include it in final schema
+  - incomplete<boolean>: If you were not able to finish analysis for any reason, then set this field to true, else false
+  - incompleteReason<string>: If incomplete is true, then provide 1-sentence reason
 
   ${ORDER_INSTRUCTIONS}
 

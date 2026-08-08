@@ -38,7 +38,7 @@ export const userSchema = z.object({
   name: z.string(),
   email: z.email(),
   emailVerified: z.boolean(),
-  image: z.string().url().nullable().optional(),
+  image: z.string().nullable().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -76,12 +76,28 @@ export const analysisSchema = z.object({
   email: z.string().nullable(),
   linkedin: z.string().nullable(),
   github: z.string().nullable(),
+  website: z.string().nullable(),
   vacancyHash: z.string().nullable(),
   status: z.enum(AnalysisStatus),
   statusMessage: z.string().nullable(),
   progress: z.number().int().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  incomplete: z.boolean().nullable().default(false),
+  incompleteReason: z.string().nullable().default(''),
+});
+
+export const analysisAIResponseSchema = analysisSchema.omit({
+  id: true,
+  userId: true,
+  projectId: true,
+  fileId: true,
+  status: true,
+  statusMessage: true,
+  progress: true,
+  vacancyHash: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export const analysisRealtimeSchema = z.object({

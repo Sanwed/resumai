@@ -31,13 +31,15 @@
 
         return {
           id: file.id,
-          title: file.filename,
+          title: analysis?.fileId === file.id && analysis.candidateName ? analysis.candidateName : file.filename,
           size: file.size,
           type: file.type,
           url: file.url,
           active: file.id === selectedFileId.value,
           progress: analysis?.progress ?? 0,
+          incomplete: analysis?.incomplete,
           status: analysis?.status,
+          rate: analysis?.fileId === file.id ? analysis.compatibility : undefined,
         };
       }) ?? [],
   );
@@ -45,9 +47,9 @@
   const displayedItems = computed(() => {
     const q = searchDebounced.value.trim().toLowerCase();
 
-    if (!q) return items.value;
+    const filtered = q ? items.value.filter((item) => item.title?.toLowerCase().includes(q)) : [...items.value];
 
-    return items.value.filter((item) => item.title.toLowerCase().includes(q));
+    return filtered.sort((a, b) => (b.rate ?? 0) - (a.rate ?? 0));
   });
 
   const selectMode = ref(false);
@@ -248,9 +250,13 @@
         variant="soft"
         :ui="{
           root: [
-            'relative w-full text-left bg-neutral-200 mb-2 relative hover:bg-primary-100 focus-visible:bg-primary-100 focus-visible:outline-0 active:bg-primary-200',
-            item.active ? 'bg-primary-100' : '',
-            selectedFileIds.includes(item.id) ? 'bg-primary-200' : '',
+            'border border-2 border-transparent relative w-full text-left bg-neutral-200 mb-2 relative hover:bg-primary-100 focus-visible:bg-primary-100 focus-visible:outline-0 active:bg-primary-200',
+            item.active ? 'bg-primary-100 border-primary-500' : '',
+            selectedFileIds.includes(item.id) ? 'bg-primary-200! border-primary-400' : '',
+            item.status === 'succeed' ? 'bg-success-200 hover:bg-success-100 focus-visible:bg-success-100' : '',
+            item.status === 'failed' || item.incomplete
+              ? 'bg-error-200 hover:bg-error-100 focus-visible:bg-error-100'
+              : '',
           ],
           body: 'sm:p-2 group',
         }"
@@ -273,6 +279,8 @@
             <p class="text-muted text-xs">{{ formatFileSize(item.size) }}</p>
           </div>
         </div>
+        <UBadge v-if="item.rate" :label="item.rate" variant="soft" class="absolute bottom-0 right-0" />
+
         <UButton
           size="xs"
           square
