@@ -1,6 +1,6 @@
-import type { Analysis, AnalysisStatus, Project, ProjectFile } from '~/generated/prisma/client';
+import type { Analysis, AnalysisStatus, Notification, ProjectFile } from '~/generated/prisma/client';
 import { inngest } from './client';
-import { fileUploaded } from './event-types';
+import { analysisFinished, fileUploaded } from './event-types';
 import { NonRetriableError, type StepError } from 'inngest';
 import { analysisChannel } from './channels';
 import { getDocumentProxy, extractText } from 'unpdf';
@@ -48,6 +48,16 @@ export const analyzeResume = inngest.createFunction(
         progress: 100,
       });
 
+      await step.sendEvent(
+        'send-analysis-failed-event',
+        analysisFinished.create({
+          projectId: event.data.projectId,
+          userId: event.data.userId,
+          title: 'Analysis error',
+          message: `File with id ${event.data.fileId} was not found`,
+        }),
+      );
+
       throw err;
     }
 
@@ -94,6 +104,16 @@ export const analyzeResume = inngest.createFunction(
         progress: 100,
       });
 
+      await step.sendEvent(
+        'send-analysis-failed-event',
+        analysisFinished.create({
+          projectId: event.data.projectId,
+          userId: event.data.userId,
+          title: 'Analysis error',
+          message: `Could not create an analysis`,
+        }),
+      );
+
       throw err;
     }
 
@@ -105,11 +125,20 @@ export const analyzeResume = inngest.createFunction(
       newAnalysis,
     });
 
-    let existingProject: Project | undefined;
+    let existingProject:
+      | {
+          vacancyText: string | null;
+          name: string;
+        }
+      | undefined;
     try {
-      const project = await step.run('fetch-project-by-id', async () => {
+      existingProject = await step.run('fetch-project-by-id', async () => {
         const response = await prisma.project.findUnique({
           where: { id: event.data.projectId, userId: event.data.userId },
+          select: {
+            vacancyText: true,
+            name: true,
+          },
         });
 
         if (!response) {
@@ -118,14 +147,6 @@ export const analyzeResume = inngest.createFunction(
 
         return response;
       });
-
-      existingProject = project
-        ? {
-            ...project,
-            createdAt: new Date(project.createdAt),
-            updatedAt: new Date(project.updatedAt),
-          }
-        : undefined;
     } catch (e) {
       const err = e as StepError;
       console.error(err);
@@ -143,6 +164,16 @@ export const analyzeResume = inngest.createFunction(
         statusMessage: 'Project not found',
         progress: 100,
       });
+
+      await step.sendEvent(
+        'send-analysis-failed-event',
+        analysisFinished.create({
+          projectId: event.data.projectId,
+          userId: event.data.userId,
+          title: 'Analysis error',
+          message: `Project not found. Maybe it was deleted or incorrect data was sent`,
+        }),
+      );
 
       throw err;
     }
@@ -195,6 +226,16 @@ export const analyzeResume = inngest.createFunction(
         statusMessage: 'Error while parsing file to text',
         progress: 100,
       });
+
+      await step.sendEvent(
+        'send-analysis-failed-event',
+        analysisFinished.create({
+          projectId: event.data.projectId,
+          userId: event.data.userId,
+          title: 'Analysis error',
+          message: `Impossible to parse file to text`,
+        }),
+      );
 
       throw err;
     }
@@ -265,6 +306,16 @@ export const analyzeResume = inngest.createFunction(
         progress: 100,
       });
 
+      await step.sendEvent(
+        'send-analysis-failed-event',
+        analysisFinished.create({
+          projectId: event.data.projectId,
+          userId: event.data.userId,
+          title: 'Analysis error',
+          message: `Error while analyzing with AI`,
+        }),
+      );
+
       throw err;
     }
 
@@ -285,6 +336,78 @@ export const analyzeResume = inngest.createFunction(
       statusMessage,
       progress,
       newAnalysis: res,
+    });
+
+    const isProjectComplete = await step.run('check-project-completion', async () => {
+      const [totalFiles, terminalAnalyses] = await Promise.all([
+        prisma.projectFile.count({
+          where: { projectId: event.data.projectId, userId: event.data.userId },
+        }),
+        prisma.analysis.count({
+          where: {
+            projectId: event.data.projectId,
+            userId: event.data.userId,
+            status: { in: ['succeed', 'failed'] },
+          },
+        }),
+      ]);
+
+      return totalFiles > 0 && totalFiles === terminalAnalyses;
+    });
+
+    if (isProjectComplete) {
+      await step.sendEvent(
+        'send-analysis-succeed-event',
+        analysisFinished.create({
+          projectId: event.data.projectId,
+          userId: event.data.userId,
+          title: `Analysis completed`,
+          message: `Successful analysis for project "${existingProject.name}". Click on the notification to see results`,
+          link: `/dashboard/${event.data.projectId}`,
+        }),
+      );
+    }
+  },
+);
+
+export const sendNotification = inngest.createFunction(
+  {
+    id: 'send-notification',
+    name: 'Send Notification',
+    triggers: [analysisFinished],
+  },
+  async ({ event, step }) => {
+    const ch = analysisChannel({ projectId: event.data.projectId });
+
+    let newNotification: Notification | undefined;
+    try {
+      const notification = await step.run('create-notification', async () => {
+        const response = await prisma.notification.create({
+          data: {
+            userId: event.data.userId,
+            title: event.data.title,
+            message: event.data.message,
+            link: event.data.link,
+          },
+        });
+
+        return response;
+      });
+
+      newNotification = {
+        ...notification,
+        createdAt: new Date(notification.createdAt),
+      };
+    } catch (e) {
+      const err = e as StepError;
+
+      console.error(err);
+
+      throw err;
+    }
+
+    await step.realtime.publish('notification-created', ch.notification, {
+      notification: newNotification,
     });
   },
 );

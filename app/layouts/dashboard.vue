@@ -4,6 +4,10 @@
   const sidebarOpen = ref(false);
 
   const { data: projects, pending, error } = await useLazyFetch('/api/project', { key: 'projects' });
+  const { pending: notificationsPending, error: notificationsError } = await useLazyFetch('/api/notification', {
+    key: 'notifications',
+    query: { read: false },
+  });
 
   const links = [
     {
@@ -90,6 +94,8 @@
     </UDashboardSidebar>
 
     <UDashboardSearch :groups="groups" shortcut="meta_k" :fuse="{ resultLimit: 42 }" />
+
+    <NotificationSlideover :loading="notificationsPending" :error="notificationsError" />
 
     <slot />
   </UDashboardGroup>

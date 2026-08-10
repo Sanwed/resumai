@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     const stream = await subscribe({
       app: inngest,
       channel: ch,
-      topics: ['status'],
+      topics: ['status', 'notification'],
     });
 
     setResponseHeaders(event, {

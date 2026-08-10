@@ -1,11 +1,15 @@
 <script lang="ts" setup>
-  import type { Project } from '~/generated/prisma/client';
+  import type { Notification, Project } from '~/generated/prisma/client';
 
   definePageMeta({ layout: 'dashboard', middleware: 'auth' });
 
   const route = useRoute();
 
   const { data: projects } = useNuxtData<Project[]>('projects');
+
+  const { data: notifications } = useNuxtData<Notification[]>('notifications');
+
+  const { open } = useNotification();
 
   const currentProject = computed(() => projects.value?.find((project) => project.id === route.params.id));
 
@@ -39,14 +43,23 @@
     ogDescription:
       'Manage your recruitment projects, analyze resumes, compare candidates, and review AI-powered hiring insights.',
   });
+
+  const unreadNotifications = computed(() => notifications.value?.filter((n) => !n.read) ?? []);
 </script>
 
 <template>
   <UDashboardPanel id="project">
     <template #header>
-      <UDashboardNavbar :title="currentProject?.name ?? 'Unknown'" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar :title="currentProject?.name ?? 'Unknown'" :ui="{ root: 'sm:px-4' }">
         <template #leading>
           <UDashboardSidebarCollapse />
+        </template>
+        <template #right>
+          <UButton color="neutral" variant="ghost" square aria-label="Notifications" @click="open = true">
+            <UChip color="error" :show="unreadNotifications.length != 0" inset>
+              <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
+            </UChip>
+          </UButton>
         </template>
       </UDashboardNavbar>
     </template>

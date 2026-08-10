@@ -58,6 +58,16 @@ export const userUpdateSchema = userSchema
     message: 'At least one field must be provided',
   });
 
+export const notificationSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  title: z.string(),
+  message: z.string().nullable(),
+  link: z.string().nullable(),
+  read: z.boolean(),
+  createdAt: z.coerce.date(),
+});
+
 export const analysisSchema = z.object({
   id: z.string(),
   userId: z.string(),

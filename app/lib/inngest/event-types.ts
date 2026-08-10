@@ -15,3 +15,13 @@ export const fileDeleted = eventType('app/file.deleted', {
     fileId: z.string(),
   }),
 });
+
+export const analysisFinished = eventType('app/analysis.finished', {
+  schema: z.object({
+    projectId: z.string(),
+    userId: z.string(),
+    title: z.string(),
+    message: z.string().optional(),
+    link: z.string().optional(),
+  }),
+});

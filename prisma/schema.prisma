@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id            String        @id
+  id            String         @id
   name          String
   email         String
   emailVerified Boolean
@@ -20,6 +20,7 @@ model User {
   projects      Project[]
   files         ProjectFile[]
   analyses      Analysis[]
+  notifications Notification[]
 
   @@unique([email])
   @@map("user")
@@ -85,6 +86,7 @@ model Project {
   updatedAt   DateTime      @updatedAt
   analyses    Analysis[]
 
+  @@index([userId])
   @@map("project")
 }
 
@@ -100,6 +102,7 @@ model ProjectFile {
   url       String
   analysis  Analysis?
 
+  @@index([projectId, userId])
   @@map("project-file")
 }
 
@@ -134,8 +137,22 @@ model Analysis {
   incomplete              Boolean?
   incompleteReason        String?
 
-  @@index([projectId])
+  @@index([projectId, fileId, userId])
   @@map("analysis")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String?
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("notification")
 }
 
 enum ProjectColor {
