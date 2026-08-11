@@ -8,6 +8,7 @@ import type z from 'zod';
 import { generateText, Output } from 'ai';
 import { analysisAIResponseSchema, type analysisSchema } from '~/types/schema';
 import { anthropic } from '@ai-sdk/anthropic';
+import { MINIMAL_ANALYSIS_COST, TOKEN_COEFFICIENT } from '~/constants';
 
 export const analyzeResume = inngest.createFunction(
   {
@@ -258,9 +259,55 @@ export const analyzeResume = inngest.createFunction(
       progress,
     });
 
-    let res: Analysis | undefined;
     try {
-      const analysis = await step.run('generate-ai-response', async () => {
+      await step.run('check-balance', async () => {
+        const userBalance = await prisma.user.findUnique({
+          where: {
+            id: event.data.userId,
+          },
+          select: {
+            tokens: true,
+          },
+        });
+
+        if ((userBalance?.tokens ?? 0) < MINIMAL_ANALYSIS_COST) {
+          throw new NonRetriableError('Insufficient tokens for analysis');
+        }
+      });
+    } catch (e) {
+      const err = e as StepError;
+      console.error(err);
+
+      await step.run('update-status-balance-failed', async () => {
+        await prisma.analysis.update({
+          where: { fileId: event.data.fileId, projectId: event.data.projectId, userId: event.data.userId },
+          data: { status: 'failed', statusMessage: 'Insufficient tokens for analysis', progress: 100 },
+        });
+      });
+
+      await step.realtime.publish('analysis-error', ch.status, {
+        fileId: event.data.fileId,
+        status: 'failed',
+        statusMessage: 'Insufficient tokens for analysis',
+        progress: 100,
+      });
+
+      await step.sendEvent(
+        'send-analysis-failed-event',
+        analysisFinished.create({
+          projectId: event.data.projectId,
+          userId: event.data.userId,
+          title: 'Analysis error',
+          message: 'Insufficient tokens for analysis',
+        }),
+      );
+
+      throw err;
+    }
+
+    let res: { analysis: Analysis | undefined; usage: number } | undefined;
+    try {
+      const { analysis, usage } = await step.run('generate-ai-response', async () => {
         const result = await generateText({
           model: anthropic('claude-haiku-4-5-20251001'),
           prompt: buildAnalysisPrompt(existingProject?.vacancyText ?? '', parsedText),
@@ -268,6 +315,24 @@ export const analyzeResume = inngest.createFunction(
             schema: analysisAIResponseSchema,
           }),
         });
+
+        const totalTokens = (result.usage.totalTokens ?? 0) / TOKEN_COEFFICIENT;
+
+        const res = await prisma.user.updateMany({
+          where: {
+            id: event.data.userId,
+            tokens: { gte: totalTokens },
+          },
+          data: {
+            tokens: {
+              decrement: totalTokens,
+            },
+          },
+        });
+
+        if (res.count === 0) {
+          throw new NonRetriableError('Insufficient tokens for analysis');
+        }
 
         const finalObject: z.infer<typeof analysisSchema> = {
           ...newAnalysis,
@@ -278,16 +343,19 @@ export const analyzeResume = inngest.createFunction(
           vacancyHash: existingProject?.vacancyText ?? '',
         };
 
-        return finalObject;
+        return { analysis: finalObject, usage: totalTokens };
       });
 
-      res = analysis
-        ? {
-            ...analysis,
-            createdAt: new Date(analysis.createdAt),
-            updatedAt: new Date(analysis.updatedAt),
-          }
-        : undefined;
+      res = {
+        analysis: analysis
+          ? {
+              ...analysis,
+              createdAt: new Date(analysis.createdAt),
+              updatedAt: new Date(analysis.updatedAt),
+            }
+          : undefined,
+        usage,
+      };
     } catch (e) {
       const err = e as StepError;
       console.error(err);
@@ -326,7 +394,7 @@ export const analyzeResume = inngest.createFunction(
     await step.run('update-status-analysis-complete', async () => {
       await prisma.analysis.update({
         where: { fileId: event.data.fileId, projectId: event.data.projectId, userId: event.data.userId },
-        data: { ...res },
+        data: { ...res.analysis },
       });
     });
 
@@ -335,7 +403,7 @@ export const analyzeResume = inngest.createFunction(
       status,
       statusMessage,
       progress,
-      newAnalysis: res,
+      newAnalysis: res.analysis,
     });
 
     const isProjectComplete = await step.run('check-project-completion', async () => {

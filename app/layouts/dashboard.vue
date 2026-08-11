@@ -3,11 +3,14 @@
 
   const sidebarOpen = ref(false);
 
-  const { data: projects, pending, error } = await useLazyFetch('/api/project', { key: 'projects' });
-  const { pending: notificationsPending, error: notificationsError } = await useLazyFetch('/api/notification', {
-    key: 'notifications',
-    query: { read: false },
-  });
+  const [{ data: projects, pending, error }, { pending: notificationsPending, error: notificationsError }] =
+    await Promise.all([
+      useLazyFetch('/api/project', { key: 'projects' }),
+      useLazyFetch('/api/notification', {
+        key: 'notifications',
+        query: { read: false },
+      }),
+    ]);
 
   const links = [
     {

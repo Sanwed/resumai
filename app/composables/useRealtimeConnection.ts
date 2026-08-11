@@ -61,7 +61,6 @@ export function useRealtimeConnection(projectId: string) {
     };
     source.onmessage = (e) => {
       const message = JSON.parse(e.data) as Response;
-      console.log(message);
 
       switch (message.topic) {
         case 'status':

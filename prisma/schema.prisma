@@ -13,6 +13,8 @@ model User {
   email         String
   emailVerified Boolean
   image         String?
+  customerId    String?
+  tokens        Int            @default(0)
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]

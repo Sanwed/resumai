@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import type { Notification, Project } from '~/generated/prisma/client';
+  import { authClient } from '~/lib/auth-client';
 
   definePageMeta({ layout: 'dashboard', middleware: 'auth' });
 
@@ -9,21 +10,24 @@
 
   const { data: notifications } = useNuxtData<Notification[]>('notifications');
 
+  const { data: session } = await authClient.useSession(useAuthFetch);
+
   const { open } = useNotification();
 
   const currentProject = computed(() => projects.value?.find((project) => project.id === route.params.id));
 
-  const { pending: loading, error } = await useLazyFetch('/api/file', {
-    key: `project-files-${currentProject.value?.id}`,
-    query: { projectId: currentProject.value?.id },
-  });
-
-  const { pending: loadingAnalysis, error: errorAnalysis } = await useLazyFetch('/api/analysis', {
-    query: {
-      projectId: currentProject.value?.id,
-    },
-    key: `project-analysis-${currentProject?.value?.id}`,
-  });
+  const [{ pending: loading, error }, { pending: loadingAnalysis, error: errorAnalysis }] = await Promise.all([
+    useLazyFetch('/api/file', {
+      key: `project-files-${currentProject.value?.id}`,
+      query: { projectId: currentProject.value?.id },
+    }),
+    useLazyFetch('/api/analysis', {
+      query: {
+        projectId: currentProject.value?.id,
+      },
+      key: `project-analysis-${currentProject?.value?.id}`,
+    }),
+  ]);
 
   const { error: realtimeError, connect, disconnect } = useRealtimeConnection(currentProject.value?.id ?? '');
 
@@ -55,6 +59,15 @@
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
+          <UButton
+            :to="'/billing'"
+            variant="soft"
+            color="primary"
+            block
+            :label="`${session?.user.tokens ?? 0} tokens`"
+            icon="i-lucide-coins"
+            class="justify-center"
+          />
           <UButton color="neutral" variant="ghost" square aria-label="Notifications" @click="open = true">
             <UChip color="error" :show="unreadNotifications.length != 0" inset>
               <UIcon name="i-lucide-bell" class="size-5 shrink-0" />

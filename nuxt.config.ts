@@ -29,7 +29,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    aiGatewayApiKey: '',
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
   },
 
   routeRules: {

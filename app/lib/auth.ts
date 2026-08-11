@@ -3,6 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { PrismaClient } from '@/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Resend } from 'resend';
+import { stripe } from './stripe';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -22,6 +23,19 @@ const auth = betterAuth({
     level: 'debug',
   },
   user: {
+    additionalFields: {
+      customerId: {
+        type: 'string',
+        required: false,
+        input: false,
+      },
+      tokens: {
+        type: 'number',
+        required: false,
+        input: false,
+        defaultValue: 0,
+      },
+    },
     deleteUser: {
       enabled: true,
       sendDeleteAccountVerification: async ({ user, url }) => {
@@ -105,6 +119,34 @@ const auth = betterAuth({
     linkedin: {
       clientId: process.env.LINKEDIN_CLIENT_ID as string,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET as string,
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          try {
+            const customer = await stripe.customers.create({
+              email: user.email,
+              name: user.name,
+              metadata: {
+                user_id: user.id,
+              },
+            });
+
+            await prisma.user.update({
+              where: {
+                id: user.id,
+              },
+              data: {
+                customerId: customer.id,
+              },
+            });
+          } catch (e) {
+            console.error('[databaseHooks.user.create.after] Failed to create Stripe customer', e);
+          }
+        },
+      },
     },
   },
 });
