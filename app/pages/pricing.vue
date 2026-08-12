@@ -1,81 +1,71 @@
 <script setup lang="ts">
-const { data: page } = await useAsyncData('pricing', () => queryCollection('pricing').first())
+  import type { SerializeObject } from 'nitropack';
+  import type Stripe from 'stripe';
 
-const title = page.value?.seo?.title || page.value?.title
-const description = page.value?.seo?.description || page.value?.description
+  const { data: page } = await useAsyncData('pricing', () => queryCollection('pricing').first());
 
-useSeoMeta({
-  title,
-  ogTitle: title,
-  description,
-  ogDescription: description
-})
+  const title = page.value?.seo?.title || page.value?.title;
+  const description = page.value?.seo?.description || page.value?.description;
 
-defineOgImage('Saas', { title, description })
+  useSeoMeta({
+    title,
+    ogTitle: title,
+    description,
+    ogDescription: description,
+  });
 
-const isYearly = ref('0')
+  defineOgImage('Saas', { title, description });
 
-const items = ref([
-  {
-    label: 'Monthly',
-    value: '0'
-  },
-  {
-    label: 'Yearly',
-    value: '1'
-  }
-])
+  const { data: products, pending: loading, error } = await useLazyFetch('/api/billing');
+
+  const getPriceLabel = (defaultPrice?: string | SerializeObject<Stripe.Price> | null) => {
+    if (!defaultPrice || typeof defaultPrice === 'string') return;
+    if (defaultPrice.unit_amount == null) return;
+
+    return `${defaultPrice.unit_amount / 100} ${defaultPrice.currency.toUpperCase()}`;
+  };
+
+  const getProductFeatures = (features: SerializeObject<Stripe.Product.MarketingFeature>[]) => {
+    return features.map((el) => el.name).filter((el) => el !== undefined);
+  };
 </script>
 
 <template>
   <div v-if="page">
-    <UPageHero
-      :title="page.title"
-      :description="page.description"
-    >
-      <template #links>
-        <UTabs
-          v-model="isYearly"
-          :items="items"
-          color="neutral"
-          size="xs"
-          class="w-48"
-          :ui="{
-            list: 'ring ring-accented rounded-full',
-            indicator: 'rounded-full',
-            trigger: 'w-1/2'
-          }"
-        />
-      </template>
-    </UPageHero>
+    <UPageHero :title="page.title" :description="page.description" />
 
     <UContainer>
-      <UPricingPlans scale>
+      <div v-if="loading" class="h-40 w-full flex items-center justify-center">
+        <UIcon name="i-lucide-loader" class="animate-spin size-8" />
+      </div>
+
+      <UEmpty v-else-if="error" icon="i-lucide-circle-x" variant="naked" :title="error.statusMessage" />
+
+      <UEmpty v-else-if="!products?.data.length" icon="i-lucide-circle-x" variant="naked" title="Products not found" />
+      <UPricingPlans v-else orientation="vertical" compact>
         <UPricingPlan
-          v-for="(plan, index) in page.plans"
+          v-for="(item, index) in products.data"
           :key="index"
-          v-bind="plan"
-          :price="isYearly === '1' ? plan.price.year : plan.price.month"
-          :billing-cycle="isYearly === '1' ? '/year' : '/month'"
+          :title="item.name"
+          :description="item.description ?? ''"
+          :features="getProductFeatures(item.marketing_features)"
+          :price="getPriceLabel(item.default_price)"
+          :button="{
+            to: '/billing',
+            label: 'Login',
+            size: 'xl',
+            ui: { base: 'w-full max-w-40' },
+            loadingAuto: true,
+            loadingIcon: 'i-lucide-loader',
+          }"
+          orientation="horizontal"
+          terms="Invoices and receipts available."
+          :ui="{ root: 'lg:p-6 xl:p-6', body: 'justify-start', featureTitle: 'text-clip whitespace-normal' }"
         />
       </UPricingPlans>
     </UContainer>
 
-    <UPageSection>
-      <UPageLogos>
-        <UIcon
-          v-for="icon in page.logos.icons"
-          :key="icon"
-          :name="icon"
-          class="w-12 h-12 shrink-0 text-muted"
-        />
-      </UPageLogos>
-    </UPageSection>
-
-    <UPageSection
-      :title="page.faq.title"
-      :description="page.faq.description"
-    >
+    <UPageSection :title="page.faq.title" :description="page.faq.description">
       <UAccordion
         :items="page.faq.items"
         :unmount-on-hide="false"
@@ -84,7 +74,7 @@ const items = ref([
         class="max-w-3xl mx-auto"
         :ui="{
           trigger: 'text-base text-highlighted',
-          body: 'text-base text-muted'
+          body: 'text-base text-muted',
         }"
       />
     </UPageSection>

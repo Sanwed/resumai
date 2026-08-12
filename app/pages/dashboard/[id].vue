@@ -16,18 +16,19 @@
 
   const currentProject = computed(() => projects.value?.find((project) => project.id === route.params.id));
 
-  const [{ pending: loading, error }, { pending: loadingAnalysis, error: errorAnalysis }] = await Promise.all([
-    useLazyFetch('/api/file', {
-      key: `project-files-${currentProject.value?.id}`,
-      query: { projectId: currentProject.value?.id },
-    }),
-    useLazyFetch('/api/analysis', {
-      query: {
-        projectId: currentProject.value?.id,
-      },
-      key: `project-analysis-${currentProject?.value?.id}`,
-    }),
-  ]);
+  const [{ pending: loading, error }, { data: analyses, pending: loadingAnalysis, error: errorAnalysis }] =
+    await Promise.all([
+      useLazyFetch('/api/file', {
+        key: `project-files-${currentProject.value?.id}`,
+        query: { projectId: currentProject.value?.id },
+      }),
+      useLazyFetch('/api/analysis', {
+        query: {
+          projectId: currentProject.value?.id,
+        },
+        key: `project-analysis-${currentProject?.value?.id}`,
+      }),
+    ]);
 
   const { error: realtimeError, connect, disconnect } = useRealtimeConnection(currentProject.value?.id ?? '');
 
@@ -59,11 +60,15 @@
           <UDashboardSidebarCollapse />
         </template>
         <template #right>
+          <ProjectExport
+            v-if="currentProject"
+            :project-id="currentProject.id"
+            :project-name="currentProject.name"
+            :disabled="!analyses?.length"
+          />
           <UButton
-            :to="'/billing'"
+            to="/billing"
             variant="soft"
-            color="primary"
-            block
             :label="`${session?.user.tokens ?? 0} tokens`"
             icon="i-lucide-coins"
             class="justify-center"

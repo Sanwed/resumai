@@ -45,6 +45,7 @@ export default defineNuxtConfig({
       routes: ['/'],
       crawlLinks: true,
     },
+    serverAssets: [{ baseName: 'fonts', dir: './server/assets/fonts' }],
   },
 
   eslint: {
