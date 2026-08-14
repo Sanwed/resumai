@@ -80,6 +80,12 @@
       "skillPath": "skills/inngest-steps/SKILL.md",
       "computedHash": "f37a3a423739fba256a5cd8cfa35b6121bf3192a0fe2a964e5c41af1036f3de0"
     },
+    "nuxt-ui": {
+      "source": "nuxt/ui",
+      "sourceType": "github",
+      "skillPath": "skills/nuxt-ui/SKILL.md",
+      "computedHash": "44f2989d98ea9592b777f28a6a387643378162c9fdf1a61ef91226ffa5a6e323"
+    },
     "nuxt4-patterns": {
       "source": "affaan-m/ECC",
       "sourceType": "github",
