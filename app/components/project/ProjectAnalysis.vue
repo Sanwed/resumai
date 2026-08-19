@@ -111,6 +111,9 @@
         title="Analysis creating"
       />
     </UCard>
+    <UCard v-else-if="currentAnalysis.status === 'failed'" :ui="{ body: 'sm:p-4' }">
+      <UEmpty icon="i-lucide-x" size="xl" variant="naked" :title="currentAnalysis.statusMessage ?? ''" />
+    </UCard>
     <UCard v-else-if="currentAnalysis.status !== 'succeed'" :ui="{ body: 'sm:p-4' }">
       <UEmpty
         icon="i-lucide-file"

@@ -4,11 +4,12 @@ import { analysisFinished, fileUploaded } from './event-types';
 import { NonRetriableError, type StepError } from 'inngest';
 import { analysisChannel } from './channels';
 import { getDocumentProxy, extractText } from 'unpdf';
-import type z from 'zod';
 import { generateText, Output } from 'ai';
 import { analysisAIResponseSchema } from '#server/types/schema';
 import { anthropic } from '@ai-sdk/anthropic';
-import { MINIMAL_ANALYSIS_COST, TOKEN_COEFFICIENT } from '~/constants';
+import mammoth from 'mammoth';
+import { AllowedFileFormats, MINIMAL_ANALYSIS_COST, TOKEN_COEFFICIENT } from '~/constants';
+import { get } from '@vercel/blob';
 
 export const analyzeResume = inngest.createFunction(
   {
@@ -200,15 +201,41 @@ export const analyzeResume = inngest.createFunction(
     let parsedText: string | undefined;
     try {
       parsedText = await step.run('parse-file-to-text', async () => {
-        const buffer = await $fetch<ArrayBuffer>(existingFile.url, { responseType: 'arrayBuffer' });
-        const pdf = await getDocumentProxy(new Uint8Array(buffer));
-        const { text } = await extractText(pdf, { mergePages: true });
+        const result = await get(existingFile.url, {
+          access: 'private',
+        });
 
-        if (!text.trim()) {
-          throw new Error('Error while parsing file to text');
+        if (!result) {
+          throw new NonRetriableError('Error while retrieving file');
         }
 
-        return text;
+        const buffer = await new Response(result.stream).arrayBuffer();
+        switch (existingFile.type) {
+          case AllowedFileFormats.PDF: {
+            const pdf = await getDocumentProxy(new Uint8Array(buffer));
+            const { text } = await extractText(pdf, { mergePages: true });
+
+            if (!text.trim()) {
+              throw new NonRetriableError('Error while parsing file to text');
+            }
+
+            return text;
+          }
+          case AllowedFileFormats.DOCX: {
+            const response = await mammoth.extractRawText({
+              buffer: Buffer.from(buffer),
+            });
+
+            if (!response.value.trim()) {
+              throw new NonRetriableError('Error while parsing file to text');
+            }
+
+            return response.value;
+          }
+          default: {
+            throw new NonRetriableError('Unknown file format');
+          }
+        }
       });
     } catch (e) {
       const err = e as StepError;
@@ -334,7 +361,7 @@ export const analyzeResume = inngest.createFunction(
           throw new NonRetriableError('Insufficient tokens for analysis');
         }
 
-        const finalObject: z.infer<typeof analysisSchema> = {
+        const finalObject: Analysis = {
           ...newAnalysis,
           ...result.output,
           status: 'succeed',

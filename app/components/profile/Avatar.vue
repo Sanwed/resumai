@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import type { FetchError } from 'ofetch';
-  import { AllowedAvatarFormats, AllowedFileFormats, MAX_AVATAR_FILE_SIZE } from '~/constants';
+  import { AllowedAvatarFormats, MAX_AVATAR_FILE_SIZE } from '~/constants';
   import { authClient } from '~/lib/auth-client';
 
   type Props = {
@@ -18,7 +18,7 @@
   watch(avatarFile, async (newAvatar) => {
     if (!newAvatar) return;
 
-    if (!Object.values<string>(AllowedFileFormats).includes(newAvatar.type)) {
+    if (!Object.values<string>(AllowedAvatarFormats).includes(newAvatar.type)) {
       toast.add({
         title: 'Invalid file type',
         description: `Allowed file types: ${Object.keys(AllowedAvatarFormats).join(', ')}`,
