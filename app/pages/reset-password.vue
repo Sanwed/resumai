@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import type { FormSubmitEvent } from '@nuxt/ui';
-  import * as z from 'zod';
+  import z from 'zod';
   import { MIN_PASSWORD_LENGTH } from '~/constants';
   import { authClient } from '~/lib/auth-client';
 

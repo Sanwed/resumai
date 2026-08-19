@@ -7,7 +7,7 @@ export function sanitizeFilename(filename: string): string {
   const ext = hasExt ? base.slice(lastDot + 1) : '';
 
   const cleanName = name
-    .normalize('NFC')
+    .normalize()
     .replace(/[\p{Cc}\p{Cf}]+/gu, '')
     .replace(/[^\p{L}\p{N}._ -]+/gu, '-')
     .replace(/\s+/g, ' ')

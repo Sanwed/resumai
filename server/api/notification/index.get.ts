@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   if (query.error) {
     throw createError({
       statusCode: 400,
-      message: query.error.message,
+      statusMessage: query.error.message,
     });
   }
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     return notifications;
   } catch (error) {
-    console.error('[GET] /api/notification]', error);
+    console.error('[GET] /api/notification', error);
 
     throw createError({
       statusCode: 500,

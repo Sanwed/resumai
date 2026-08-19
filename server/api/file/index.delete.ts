@@ -1,6 +1,7 @@
 import z from 'zod';
-import { inngest } from '~/lib/inngest/client';
-import { fileDeleted } from '~/lib/inngest/event-types';
+import { inngest } from '#server/lib/inngest/client';
+import { fileDeleted } from '#server/lib/inngest/event-types';
+import { del } from '@vercel/blob';
 
 const bodySchema = z.object({
   fileIds: z.array(z.string()),
@@ -9,7 +10,7 @@ const bodySchema = z.object({
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (body) => bodySchema.safeParse(body));
 
-  if (body.error || !body.data.fileIds.length) {
+  if (body.error) {
     throw createError({
       statusCode: 400,
       statusMessage: 'File ids are not provided',
@@ -22,12 +23,14 @@ export default defineEventHandler(async (event) => {
         id: { in: body.data.fileIds },
         project: { userId: event.context.user.id },
       },
-      select: { id: true },
+      select: { id: true, url: true },
     });
 
     await prisma.projectFile.deleteMany({
       where: { id: { in: filesToDelete.map((f) => f.id) } },
     });
+
+    await del(filesToDelete.map((el) => el.url));
 
     await inngest.send(
       filesToDelete.map((f) =>
@@ -40,11 +43,11 @@ export default defineEventHandler(async (event) => {
 
     return filesToDelete.map((el) => el.id);
   } catch (error) {
-    console.error('[DELETE /api/file/]', error);
+    console.error('[DELETE] /api/file', error);
 
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to delete file',
+      statusMessage: 'Failed to delete files',
     });
   }
 });

@@ -1,5 +1,3 @@
-import { projectCreateSchema } from '~/types/schema';
-
 export default defineEventHandler(async (event) => {
   try {
     const body = await readValidatedBody(event, (body) => projectCreateSchema.safeParse(body));
@@ -7,7 +5,7 @@ export default defineEventHandler(async (event) => {
     if (body.error) {
       throw createError({
         statusCode: 400,
-        message: 'Something went wrong',
+        statusMessage: 'Incorrect body data',
       });
     }
 
@@ -20,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
     return project;
   } catch (error) {
-    console.error('[POST /api/project]', error);
+    console.error('[POST] /api/project', error);
 
     throw createError({
       statusCode: 500,

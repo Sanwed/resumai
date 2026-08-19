@@ -9,12 +9,11 @@
       disabled?: boolean;
     };
   };
+  defineProps<Props>();
 
   type Emits = {
     submit: [];
   };
-
-  defineProps<Props>();
   defineEmits<Emits>();
 
   const open = defineModel<boolean>({ default: false });

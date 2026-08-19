@@ -77,6 +77,7 @@ function addInlineList(doc: PDFKit.PDFDocument, title: string, items?: string[] 
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
+
   if (!id) {
     throw createError({ statusCode: 400, statusMessage: 'Project id is required' });
   }

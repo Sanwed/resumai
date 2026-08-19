@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-  import type { NavigationMenuItem } from '@nuxt/ui';
+  import type { CommandPaletteItem } from '@nuxt/ui';
 
-  const sidebarOpen = ref(false);
-
-  const [{ data: projects, pending, error }, { pending: notificationsPending, error: notificationsError }] =
+  const [{ data: projects, pending: loading, error }, { pending: notificationsLoading, error: notificationsError }] =
     await Promise.all([
       useLazyFetch('/api/project', { key: 'projects' }),
       useLazyFetch('/api/notification', {
@@ -12,7 +10,9 @@
       }),
     ]);
 
-  const links = [
+  const sidebarOpen = ref(false);
+
+  const links = computed<CommandPaletteItem[]>(() => [
     {
       label: 'Home',
       icon: 'i-lucide-house',
@@ -37,19 +37,7 @@
         sidebarOpen.value = false;
       },
     },
-    {
-      label: 'Feedback',
-      icon: 'i-lucide-message-circle',
-      to: 'https://github.com/nuxt-ui-templates/dashboard',
-      target: '_blank',
-    },
-    {
-      label: 'Help & Support',
-      icon: 'i-lucide-info',
-      to: 'https://github.com/nuxt-ui-templates/dashboard',
-      target: '_blank',
-    },
-  ] satisfies NavigationMenuItem[];
+  ]);
 
   const projectLinks = computed(
     () =>
@@ -72,13 +60,13 @@
     {
       id: 'links',
       label: 'Go to',
-      items: links,
+      items: links.value,
     },
   ]);
 </script>
 
 <template>
-  <UDashboardGroup unit="rem">
+  <UDashboardGroup>
     <UDashboardSidebar v-model:open="sidebarOpen" collapsible :default-size="20">
       <template #header="{ collapsed }">
         <NuxtLink to="/dashboard" class="hover:text-primary focus-visible:text-primary transition-colors">
@@ -88,7 +76,7 @@
 
       <template #default="{ collapsed }">
         <UDashboardSearchButton :collapsed="collapsed" />
-        <DashboardProjectNavigation :collapsed="collapsed" :pending="pending" :error="error" />
+        <DashboardProjectNavigation :collapsed="collapsed" :loading="loading" :error="error" />
       </template>
 
       <template #footer="{ collapsed }">
@@ -98,7 +86,7 @@
 
     <UDashboardSearch :groups="groups" shortcut="meta_k" :fuse="{ resultLimit: 42 }" />
 
-    <NotificationSlideover :loading="notificationsPending" :error="notificationsError" />
+    <NotificationSlideover :loading="notificationsLoading" :error="notificationsError" />
 
     <slot />
   </UDashboardGroup>

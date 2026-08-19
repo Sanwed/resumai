@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import * as z from 'zod';
+  import z from 'zod';
   import type { FormSubmitEvent } from '@nuxt/ui';
   import { authClient } from '~/lib/auth-client';
   import { MIN_PASSWORD_LENGTH } from '~/constants';
@@ -102,9 +102,7 @@
       .min(MIN_PASSWORD_LENGTH, `Password must contain at least ${MIN_PASSWORD_LENGTH} characters`),
   });
 
-  type Schema = z.output<typeof schema>;
-
-  async function onSubmit(payload: FormSubmitEvent<Schema>) {
+  async function onSubmit(payload: FormSubmitEvent<z.output<typeof schema>>) {
     try {
       await authClient.signUp.email({
         name: payload.data.name,
@@ -112,9 +110,10 @@
         password: payload.data.password,
         callbackURL: '/dashboard',
         fetchOptions: {
-          onError: (error) => {
+          onError: (event) => {
+            console.error(event.error);
             toast.add({
-              description: error.error.message,
+              description: event.error.message,
               icon: 'i-lucide-circle-x',
               color: 'error',
             });

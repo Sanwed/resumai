@@ -3,7 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { PrismaClient } from '@/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Resend } from 'resend';
-import { stripe } from './stripe';
+import { stripe } from '../../server/lib/stripe';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,

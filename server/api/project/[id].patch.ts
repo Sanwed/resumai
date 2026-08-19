@@ -1,5 +1,3 @@
-import { projectUpdateSchema } from '~/types/schema';
-
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
 
@@ -15,7 +13,7 @@ export default defineEventHandler(async (event) => {
   if (body.error) {
     throw createError({
       statusCode: 400,
-      message: 'Something went wrong',
+      statusMessage: 'Incorrect body data',
     });
   }
 
@@ -30,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
     return updatedProject;
   } catch (error) {
-    console.error('[PATCH /api/project/:id]', error);
+    console.error('[PATCH] /api/project/:id', error);
 
     throw createError({
       statusCode: 500,

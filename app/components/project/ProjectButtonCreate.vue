@@ -7,12 +7,11 @@
   };
   defineProps<Props>();
 
-  const { create } = useProject();
-
   const { data: projects } = useNuxtData<Project[]>('projects');
 
   const toast = useToast();
 
+  const { create } = useProject();
   const onCreate = async () => {
     try {
       const created = await create({ name: `Project #${(projects.value?.length ?? 0) + 1}` });

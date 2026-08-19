@@ -6,7 +6,7 @@ import { analysisChannel } from './channels';
 import { getDocumentProxy, extractText } from 'unpdf';
 import type z from 'zod';
 import { generateText, Output } from 'ai';
-import { analysisAIResponseSchema, type analysisSchema } from '~/types/schema';
+import { analysisAIResponseSchema } from '#server/types/schema';
 import { anthropic } from '@ai-sdk/anthropic';
 import { MINIMAL_ANALYSIS_COST, TOKEN_COEFFICIENT } from '~/constants';
 

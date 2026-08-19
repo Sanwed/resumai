@@ -1,19 +1,16 @@
 import z from 'zod';
-import { inngest } from '~/lib/inngest/index';
-import { fileUploaded } from '~/lib/inngest/event-types';
+import { inngest } from '#server/lib/inngest/index';
+import { fileUploaded } from '#server/lib/inngest/event-types';
+import { analysisQuerySchema } from '#server/types/schema';
 
 const bodySchema = z.object({
   fileIds: z.array(z.string()),
 });
 
-const querySchema = z.object({
-  projectId: z.string(),
-});
-
 export default defineEventHandler(async (event) => {
-  const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
+  const query = await getValidatedQuery(event, (query) => analysisQuerySchema.safeParse(query));
 
-  if (!query.data || query.error) {
+  if (query.error) {
     throw createError({
       statusCode: 400,
       message: 'Project id is required',
@@ -25,7 +22,7 @@ export default defineEventHandler(async (event) => {
   if (body.error) {
     throw createError({
       statusCode: 400,
-      message: 'Something went wrong',
+      message: 'Body is empty',
     });
   }
 

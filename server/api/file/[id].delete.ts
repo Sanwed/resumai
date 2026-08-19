@@ -1,5 +1,6 @@
-import { inngest } from '~/lib/inngest/client';
-import { fileDeleted } from '~/lib/inngest/event-types';
+import { inngest } from '#server/lib/inngest/client';
+import { fileDeleted } from '#server/lib/inngest/event-types';
+import { del } from '@vercel/blob';
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
@@ -19,6 +20,8 @@ export default defineEventHandler(async (event) => {
       },
     });
 
+    await del(deletedFile.url);
+
     await inngest.send(
       fileDeleted.create({
         userId: event.context.user.id,
@@ -28,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
     return deletedFile;
   } catch (error) {
-    console.error('[DELETE /api/file/:id]', error);
+    console.error('[DELETE] /api/file/:id', error);
 
     throw createError({
       statusCode: 500,

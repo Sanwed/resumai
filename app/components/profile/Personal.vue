@@ -20,8 +20,7 @@
 
   const formRef = useTemplateRef('editForm');
 
-  type Schema = z.output<typeof userUpdateSchema>;
-  const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+  const onSubmit = async (event: FormSubmitEvent<z.output<typeof userUpdateSchema>>) => {
     try {
       await authClient.updateUser({
         name: event.data.name,

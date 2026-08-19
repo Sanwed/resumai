@@ -1,35 +1,30 @@
 import { del, put } from '@vercel/blob';
-import z from 'zod';
-import { AvailableFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
-import { sanitizeFilename } from '~~/server/utils/files';
-
-const querySchema = z.object({
-  projectId: z.string(),
-});
+import { AllowedFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
+import { fileQuerySchema } from '#server/types/schema';
 
 export default defineEventHandler(async (event) => {
-  const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
+  const query = await getValidatedQuery(event, (query) => fileQuerySchema.safeParse(query));
 
-  if (!query.data || query.error) {
+  if (query.error) {
     throw createError({
       statusCode: 400,
-      message: 'Project id is required',
+      statusMessage: 'Project id is required',
     });
   }
 
   const files = await readMultipartFormData(event);
 
   if (!files?.length) {
-    throw createError({ statusCode: 400, message: 'No files provided' });
+    throw createError({ statusCode: 400, statusMessage: 'No files provided' });
   }
 
   for (const file of files) {
     if (file.data.length > MAX_RESUME_FILE_SIZE) {
-      throw createError({ statusCode: 400, message: 'File too large' });
+      throw createError({ statusCode: 400, statusMessage: 'File too large' });
     }
 
-    if (!file.type || !Object.values<string>(AvailableFileFormats).includes(file.type)) {
-      throw createError({ statusCode: 400, message: 'Invalid file type' });
+    if (!file.type || !Object.values<string>(AllowedFileFormats).includes(file.type)) {
+      throw createError({ statusCode: 400, statusMessage: 'Invalid file type' });
     }
   }
 
@@ -39,7 +34,7 @@ export default defineEventHandler(async (event) => {
     for (const file of files) {
       const filename = sanitizeFilename(file.filename ?? '');
       const { url } = await put(`resume/${event.context.user.id}-${filename}`, file.data, {
-        access: 'public',
+        access: 'private',
         addRandomSuffix: true,
         contentType: file.type,
       });
@@ -52,13 +47,13 @@ export default defineEventHandler(async (event) => {
       });
     }
   } catch (error) {
-    console.error('[POST] /api/file]', error);
+    console.error('[POST] /api/file', error);
 
     await Promise.allSettled(uploaded.map((file) => del(file.url)));
 
     throw createError({
       statusCode: 500,
-      message: 'Failed to upload one or more files',
+      statusMessage: 'Failed to upload one or more files',
     });
   }
 
@@ -73,7 +68,7 @@ export default defineEventHandler(async (event) => {
 
     return createdFiles;
   } catch (error) {
-    console.error('[POST] /api/file/]', error);
+    console.error('[POST] /api/file]', error);
 
     await Promise.allSettled(uploaded.map((file) => del(file.url)));
 

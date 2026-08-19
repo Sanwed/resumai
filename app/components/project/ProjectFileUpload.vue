@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { AvailableFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
+  import { AllowedFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
   import type { Analysis, ProjectFile } from '~/generated/prisma/client';
   import type { FetchError } from 'ofetch';
 
@@ -97,10 +97,10 @@
         continue;
       }
 
-      if (!Object.values<string>(AvailableFileFormats).includes(file.type)) {
+      if (!Object.values<string>(AllowedFileFormats).includes(file.type)) {
         toast.add({
           title: `Incorrect format - ${file.name}`,
-          description: `Please, select only files with next formats - ${Object.keys(AvailableFileFormats).join(', ')}`,
+          description: `Please, select only files with next formats - ${Object.keys(AllowedFileFormats).join(', ')}`,
           color: 'error',
           avatar: {
             src: createObjectUrl(file),
@@ -191,9 +191,9 @@
       multiple
       :disabled="hasVacancyText || loading || fileLoading"
       label="Click or drop your files"
-      :description="`${Object.keys(AvailableFileFormats).join(', ')} (max ${MAX_RESUME_FILE_SIZE / 1024 ** 2}MB)`"
+      :description="`${Object.keys(AllowedFileFormats).join(', ')} (max ${MAX_RESUME_FILE_SIZE / 1024 ** 2}MB)`"
       size="lg"
-      :accept="Object.values(AvailableFileFormats).join(',')"
+      :accept="Object.values(AllowedFileFormats).join(',')"
       class="w-80"
       :icon="fileLoading ? 'i-lucide-loader' : 'i-lucide-upload'"
       :ui="{ files: 'block', icon: fileLoading ? 'animate-spin' : '' }"
@@ -212,7 +212,7 @@
           </span>
           <p class="font-medium text-default mt-2">Click or drop your files</p>
           <p class="text-muted mt-1">
-            {{ Object.keys(AvailableFileFormats).join(', ') }} (max {{ formatFileSize(MAX_RESUME_FILE_SIZE) }})
+            {{ Object.keys(AllowedFileFormats).join(', ') }} (max {{ formatFileSize(MAX_RESUME_FILE_SIZE) }})
           </p>
         </div>
       </template>

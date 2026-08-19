@@ -5,7 +5,7 @@
     link: string | null;
     title: string;
     createdAt: Date;
-    message?: string;
+    message?: string | null;
     chip?: boolean;
   };
   defineProps<Props>();

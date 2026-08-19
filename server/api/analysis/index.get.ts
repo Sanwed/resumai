@@ -1,16 +1,12 @@
-import z from 'zod';
-
-const querySchema = z.object({
-  projectId: z.string(),
-});
+import { analysisQuerySchema } from '#server/types/schema';
 
 export default defineEventHandler(async (event) => {
-  const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
+  const query = await getValidatedQuery(event, (query) => analysisQuerySchema.safeParse(query));
 
-  if (!query.data || query.error) {
+  if (query.error) {
     throw createError({
       statusCode: 400,
-      message: 'Project id is required',
+      statusMessage: 'Project id is required',
     });
   }
 
@@ -28,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to fetch analysis',
+      statusMessage: 'Failed to fetch analyses',
     });
   }
 });

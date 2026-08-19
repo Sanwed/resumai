@@ -1,5 +1,4 @@
 import type z from 'zod';
-import type { projectUpdateSchema, projectCreateSchema } from '~/types/schema';
 
 export function useProject() {
   const loading = ref(false);

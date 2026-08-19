@@ -12,6 +12,7 @@ export async function signInWithProvider(provider: Provider, errorCallbackURL = 
 
 export function handleApiError(error: unknown, toast: ReturnType<typeof useToast>) {
   if (isAPIError(error)) {
+    console.error(error);
     toast.add({
       title: error.name,
       description: error.message,

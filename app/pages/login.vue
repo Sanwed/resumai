@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import * as z from 'zod';
+  import z from 'zod';
   import type { FormSubmitEvent } from '@nuxt/ui';
   import { authClient } from '~/lib/auth-client';
 
@@ -97,9 +97,7 @@
     rememberMe: z.boolean().optional(),
   });
 
-  type Schema = z.output<typeof schema>;
-
-  async function onSubmit(payload: FormSubmitEvent<Schema>) {
+  async function onSubmit(payload: FormSubmitEvent<z.output<typeof schema>>) {
     try {
       await authClient.signIn.email({
         email: payload.data.email,
@@ -107,9 +105,10 @@
         rememberMe: payload.data.rememberMe,
         callbackURL: '/dashboard',
         fetchOptions: {
-          onError: (error) => {
+          onError: (event) => {
+            console.error(event.error);
             toast.add({
-              description: error.error.message,
+              description: event.error.message,
               icon: 'i-lucide-circle-x',
               color: 'error',
             });

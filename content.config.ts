@@ -121,26 +121,6 @@ export const collections = {
       }),
     }),
   }),
-  blog: defineCollection({
-    source: '3.blog.yml',
-    type: 'page',
-  }),
-  posts: defineCollection({
-    source: '3.blog/**/*',
-    type: 'page',
-    schema: z.object({
-      image: z.object({ src: z.string().nonempty().editor({ input: 'media' }) }),
-      authors: z.array(
-        z.object({
-          name: z.string().nonempty(),
-          to: z.string().nonempty(),
-          avatar: z.object({ src: z.string().nonempty().editor({ input: 'media' }) }),
-        }),
-      ),
-      date: z.date(),
-      badge: z.object({ label: z.string().nonempty() }),
-    }),
-  }),
   changelog: defineCollection({
     source: '4.changelog.yml',
     type: 'page',

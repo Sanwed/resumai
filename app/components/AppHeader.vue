@@ -5,10 +5,6 @@
       to: '/pricing',
     },
     {
-      label: 'Blog',
-      to: '/blog',
-    },
-    {
       label: 'Changelog',
       to: '/changelog',
     },

@@ -1,4 +1,4 @@
-import { stripe } from '~/lib/stripe';
+import { stripe } from '#server/lib/stripe';
 
 export default defineEventHandler(async () => {
   try {
@@ -8,8 +8,8 @@ export default defineEventHandler(async () => {
     });
 
     return products;
-  } catch (e) {
-    console.error('[GET /api/billing]', e);
+  } catch (error) {
+    console.error('[GET] /api/billing', error);
 
     throw createError({
       statusCode: 500,

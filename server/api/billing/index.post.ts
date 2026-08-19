@@ -1,6 +1,6 @@
 import z from 'zod';
 import { auth } from '~/lib/auth';
-import { stripe } from '~/lib/stripe';
+import { stripe } from '#server/lib/stripe';
 
 const querySchema = z.object({
   priceId: z.string(),
@@ -16,10 +16,10 @@ export default defineEventHandler(async (event) => {
 
   const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
 
-  if (!query.data || query.error) {
+  if (query.error) {
     throw createError({
       statusCode: 400,
-      message: 'priceId and tokenValue is required',
+      statusMessage: 'priceId and tokenValue is required',
     });
   }
 
@@ -46,8 +46,8 @@ export default defineEventHandler(async (event) => {
     });
 
     return { url: session.url };
-  } catch (e) {
-    console.error('[POST /api/billing]', e);
+  } catch (error) {
+    console.error('[POST] /api/billing', error);
 
     throw createError({
       statusCode: 500,

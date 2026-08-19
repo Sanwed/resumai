@@ -41,6 +41,14 @@ export function generateProjectReportCsv(project: ProjectWithAnalyses): string {
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
+
+  if (!id) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Project id is required',
+    });
+  }
+
   const project = await prisma.project.findFirst({
     where: { id, userId: event.context.user.id },
     include: { analyses: true },

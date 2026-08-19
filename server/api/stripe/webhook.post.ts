@@ -1,5 +1,5 @@
 import type Stripe from 'stripe';
-import { stripe } from '~/lib/stripe';
+import { stripe } from '#server/lib/stripe';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   try {
     stripeEvent = stripe.webhooks.constructEvent(rawBody, signature, config.stripeWebhookSecret);
   } catch (err) {
-    console.error('[POST /api/billing/webhook] signature verification failed', err);
+    console.error('[POST] /api/stripe/webhook', err);
     throw createError({ statusCode: 400, statusMessage: 'Invalid signature' });
   }
 
@@ -45,6 +45,13 @@ export default defineEventHandler(async (event) => {
       } else {
         console.log('No necessary data provided for this payment');
       }
+      break;
+    }
+    case 'payment_intent.payment_failed': {
+      const paymentIntent = stripeEvent.data.object;
+
+      console.log('Payment failed for:', paymentIntent.id);
+      console.log('Failure reason:', paymentIntent.last_payment_error?.message);
       break;
     }
     default:

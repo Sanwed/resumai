@@ -1,17 +1,17 @@
 import z from 'zod';
 import { subscribe } from 'inngest/realtime';
-import { inngest } from '~/lib/inngest/client';
-import { analysisChannel } from '~/lib/inngest/channels';
+import { inngest } from '#server/lib/inngest/client';
+import { analysisChannel } from '#server/lib/inngest/channels';
 
 const querySchema = z.object({ projectId: z.string() });
 
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
 
-  if (!query.data || query.error) {
+  if (query.error) {
     throw createError({
       statusCode: 400,
-      message: 'Project id is required',
+      statusMessage: 'Project id is required',
     });
   }
 
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
     return stream.getEncodedStream();
   } catch (error) {
-    console.error('[realtime] subscribe failed', error);
+    console.error('[GET] /realtime/analysis', error);
 
     throw createError({
       statusCode: 503,

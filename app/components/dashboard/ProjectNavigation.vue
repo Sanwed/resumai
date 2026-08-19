@@ -5,7 +5,7 @@
   import type { FetchError } from 'ofetch';
 
   type Props = {
-    pending?: boolean;
+    loading?: boolean;
     collapsed?: boolean;
     error?: FetchError;
   };
@@ -16,7 +16,7 @@
 
   const route = useRoute();
 
-  const linkProjects: ComputedRef<(NavigationMenuItem & { id: string; color: ProjectColor })[]> = computed(
+  const linkProjects = computed<(NavigationMenuItem & { id: string; color: ProjectColor })[]>(
     () =>
       projects.value?.map((project) => ({
         id: project.id,
@@ -32,7 +32,7 @@
 
 <template>
   <div>
-    <div v-if="pending" class="h-60 w-full flex items-center justify-center flex-col text-muted">
+    <div v-if="loading" class="h-60 w-full flex items-center justify-center flex-col text-muted">
       <UIcon name="i-lucide-loader" size="30" class="animate-spin" />
     </div>
     <div v-else-if="error" class="h-60 w-full flex items-center justify-center flex-col gap-2 text-muted">
@@ -41,7 +41,7 @@
     </div>
     <template v-else-if="!projects?.length">
       <ProjectButtonCreate :collapsed="collapsed" />
-      <UEmpty icon="i-lucide-circle-x" variant="naked" title="Projects not found" />
+      <UEmpty icon="i-lucide-file" variant="naked" title="Projects not found" />
     </template>
     <div v-else class="flex flex-col gap-4">
       <ProjectButtonCreate :collapsed="collapsed" />

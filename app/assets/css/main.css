@@ -86,3 +86,17 @@
   --ui-bg-elevated: var(--ui-color-neutral-900);
   --ui-bg-accented: var(--ui-color-neutral-800);
 }
+
+.layout-enter-active,
+.layout-leave-active {
+  transition:
+    opacity 180ms ease,
+}
+
+.layout-enter-from {
+  opacity: 0;
+}
+
+.layout-leave-to {
+  opacity: 0;
+}

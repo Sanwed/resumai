@@ -9,11 +9,7 @@
 
   const toast = useToast();
 
-  const linkedAccounts = ref<
-    {
-      providerId: string;
-    }[]
-  >([]);
+  const linkedAccounts = ref<{ providerId: string }[]>([]);
 
   const fetchLinkedAccounts = async () => {
     const { data } = await authClient.listAccounts();
@@ -63,10 +59,7 @@
 
   const connectProvider = async (providerId: string) => {
     try {
-      await authClient.linkSocial({
-        provider: providerId,
-        callbackURL: '/profile',
-      });
+      await authClient.linkSocial({ provider: providerId, callbackURL: '/profile' });
     } catch (e) {
       handleApiError(e, toast);
     }
@@ -74,9 +67,7 @@
 
   const unlinkProvider = async (providerId: string) => {
     try {
-      await authClient.unlinkAccount({
-        providerId,
-      });
+      await authClient.unlinkAccount({ providerId });
       await fetchLinkedAccounts();
     } catch (e) {
       handleApiError(e, toast);

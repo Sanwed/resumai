@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
     return deletedProject;
   } catch (error) {
-    console.error('[DELETE /api/project/:id]', error);
+    console.error('[DELETE] /api/project/:id', error);
 
     throw createError({
       statusCode: 500,

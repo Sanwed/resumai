@@ -1,7 +1,7 @@
-import type { User } from '~/generated/prisma';
+import type { auth } from '~/lib/auth';
 
 declare module 'h3' {
   interface H3EventContext {
-    user: User;
+    user: typeof auth.$Infer.Session.user;
   }
 }

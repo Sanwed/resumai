@@ -40,15 +40,6 @@
     disconnect();
   });
 
-  useSeoMeta({
-    title: 'Dashboard',
-    ogTitle: 'Dashboard',
-    description:
-      'Manage your recruitment projects, analyze resumes, compare candidates, and review AI-powered hiring insights.',
-    ogDescription:
-      'Manage your recruitment projects, analyze resumes, compare candidates, and review AI-powered hiring insights.',
-  });
-
   const unreadNotifications = computed(() => notifications.value?.filter((n) => !n.read) ?? []);
 </script>
 

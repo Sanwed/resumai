@@ -19,8 +19,7 @@
 
   const verificationSent = ref(false);
 
-  type Schema = z.output<typeof userUpdateSchema>;
-  const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+  const onSubmit = async (event: FormSubmitEvent<z.output<typeof userUpdateSchema>>) => {
     try {
       if (!event.data.email || event.data.email === props.defaultMail) return;
       await authClient.changeEmail({

@@ -1,6 +1,6 @@
 import type z from 'zod';
 import type { Analysis, Notification } from '~/generated/prisma/client';
-import type { analysisRealtimeSchema, notificationSchema } from '~/types/schema';
+import type {} from '~/types/schema';
 
 type Response =
   | { topic: 'status'; data: z.infer<typeof analysisRealtimeSchema> }

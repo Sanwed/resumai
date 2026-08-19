@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
     return updatedNotification;
   } catch (error) {
-    console.error('[PATCH /api/notification/:id]', error);
+    console.error('[PATCH] /api/notification/:id', error);
 
     throw createError({
       statusCode: 500,

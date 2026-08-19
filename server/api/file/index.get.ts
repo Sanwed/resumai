@@ -1,17 +1,13 @@
-import z from 'zod';
-
-const querySchema = z.object({
-  projectId: z.string(),
-});
+import { fileQuerySchema } from '#server/types/schema';
 
 export default defineEventHandler(async (event) => {
   try {
-    const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
+    const query = await getValidatedQuery(event, (query) => fileQuerySchema.safeParse(query));
 
-    if (!query.data || query.error) {
+    if (query.error) {
       throw createError({
         statusCode: 400,
-        message: 'Project id is required',
+        statusMessage: 'Project id is required',
       });
     }
 
@@ -24,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
     return files;
   } catch (error) {
-    console.error('[GET] /api/file/]', error);
+    console.error('[GET] /api/file', error);
 
     throw createError({
       statusCode: 500,

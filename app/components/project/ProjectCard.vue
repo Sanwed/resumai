@@ -3,7 +3,6 @@
   import type { ProjectColor } from '~/generated/prisma/enums';
   import type { FetchError } from 'ofetch';
   import type { Project } from '~/generated/prisma/client';
-  import { projectUpdateSchema } from '~/types/schema';
   import type z from 'zod';
 
   type Props = {
@@ -27,7 +26,7 @@
 
   if (!currentProject.value) {
     throw createError({
-      status: 401,
+      status: 404,
       statusText: 'Project not found',
     });
   }

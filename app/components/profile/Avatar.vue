@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import type { FetchError } from 'ofetch';
-  import { MAX_AVATAR_FILE_SIZE } from '~/constants';
+  import { AllowedAvatarFormats, AllowedFileFormats, MAX_AVATAR_FILE_SIZE } from '~/constants';
   import { authClient } from '~/lib/auth-client';
 
   type Props = {
@@ -17,7 +17,18 @@
 
   watch(avatarFile, async (newAvatar) => {
     if (!newAvatar) return;
-    if (newAvatar?.size > MAX_AVATAR_FILE_SIZE) {
+
+    if (!Object.values<string>(AllowedFileFormats).includes(newAvatar.type)) {
+      toast.add({
+        title: 'Invalid file type',
+        description: `Allowed file types: ${Object.keys(AllowedAvatarFormats).join(', ')}`,
+        color: 'error',
+      });
+      avatarFile.value = null;
+      return;
+    }
+
+    if (newAvatar.size > MAX_AVATAR_FILE_SIZE) {
       toast.add({
         title: 'Max file size exceeded',
         description: `Please, select new file not greater than ${formatFileSize(MAX_AVATAR_FILE_SIZE)}`,

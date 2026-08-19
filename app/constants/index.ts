@@ -11,11 +11,16 @@ export const Providers = {
   LINKEDIN: 'linkedin',
 } as const;
 
-export const AvailableFileFormats = {
+export const AllowedFileFormats = {
   PDF: 'application/pdf',
   DOCX: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   DOC: 'application/msword',
   TXT: 'text/plain',
+  JPG: 'image/jpeg',
+  PNG: 'image/png',
+} as const;
+
+export const AllowedAvatarFormats = {
   JPG: 'image/jpeg',
   PNG: 'image/png',
 } as const;

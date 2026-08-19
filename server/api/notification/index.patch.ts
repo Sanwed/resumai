@@ -7,10 +7,10 @@ const bodySchema = z.object({
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (body) => bodySchema.safeParse(body));
 
-  if (!body.data || body.error) {
+  if (body.error) {
     throw createError({
       statusCode: 400,
-      message: 'Incorrect body data',
+      statusMessage: 'Incorrect body data',
     });
   }
 
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
     return updatedNotifications;
   } catch (error) {
-    console.error('[PATCH /api/notification]', error);
+    console.error('[PATCH] /api/notification', error);
 
     throw createError({
       statusCode: 500,
