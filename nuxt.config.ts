@@ -37,6 +37,8 @@ export default defineNuxtConfig({
       ogType: 'website',
       ogSiteName: 'ResumAI',
       twitterCard: 'summary_large_image',
+      twitterSite: '@ResumAI',
+      twitterCreator: '@Sanwed',
       themeColor: [
         { content: '#020618', media: '(prefers-color-scheme: dark)' },
         { content: 'white', media: '(prefers-color-scheme: light)' },
