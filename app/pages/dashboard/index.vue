@@ -2,6 +2,12 @@
   import type { Notification } from '~/generated/prisma/client';
   import { authClient } from '~/lib/auth-client';
 
+  useSeoMeta({
+    title: 'Dashboard',
+    description:
+      'Access your ResumAI dashboard to create hiring projects, upload resumes, manage candidate analyses, and easily review AI-powered matching reports.',
+  });
+
   definePageMeta({ layout: 'dashboard', middleware: 'auth' });
 
   const { data: notifications } = useNuxtData<Notification[]>('notifications');

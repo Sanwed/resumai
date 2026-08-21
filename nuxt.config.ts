@@ -27,6 +27,10 @@ export default defineNuxtConfig({
     identity: 'Organization',
   },
 
+  ogImage: {
+    zeroRuntime: true,
+  },
+
   seo: {
     redirectToCanonicalSiteUrl: true,
     meta: {
@@ -81,9 +85,18 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
-    '/privacy': { redirect: '/privacy/introduction', prerender: false },
-    '/terms': { redirect: '/terms/acceptance-of-terms', prerender: false },
-    '/cookies': { redirect: 'cookies/introduction', prerender: false },
+    '/changelog': { prerender: true },
+
+    '/privacy': { redirect: '/privacy/introduction' },
+    '/privacy/**': { prerender: true },
+
+    '/terms': { redirect: '/terms/acceptance-of-terms' },
+    '/terms/**': { prerender: true },
+
+    '/cookies': { redirect: '/cookies/introduction' },
+    '/cookies/**': { prerender: true },
+
+    '/pricing': { swr: 3600 },
   },
 
   compatibilityDate: '2026-06-30',
@@ -93,9 +106,5 @@ export default defineNuxtConfig({
       routes: ['/'],
       crawlLinks: true,
     },
-  },
-
-  ogImage: {
-    zeroRuntime: true,
   },
 });

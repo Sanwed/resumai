@@ -8,6 +8,12 @@
     backRoute: '/login',
   });
 
+  useSeoMeta({
+    title: 'Reset Your Password',
+    description:
+      'Request a secure password reset link for your ResumAI account and quickly restore access to your resume analysis projects, reports, and settings.',
+  });
+
   const toast = useToast();
   const sent = ref(false);
 
@@ -33,9 +39,9 @@
         email: payload.data.email,
         redirectTo: 'http://localhost:3000/reset-password/',
         fetchOptions: {
-          onError: (error) => {
+          onError: (event) => {
             toast.add({
-              description: error.error.message,
+              description: event.error.message,
               icon: 'i-lucide-circle-x',
               color: 'error',
             });

@@ -4,6 +4,12 @@
   import { MIN_PASSWORD_LENGTH } from '~/constants';
   import { authClient } from '~/lib/auth-client';
 
+  useSeoMeta({
+    title: 'Set a New Password',
+    description:
+      'Set a new password for your ResumAI account, restore secure access, and return to your resume analysis projects, candidate reports, and settings.',
+  });
+
   const route = useRoute();
   const token = route.query.token as string | undefined;
 
@@ -44,6 +50,13 @@
         fetchOptions: {
           onSuccess: () => {
             navigateTo({ path: '/login', query: { 'message-success': 'Password successfully changed' } });
+          },
+          onError: (event) => {
+            toast.add({
+              description: event.error.message,
+              icon: 'i-lucide-circle-x',
+              color: 'error',
+            });
           },
         },
       });

@@ -9,10 +9,9 @@
   const toast = useToast();
 
   useSeoMeta({
-    title: 'Profile',
-    ogTitle: 'Profile',
-    description: 'Settings of your personal profile',
-    ogDescription: 'Settings of your personal profile',
+    title: 'Profile, Security & Account Settings',
+    description:
+      'Manage your ResumAI profile, email address, sign-in methods, account security, connected providers, and personal preferences in one secure place.',
   });
 
   const { data: session } = await authClient.useSession(useAuthFetch);

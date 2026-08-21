@@ -10,8 +10,15 @@
   });
 
   useSeoMeta({
-    title: 'Sign up',
-    description: 'Create an account to get started',
+    title: 'Create account',
+    description:
+      'Create your ResumAI account to analyze resumes with AI, match candidates to job descriptions, organize hiring projects, and generate actionable reports.',
+  });
+
+  defineOgImage('Base.takumi', {
+    title: 'Create account',
+    description:
+      'Create your ResumAI account to analyze resumes with AI, match candidates to job descriptions, organize hiring projects, and generate actionable reports.',
   });
 
   const toast = useToast();

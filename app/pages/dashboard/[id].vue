@@ -40,6 +40,12 @@
     disconnect();
   });
 
+  useSeoMeta({
+    title: () => currentProject.value?.name,
+    description:
+      'Manage this hiring project, add a job description, upload candidate resumes, and review AI-powered resume analysis and job-match insights in one place.',
+  });
+
   const unreadNotifications = computed(() => notifications.value?.filter((n) => !n.read) ?? []);
 </script>
 

@@ -1,9 +1,8 @@
 title: Analyze Candidates with [ResumAI]{class="text-primary"}
 description: AI-powered resume screening for recruiters and job seekers. Instantly evaluate resumes, match candidates to job descriptions, identify strengths and weaknesses, and make smarter hiring decisions in minutes.
 seo:
-  title: Home Page
-  description: Create stunning, fast and production-ready SaaS applications with Nuxt UI. 100+ Vue components, authentication, dark mode, and enterprise features built on Tailwind CSS.
-navigation: false
+  title: AI Resume Screening & Job Matching
+  description: Screen resumes with AI, match candidates to job descriptions, uncover strengths and skill gaps, and make faster, more confident hiring decisions.
 hero:
   links:
     - label: Get started

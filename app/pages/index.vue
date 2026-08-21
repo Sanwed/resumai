@@ -1,12 +1,14 @@
 <script setup lang="ts">
   const { data: page } = await useAsyncData('index', () => queryCollection('index').first());
 
-  const title = page.value?.seo?.title || page.value?.title;
-  const description = page.value?.seo?.description || page.value?.description;
-
   useSeoMeta({
-    title,
-    description,
+    title: () => page.value?.seo.title,
+    description: () => page.value?.seo.description,
+  });
+
+  defineOgImage('Base.takumi', {
+    title: page.value?.seo.title,
+    description: page.value?.seo.description,
   });
 </script>
 

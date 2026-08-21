@@ -1,5 +1,5 @@
 import { put } from '@vercel/blob';
-import { AllowedFileFormats, MAX_AVATAR_FILE_SIZE } from '~/constants';
+import { AllowedAvatarFormats, MAX_AVATAR_FILE_SIZE } from '~/constants';
 import { sanitizeFilename } from '#server/utils/files';
 
 export default defineEventHandler(async (event) => {
@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'No file provided' });
   }
 
-  if (!file.type || !Object.values<string>(AllowedFileFormats).includes(file.type)) {
+  if (!file.type || !Object.values<string>(AllowedAvatarFormats).includes(file.type)) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid file type' });
   }
 

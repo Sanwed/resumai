@@ -3,43 +3,36 @@
 
   type Props = {
     collection: keyof PageCollections;
+    titleTemplate?: string | null;
+    seoSubtitle?: string;
   };
   const props = defineProps<Props>();
 
   const route = useRoute();
 
-  const { data: navigation } = await useAsyncData(
-    `${props.collection}-navigation`,
-    () => queryCollectionNavigation(props.collection),
-    {
+  const [{ data: navigation }, { data: page }, { data: surround }] = await Promise.all([
+    useAsyncData(`${props.collection}-navigation`, () => queryCollectionNavigation(props.collection), {
       transform: (data) => data.find((item) => item.path === `/${props.collection}`)?.children || [],
-    },
-  );
-
-  const { data: page } = await useAsyncData(route.path, () =>
-    queryCollection(props.collection).path(route.path).first(),
-  );
-  if (!page.value) {
-    throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true });
-  }
-
-  const { data: surround } = await useAsyncData(`${route.path}-surround`, () => {
-    return queryCollectionItemSurroundings(props.collection, route.path, {
-      fields: ['description'],
-    });
-  });
-
-  const title = page.value.seo?.title || page.value.title;
-  const description = page.value.seo?.description || page.value.description;
+    }),
+    useAsyncData(route.path, () => queryCollection(props.collection).path(route.path).first()),
+    useAsyncData(`${route.path}-surround`, () => {
+      return queryCollectionItemSurroundings(props.collection, route.path, {
+        fields: ['description'],
+      });
+    }),
+  ]);
 
   useSeoMeta({
-    title,
-    ogTitle: title,
-    description,
-    ogDescription: description,
+    title: () => page.value?.seo.title,
+    titleTemplate: () => `%s - ${props.titleTemplate}`,
+    description: () => page.value?.seo.description,
   });
 
-  defineOgImage('Saas', { title, description, headline: title });
+  defineOgImage('Base.takumi', {
+    title: page.value?.seo.title,
+    description: page.value?.seo.description,
+    subTitle: props.seoSubtitle,
+  });
 </script>
 
 <template>

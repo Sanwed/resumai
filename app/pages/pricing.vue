@@ -2,21 +2,20 @@
   import type { SerializeObject } from 'nitropack';
   import type Stripe from 'stripe';
 
-  const { data: page } = await useAsyncData('pricing', () => queryCollection('pricing').first());
-
-  const title = page.value?.seo?.title || page.value?.title;
-  const description = page.value?.seo?.description || page.value?.description;
+  const [{ data: page }, { data: products, pending: loading, error }] = await Promise.all([
+    useAsyncData('pricing', () => queryCollection('pricing').first()),
+    useLazyFetch('/api/billing'),
+  ]);
 
   useSeoMeta({
-    title,
-    ogTitle: title,
-    description,
-    ogDescription: description,
+    title: () => page.value?.seo.title,
+    description: () => page.value?.seo.description,
   });
 
-  defineOgImage('Saas', { title, description });
-
-  const { data: products, pending: loading, error } = await useLazyFetch('/api/billing');
+  defineOgImage('Base.takumi', {
+    title: page.value?.seo.title,
+    description: page.value?.seo.description,
+  });
 
   const getPriceLabel = (defaultPrice?: string | SerializeObject<Stripe.Price> | null) => {
     if (!defaultPrice || typeof defaultPrice === 'string') return;

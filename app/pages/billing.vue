@@ -9,10 +9,9 @@
   });
 
   useSeoMeta({
-    title: 'Billing',
-    ogTitle: 'Billing',
-    description: 'Add tokens to your account',
-    ogDescription: 'Add tokens to your account',
+    title: 'Purchase AI Resume Analysis Tokens',
+    description:
+      'Purchase flexible ResumAI token packs for AI resume analysis, candidate matching, and reports. Add credits instantly with no subscription required.',
   });
 
   const { data: session } = await authClient.useSession(useAuthFetch);

@@ -10,7 +10,14 @@
 
   useSeoMeta({
     title: 'Login',
-    description: 'Login to your account to continue',
+    description:
+      'Log in to ResumAI to access your projects, analyze resumes, compare candidates with job requirements, and manage your account securely online.',
+  });
+
+  defineOgImage('Base.takumi', {
+    title: 'Login',
+    description:
+      'Log in to ResumAI to access your projects, analyze resumes, compare candidates with job requirements, and manage your account securely online.',
   });
 
   const toast = useToast();

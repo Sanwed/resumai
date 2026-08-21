@@ -1,22 +1,20 @@
 <script setup lang="ts">
   const route = useRoute();
 
-  const { data: page } = await useAsyncData('changelog', () => queryCollection('changelog').first());
-  const { data: versions } = await useAsyncData(route.path, () =>
-    queryCollection('versions').order('date', 'DESC').all(),
-  );
-
-  const title = page.value?.seo?.title || page.value?.title;
-  const description = page.value?.seo?.description || page.value?.description;
+  const [{ data: page }, { data: versions }] = await Promise.all([
+    useAsyncData('changelog', () => queryCollection('changelog').first()),
+    useAsyncData(route.path, () => queryCollection('versions').order('date', 'DESC').all()),
+  ]);
 
   useSeoMeta({
-    title,
-    ogTitle: title,
-    description,
-    ogDescription: description,
+    title: () => page.value?.seo.title,
+    description: () => page.value?.seo.description,
   });
 
-  defineOgImage('Saas', { title, description });
+  defineOgImage('Base.takumi', {
+    title: page.value?.seo.title,
+    description: page.value?.seo.description,
+  });
 </script>
 
 <template>

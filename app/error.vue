@@ -9,7 +9,8 @@
 
   useSeoMeta({
     title: 'Page not found',
-    description: 'We are sorry but this page could not be found.',
+    description:
+      'The page you requested could not be found. Check the web address or return to ResumAI to continue analyzing resumes and managing hiring projects.',
   });
 </script>
 
