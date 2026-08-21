@@ -9,6 +9,7 @@
   useSeoMeta({
     title: () => page.value?.seo.title,
     description: () => page.value?.seo.description,
+    ogImageAlt: 'ResumAI social card: product updates and release changelog',
   });
 
   defineOgImage('Base.takumi', {

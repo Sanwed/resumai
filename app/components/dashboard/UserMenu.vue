@@ -14,7 +14,10 @@
       {
         type: 'label',
         label: session.value.data?.user.name,
-        avatar: { src: session.value.data?.user.image ?? '/avatar-placeholder.png' },
+        avatar: {
+          src: session.value.data?.user.image ?? '/avatar-placeholder.png',
+          alt: session.value.data?.user.name ?? 'Account avatar',
+        },
       },
     ],
     [
@@ -74,7 +77,10 @@
     :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
   >
     <UButton
-      :avatar="{ src: session.data?.user.image ?? '/avatar-placeholder.png' }"
+      :avatar="{
+        src: session.data?.user.image ?? '/avatar-placeholder.png',
+        alt: session.data?.user.name ?? 'Account avatar',
+      }"
       :label="collapsed ? undefined : session.data?.user.name"
       :trailing-icon="collapsed ? undefined : 'i-lucide-chevrons-up-down'"
       color="neutral"

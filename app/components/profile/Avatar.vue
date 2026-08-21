@@ -5,6 +5,7 @@
 
   type Props = {
     src?: string | null;
+    alt: string;
   };
 
   defineProps<Props>();
@@ -88,7 +89,7 @@
           as="button"
           type="button"
           :src="(newAvatarUrl || src) ?? '/avatar-placeholder.png'"
-          alt="User avatar"
+          :alt="alt"
           class="size-20 hover:opacity-90 focus-visible:opacity-90"
           @click="open"
         />

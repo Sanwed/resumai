@@ -4,6 +4,7 @@
   useSeoMeta({
     title: () => page.value?.seo.title,
     description: () => page.value?.seo.description,
+    ogImageAlt: 'ResumAI social card: AI resume screening and job matching',
   });
 
   defineOgImage('Base.takumi', {

@@ -69,8 +69,12 @@
   <UDashboardGroup>
     <UDashboardSidebar v-model:open="sidebarOpen" collapsible :default-size="20">
       <template #header="{ collapsed }">
-        <NuxtLink to="/dashboard" class="hover:text-primary focus-visible:text-primary transition-colors">
-          <AppLogo :collapsed="collapsed" class="h-10 max-w-full" />
+        <NuxtLink
+          to="/dashboard"
+          aria-label="ResumAI dashboard"
+          class="hover:text-primary focus-visible:text-primary transition-colors"
+        >
+          <AppLogo :collapsed="collapsed" aria-hidden="true" class="h-10 max-w-full" />
         </NuxtLink>
       </template>
 

@@ -13,6 +13,7 @@
     title: 'Create account',
     description:
       'Create your ResumAI account to analyze resumes with AI, match candidates to job descriptions, organize hiring projects, and generate actionable reports.',
+    ogImageAlt: 'ResumAI social card: account creation',
   });
 
   defineOgImage('Base.takumi', {

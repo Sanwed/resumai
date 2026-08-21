@@ -10,6 +10,7 @@
   useSeoMeta({
     title: () => page.value?.seo.title,
     description: () => page.value?.seo.description,
+    ogImageAlt: 'ResumAI social card: token pack pricing',
   });
 
   defineOgImage('Base.takumi', {

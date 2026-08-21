@@ -26,6 +26,7 @@
     title: () => page.value?.seo.title,
     titleTemplate: () => `%s - ${props.titleTemplate}`,
     description: () => page.value?.seo.description,
+    ogImageAlt: () => `ResumAI social card: ${props.titleTemplate ?? props.collection}`,
   });
 
   defineOgImage('Base.takumi', {

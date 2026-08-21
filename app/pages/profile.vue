@@ -47,7 +47,7 @@
         :links="[{ label: 'Go back', to: '/dashboard', icon: 'i-lucide-chevron-left' }]"
       />
       <UPageBody class="space-y-8">
-        <ProfileAvatar :src="session.user.image" />
+        <ProfileAvatar :src="session.user.image" :alt="session.user.name ?? 'Account avatar'" />
         <ProfilePersonal :default-values="{ name: session.user.name }" />
         <ProfileMail :default-mail="session.user.email" />
         <ProfileProviders :default-mail="session.user.email" />
