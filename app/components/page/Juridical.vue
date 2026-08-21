@@ -33,6 +33,19 @@
     description: page.value?.seo.description,
     subTitle: props.seoSubtitle,
   });
+
+  const pageRouteName = computed(() => route.name?.toString().split('-')[0]);
+
+  useSchemaOrg(
+    defineBreadcrumb({
+      name: `${pageRouteName.value} breadcrumb`,
+      itemListElement: [
+        { name: 'Home', item: '/' },
+        { name: props.titleTemplate, item: `/${pageRouteName.value}` },
+        { name: page.value?.title },
+      ],
+    }),
+  );
 </script>
 
 <template>

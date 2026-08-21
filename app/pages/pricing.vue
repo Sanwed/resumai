@@ -17,6 +17,39 @@
     description: page.value?.seo.description,
   });
 
+  useSchemaOrg(
+    computed(() => [
+      defineWebPage({
+        '@type': ['WebPage', 'CollectionPage'],
+      }),
+      defineBreadcrumb({
+        itemListElement: [{ name: 'Home', item: '/' }, { name: page.value?.seo.title ?? 'Pricing' }],
+      }),
+      ...(products.value?.data.map((item) => {
+        const defaultPrice = item.default_price;
+        const offer =
+          defaultPrice && typeof defaultPrice !== 'string' && defaultPrice.unit_amount != null
+            ? {
+                '@type': 'Offer' as const,
+                price: defaultPrice.unit_amount / 100,
+                priceCurrency: defaultPrice.currency.toUpperCase(),
+                availability: item.active ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                url: '/pricing',
+              }
+            : undefined;
+
+        return defineProduct({
+          '@id': `#product-${item.id}`,
+          name: item.name,
+          description: item.description ?? undefined,
+          url: '/pricing',
+          sku: item.id,
+          offers: offer,
+        });
+      }) ?? []),
+    ]),
+  );
+
   const getPriceLabel = (defaultPrice?: string | SerializeObject<Stripe.Price> | null) => {
     if (!defaultPrice || typeof defaultPrice === 'string') return;
     if (defaultPrice.unit_amount == null) return;

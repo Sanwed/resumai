@@ -24,7 +24,12 @@ export default defineNuxtConfig({
   },
 
   schemaOrg: {
-    identity: 'Organization',
+    identity: {
+      type: 'Organization',
+      name: 'ResumAI',
+      logo: '/android-chrome-512x512.png',
+      sameAs: ['https://www.linkedin.com/in/sanwed/', 'https://github.com/Sanwed/resumai'],
+    },
   },
 
   ogImage: {

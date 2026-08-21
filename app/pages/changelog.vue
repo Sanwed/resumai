@@ -15,6 +15,29 @@
     title: page.value?.seo.title,
     description: page.value?.seo.description,
   });
+
+  useSchemaOrg(
+    computed(() => [
+      defineWebPage({
+        '@type': ['WebPage', 'CollectionPage'],
+      }),
+      defineBreadcrumb({
+        itemListElement: [{ name: 'Home', item: '/' }, { name: page.value?.seo.title ?? 'Changelog' }],
+      }),
+      ...(versions.value?.map((version, index) =>
+        defineArticle({
+          '@id': `#release-${index + 1}`,
+          '@type': 'TechArticle',
+          headline: version.title,
+          description: version.description,
+          datePublished: version.date,
+          image: version.image,
+          articleSection: ['Product updates'],
+          isAccessibleForFree: true,
+        }),
+      ) ?? []),
+    ]),
+  );
 </script>
 
 <template>
