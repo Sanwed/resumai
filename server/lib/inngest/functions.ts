@@ -24,7 +24,10 @@ export const analyzeResume = inngest.createFunction(
     ],
   },
   async ({ event, step }) => {
-    const ch = analysisChannel({ projectId: event.data.projectId });
+    const ch = analysisChannel({
+      projectId: event.data.projectId,
+      userId: event.data.userId,
+    });
 
     let existingFile: ProjectFile | undefined;
     try {
@@ -337,6 +340,7 @@ export const analyzeResume = inngest.createFunction(
       const { analysis, usage } = await step.run('generate-ai-response', async () => {
         const result = await generateText({
           model: anthropic('claude-haiku-4-5-20251001'),
+          instructions: ANALYSIS_INSTRUCTIONS,
           prompt: buildAnalysisPrompt(existingProject?.vacancyText ?? '', parsedText),
           output: Output.object({
             schema: analysisAIResponseSchema,
@@ -472,7 +476,10 @@ export const sendNotification = inngest.createFunction(
     triggers: [analysisFinished],
   },
   async ({ event, step }) => {
-    const ch = analysisChannel({ projectId: event.data.projectId });
+    const ch = analysisChannel({
+      projectId: event.data.projectId,
+      userId: event.data.userId,
+    });
 
     let newNotification: Notification | undefined;
     try {

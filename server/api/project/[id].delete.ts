@@ -1,3 +1,5 @@
+import { del } from '@vercel/blob';
+
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
 
@@ -9,6 +11,13 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const filesToDelete = await prisma.projectFile.findMany({
+      where: { userId: event.context.user.id, projectId: id },
+      select: { url: true },
+    });
+
+    await del(filesToDelete.map((el) => el.url));
+
     const deletedProject = await prisma.project.delete({
       where: {
         id,

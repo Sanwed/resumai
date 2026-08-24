@@ -17,6 +17,7 @@
 
   const toast = useToast();
   const sent = ref(false);
+  const resetPasswordURL = new URL('/reset-password', useRequestURL().origin).toString();
 
   const fields = [
     {
@@ -38,7 +39,7 @@
     try {
       await authClient.requestPasswordReset({
         email: payload.data.email,
-        redirectTo: 'http://localhost:3000/reset-password',
+        redirectTo: resetPasswordURL,
         fetchOptions: {
           onError: (event) => {
             toast.add({

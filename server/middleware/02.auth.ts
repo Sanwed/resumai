@@ -2,7 +2,7 @@ import { auth } from '~/lib/auth';
 
 const protectedPrefixes: string[] = [
   '/api/project',
-  '/api/upload',
+  '/api/avatar',
   '/api/file',
   '/api/analysis',
   '/api/realtime',
@@ -18,6 +18,10 @@ export default defineEventHandler(async (event) => {
 
   if (!session) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
+  }
+
+  if (!session.user.emailVerified) {
+    throw createError({ statusCode: 403, statusMessage: 'Email verification required' });
   }
 
   event.context.user = session.user;

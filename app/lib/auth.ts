@@ -4,6 +4,8 @@ import { PrismaClient } from '@/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Resend } from 'resend';
 import { stripe } from '../../server/lib/stripe';
+import { MIN_PASSWORD_LENGTH } from '~/constants';
+import { del } from '@vercel/blob';
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -16,11 +18,17 @@ const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
+  trustedOrigins: process.env.NUXT_PUBLIC_SITE_URL ? [process.env.NUXT_PUBLIC_SITE_URL] : [],
   advanced: {
     cookiePrefix: 'resumai',
+    disableCSRFCheck: false,
+    disableOriginCheck: false,
   },
   logger: {
-    level: 'debug',
+    level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
+  },
+  session: {
+    freshAge: 60 * 60,
   },
   user: {
     additionalFields: {
@@ -46,6 +54,14 @@ const auth = betterAuth({
           text: `Click the link to permanently delete your account. After this action the changes can not be undone and you can lose all data on this account - ${url}`,
         });
       },
+      beforeDelete: async (user) => {
+        const filesToDelete = await prisma.projectFile.findMany({
+          where: { userId: user.id },
+          select: { url: true },
+        });
+
+        await del(filesToDelete.map((el) => el.url));
+      },
     },
     changeEmail: {
       enabled: true,
@@ -60,22 +76,30 @@ const auth = betterAuth({
     },
   },
   emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
     sendVerificationEmail: async ({ user, url }) => {
       void resend.emails.send({
         from: 'onboarding@resend.dev',
         to: user.email,
         subject: 'Verification letter',
-        text: `Click <a href="${url}">here</a> to verify your email.`,
+        text: `Click the link below to verify your email. \n ${url}"`,
       });
     },
   },
   account: {
     accountLinking: {
-      allowDifferentEmails: true,
+      disableImplicitLinking: true,
+      allowDifferentEmails: false,
     },
+    encryptOAuthTokens: true,
   },
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
+    minPasswordLength: MIN_PASSWORD_LENGTH,
+    maxPasswordLength: 128,
+    resetPasswordTokenExpiresIn: 60 * 30,
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async ({ user, url }) => {
       void resend.emails.send({
@@ -111,14 +135,17 @@ const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      requireEmailVerification: true,
     },
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      requireEmailVerification: true,
     },
     linkedin: {
       clientId: process.env.LINKEDIN_CLIENT_ID as string,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET as string,
+      requireEmailVerification: true,
     },
   },
   databaseHooks: {

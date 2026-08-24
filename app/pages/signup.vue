@@ -24,6 +24,7 @@
   });
 
   const toast = useToast();
+  const verificationSent = ref(false);
 
   const fields = [
     {
@@ -117,8 +118,11 @@
         name: payload.data.name,
         email: payload.data.email,
         password: payload.data.password,
-        callbackURL: '/dashboard',
+        callbackURL: '/login',
         fetchOptions: {
+          onSuccess: () => {
+            verificationSent.value = true;
+          },
           onError: (event) => {
             console.error(event.error);
             toast.add({
@@ -150,6 +154,10 @@
   >
     <template #description>
       Already have an account? <ULink to="/login" class="text-primary font-medium">Login</ULink>.
+    </template>
+
+    <template #validation>
+      <UAlert v-if="verificationSent" title="Check your email to verify your account" color="success" variant="soft" />
     </template>
 
     <template #footer>

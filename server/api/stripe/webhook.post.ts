@@ -29,22 +29,65 @@ export default defineEventHandler(async (event) => {
       const customerId = paymentIntent.customer;
       const userId = paymentIntent.metadata.user_id;
       const tokensValue = paymentIntent.metadata.tokens_value;
+      const tokens = Number(tokensValue);
 
-      if (customerId && typeof customerId === 'string' && userId && tokensValue) {
-        await prisma.user.update({
+      if (
+        typeof customerId !== 'string' ||
+        !userId ||
+        !Number.isSafeInteger(tokens) ||
+        tokens <= 0 ||
+        tokens > 2_147_483_647
+      ) {
+        console.error('[POST] /api/stripe/webhook Invalid payment metadata', {
+          eventId: stripeEvent.id,
+          paymentIntentId: paymentIntent.id,
+        });
+
+        throw createError({ statusCode: 500, statusMessage: 'Invalid payment metadata' });
+      }
+
+      const credited = await prisma.$transaction(async (tx) => {
+        const purchase = await tx.tokenPurchase.createMany({
+          data: {
+            stripeEventId: stripeEvent.id,
+            stripePaymentIntentId: paymentIntent.id,
+            stripeCustomerId: customerId,
+            amount: paymentIntent.amount_received,
+            currency: paymentIntent.currency,
+            tokens,
+            userId,
+          },
+          skipDuplicates: true,
+        });
+
+        if (purchase.count === 0) return false;
+
+        const user = await tx.user.updateMany({
           where: {
             id: userId,
             customerId,
           },
           data: {
             tokens: {
-              increment: Number(tokensValue),
+              increment: tokens,
             },
           },
         });
-      } else {
-        console.log('No necessary data provided for this payment');
+
+        if (user.count !== 1) {
+          throw createError({ statusCode: 500, statusMessage: 'Unable to credit token purchase' });
+        }
+
+        return true;
+      });
+
+      if (!credited) {
+        console.info('[POST] /api/stripe/webhook Duplicate payment ignored', {
+          eventId: stripeEvent.id,
+          paymentIntentId: paymentIntent.id,
+        });
       }
+
       break;
     }
     case 'payment_intent.payment_failed': {

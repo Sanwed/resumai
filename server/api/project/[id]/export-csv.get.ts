@@ -2,6 +2,17 @@ import type { Analysis, Project } from '~/generated/prisma/client';
 
 type ProjectWithAnalyses = Project & { analyses: Analysis[] };
 
+const SPREADSHEET_FORMULA_PREFIX = /^\s*[=+\-@\uFF1D\uFF0B\uFF0D\uFF20]/u;
+const SPREADSHEET_CONTROL_PREFIXES = ['\t', '\r', '\n', '\0'];
+
+const escapeCsvCell = (value: string): string => {
+  const hasDangerousPrefix =
+    SPREADSHEET_FORMULA_PREFIX.test(value) || SPREADSHEET_CONTROL_PREFIXES.some((prefix) => value.startsWith(prefix));
+  const safeValue = hasDangerousPrefix ? `'${value}` : value;
+
+  return `"${safeValue.replace(/"/g, '""')}"`;
+};
+
 export function generateProjectReportCsv(project: ProjectWithAnalyses): string {
   const headers = [
     'Candidate',
@@ -33,8 +44,7 @@ export function generateProjectReportCsv(project: ProjectWithAnalyses): string {
     (a.skills ?? []).join('; '),
   ]);
 
-  const escape = (val: string) => `"${val.replace(/"/g, '""')}"`;
-  const lines = [headers, ...rows].map((row) => row.map((e) => escape(e ?? '')).join(','));
+  const lines = [headers, ...rows].map((row) => row.map((value) => escapeCsvCell(value ?? '')).join(','));
 
   return '\uFEFF' + lines.join('\r\n');
 }

@@ -26,7 +26,38 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  for (const id of body.data.fileIds) {
+  const fileIds = [...new Set(body.data.fileIds)];
+
+  const [project, files] = await Promise.all([
+    prisma.project.findUnique({
+      where: {
+        id: query.data.projectId,
+        userId: event.context.user.id,
+      },
+      select: {
+        id: true,
+      },
+    }),
+    prisma.projectFile.findMany({
+      where: {
+        id: { in: fileIds },
+        projectId: query.data.projectId,
+        userId: event.context.user.id,
+      },
+      select: {
+        id: true,
+      },
+    }),
+  ]);
+
+  if (!project || files.length !== fileIds.length) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Project or files not found',
+    });
+  }
+
+  for (const id of fileIds) {
     await inngest.send(
       fileUploaded.create({
         userId: event.context.user.id,

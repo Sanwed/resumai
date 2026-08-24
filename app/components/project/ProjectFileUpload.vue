@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { AllowedFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
+  import { AllowedFileFormats, MAX_RESUME_FILES_PER_UPLOAD, MAX_RESUME_FILE_SIZE } from '~/constants';
   import type { Analysis, ProjectFile } from '~/generated/prisma/client';
   import type { FetchError } from 'ofetch';
 
@@ -80,6 +80,16 @@
 
   const onChange = async (newFiles: File[] | null | undefined) => {
     if (!newFiles) return;
+
+    if (newFiles.length > MAX_RESUME_FILES_PER_UPLOAD) {
+      toast.add({
+        title: 'Too many files selected',
+        description: `Upload no more than ${MAX_RESUME_FILES_PER_UPLOAD} resumes at once`,
+        color: 'error',
+      });
+      files.value = [];
+      return;
+    }
 
     const validFiles: File[] = [];
 
@@ -191,7 +201,7 @@
       multiple
       :disabled="hasVacancyText || loading || fileLoading"
       label="Click or drop your files"
-      :description="`${Object.keys(AllowedFileFormats).join(', ')} (max ${MAX_RESUME_FILE_SIZE / 1024 ** 2}MB)`"
+      :description="`${Object.keys(AllowedFileFormats).join(', ')} (max ${MAX_RESUME_FILE_SIZE / 1024 ** 2}MB each, ${MAX_RESUME_FILES_PER_UPLOAD} files)`"
       size="lg"
       :accept="Object.values(AllowedFileFormats).join(',')"
       class="w-80"
@@ -212,7 +222,8 @@
           </span>
           <p class="font-medium text-default mt-2">Click or drop your files</p>
           <p class="text-muted mt-1">
-            {{ Object.keys(AllowedFileFormats).join(', ') }} (max {{ formatFileSize(MAX_RESUME_FILE_SIZE) }})
+            {{ Object.keys(AllowedFileFormats).join(', ') }} (max {{ formatFileSize(MAX_RESUME_FILE_SIZE) }} each,
+            {{ MAX_RESUME_FILES_PER_UPLOAD }} files)
           </p>
         </div>
       </template>
@@ -231,6 +242,7 @@
       <div v-if="selectMode" class="flex items-center gap-2">
         <p class="text-muted text-sm mr-auto">{{ selectedFileIds.length }} files</p>
         <UButton
+          v-if="!loading"
           variant="soft"
           color="secondary"
           icon="i-lucide-refresh-ccw"

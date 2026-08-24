@@ -157,6 +157,21 @@ model Notification {
   @@map("notification")
 }
 
+model TokenPurchase {
+  id                    String   @id @default(uuid())
+  stripeEventId         String   @unique
+  stripePaymentIntentId String   @unique
+  stripeCustomerId      String
+  amount                Int
+  currency              String
+  tokens                Int
+  userId                String
+  createdAt             DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("token-purchase")
+}
+
 enum ProjectColor {
   red
   orange

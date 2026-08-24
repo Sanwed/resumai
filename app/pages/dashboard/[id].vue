@@ -41,7 +41,7 @@
   });
 
   useSeoMeta({
-    title: () => currentProject.value?.name,
+    title: () => currentProject.value?.name ?? 'Not Found',
     robots: 'noindex, nofollow',
     description:
       'Manage this hiring project, add a job description, upload candidate resumes, and review AI-powered resume analysis and job-match insights in one place.',

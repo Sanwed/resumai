@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   try {
     const filename = sanitizeFilename(file.filename ?? '');
     const { url } = await put(`avatar/${event.context.user.id}-${filename}`, file.data, {
-      access: 'public',
+      access: 'private',
       addRandomSuffix: true,
       contentType: file.type,
     });

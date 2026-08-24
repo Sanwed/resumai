@@ -15,7 +15,27 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const ch = analysisChannel({ projectId: query.data.projectId });
+  const project = await prisma.project.findUnique({
+    where: {
+      id: query.data.projectId,
+      userId: event.context.user.id,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!project) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Project not found',
+    });
+  }
+
+  const ch = analysisChannel({
+    projectId: project.id,
+    userId: event.context.user.id,
+  });
 
   try {
     const stream = await subscribe({

@@ -6,12 +6,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { data: session } = await authClient.useSession(useAuthFetch);
 
   const isAuthRoute = authRoutes.some((route) => to.path.startsWith(route));
+  const hasVerifiedSession = Boolean(session.value?.user.emailVerified);
 
-  if (isAuthRoute && session.value) {
+  if (isAuthRoute && hasVerifiedSession) {
     return navigateTo('/dashboard');
   }
 
-  if (!session.value && !isAuthRoute) {
+  if (!hasVerifiedSession && !isAuthRoute) {
     return navigateTo('/login');
   }
 });

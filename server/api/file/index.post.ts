@@ -1,5 +1,5 @@
 import { del, put } from '@vercel/blob';
-import { AllowedFileFormats, MAX_RESUME_FILE_SIZE } from '~/constants';
+import { AllowedFileFormats, MAX_RESUME_FILE_SIZE, MAX_RESUME_FILES_PER_UPLOAD } from '~/constants';
 import { fileQuerySchema } from '#server/types/schema';
 
 export default defineEventHandler(async (event) => {
@@ -12,10 +12,26 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const project = await prisma.project.findFirst({
+    where: {
+      id: query.data.projectId,
+      userId: event.context.user.id,
+    },
+    select: { id: true },
+  });
+
+  if (!project) {
+    throw createError({ statusCode: 404, statusMessage: 'Project not found' });
+  }
+
   const files = await readMultipartFormData(event);
 
   if (!files?.length) {
     throw createError({ statusCode: 400, statusMessage: 'No files provided' });
+  }
+
+  if (files.length > MAX_RESUME_FILES_PER_UPLOAD) {
+    throw createError({ statusCode: 400, statusMessage: 'Too many files uploaded simultaneously' });
   }
 
   for (const file of files) {
