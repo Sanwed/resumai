@@ -29,13 +29,13 @@
     return features.map((el) => el.name).filter((el) => el !== undefined);
   };
 
-  const onBuyClick = async (tokensValue?: string, defaultPrice?: string | SerializeObject<Stripe.Price> | null) => {
+  const onBuyClick = async (defaultPrice?: string | SerializeObject<Stripe.Price> | null) => {
     if (!defaultPrice || typeof defaultPrice === 'string') return;
     if (defaultPrice.id == null) return;
 
     const { url } = await $fetch('/api/billing', {
       method: 'POST',
-      query: { priceId: defaultPrice.id, tokensValue },
+      query: { priceId: defaultPrice.id },
     });
 
     navigateTo(url, {
@@ -90,7 +90,7 @@
               ui: { base: 'w-full max-w-40' },
               loadingAuto: true,
               loadingIcon: 'i-lucide-loader',
-              onClick: () => onBuyClick(item.metadata.tokens_value, item.default_price),
+              onClick: () => onBuyClick(item.default_price),
             }"
             orientation="horizontal"
             terms="Invoices and receipts available."

@@ -1,10 +1,10 @@
 import z from 'zod';
 import { auth } from '~/lib/auth';
 import { stripe } from '#server/lib/stripe';
+import type Stripe from 'stripe';
 
 const querySchema = z.object({
   priceId: z.string(),
-  tokensValue: z.string(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -19,9 +19,15 @@ export default defineEventHandler(async (event) => {
   if (query.error) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'priceId and tokenValue is required',
+      statusMessage: 'priceId is required',
     });
   }
+
+  const price = await stripe.prices.retrieve(query.data.priceId, {
+    expand: ['product'],
+  });
+
+  const product = price.product as Stripe.Product;
 
   const origin = getRequestURL(event).origin;
 
@@ -38,7 +44,7 @@ export default defineEventHandler(async (event) => {
       payment_intent_data: {
         metadata: {
           user_id: authSession.user.id,
-          tokens_value: query.data.tokensValue,
+          tokens_value: product.metadata.tokens_value ?? null,
         },
       },
       success_url: `${origin}/dashboard`,
