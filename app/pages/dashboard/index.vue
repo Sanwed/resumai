@@ -4,6 +4,7 @@
 
   useSeoMeta({
     title: 'Dashboard',
+    robots: 'noindex, nofollow',
     description:
       'Access your ResumAI dashboard to create hiring projects, upload resumes, manage candidate analyses, and easily review AI-powered matching reports.',
   });

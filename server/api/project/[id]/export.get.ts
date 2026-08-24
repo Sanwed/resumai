@@ -98,6 +98,7 @@ export default defineEventHandler(async (event) => {
   setResponseHeaders(event, {
     'Content-Type': 'application/pdf',
     'Content-Disposition': `attachment; filename="${project.name}-report.pdf"`,
+    'X-Robots-Tag': 'noindex, nofollow',
   });
 
   const doc = generateProjectReportPdf(project);

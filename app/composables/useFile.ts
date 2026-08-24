@@ -12,7 +12,7 @@ export function useFile(projectId: string) {
         formData.append('file', file);
       }
 
-      const files = await $fetch(`/api/file/`, {
+      const files = await $fetch('/api/file', {
         method: 'POST',
         query: { projectId },
         body: formData,
@@ -42,7 +42,7 @@ export function useFile(projectId: string) {
   const removeMany = async (fileIds: string[]) => {
     try {
       loading.value = true;
-      const deleted = await $fetch(`/api/file/`, {
+      const deleted = await $fetch('/api/file', {
         method: 'DELETE',
         body: {
           fileIds,

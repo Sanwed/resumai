@@ -6,6 +6,7 @@
 
   useSeoMeta({
     title: 'Set a New Password',
+    robots: 'noindex, nofollow',
     description:
       'Set a new password for your ResumAI account, restore secure access, and return to your resume analysis projects, candidate reports, and settings.',
   });

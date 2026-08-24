@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
   setResponseHeaders(event, {
     'Content-Type': 'text/csv; charset=utf-8',
     'Content-Disposition': `attachment; filename="${project.name}-report.csv"`,
+    'X-Robots-Tag': 'noindex, nofollow',
   });
 
   return generateProjectReportCsv(project);

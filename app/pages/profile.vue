@@ -10,6 +10,7 @@
 
   useSeoMeta({
     title: 'Profile, Security & Account Settings',
+    robots: 'noindex, nofollow',
     description:
       'Manage your ResumAI profile, email address, sign-in methods, account security, connected providers, and personal preferences in one secure place.',
   });

@@ -10,6 +10,7 @@
 
   useSeoMeta({
     title: 'Reset Your Password',
+    robots: 'noindex, nofollow',
     description:
       'Request a secure password reset link for your ResumAI account and quickly restore access to your resume analysis projects, reports, and settings.',
   });
@@ -37,7 +38,7 @@
     try {
       await authClient.requestPasswordReset({
         email: payload.data.email,
-        redirectTo: 'http://localhost:3000/reset-password/',
+        redirectTo: 'http://localhost:3000/reset-password',
         fetchOptions: {
           onError: (event) => {
             toast.add({

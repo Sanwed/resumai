@@ -10,6 +10,7 @@
 
   useSeoMeta({
     title: 'Login',
+    robots: 'noindex, follow',
     description:
       'Log in to ResumAI to access your projects, analyze resumes, compare candidates with job requirements, and manage your account securely online.',
     ogImageAlt: 'ResumAI social card: account login',
@@ -150,7 +151,8 @@
     </template>
 
     <template #footer>
-      By signing in, you agree to our <ULink to="/terms" class="text-primary font-medium">Terms of Service</ULink>.
+      By signing in, you agree to our
+      <ULink to="/terms/acceptance-of-terms" class="text-primary font-medium">Terms of Service</ULink>.
     </template>
   </UAuthForm>
 </template>

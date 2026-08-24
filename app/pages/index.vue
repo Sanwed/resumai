@@ -47,6 +47,7 @@
     </UPageSection>
 
     <UPageSection
+      data-nosnippet
       :headline="page.testimonials.headline"
       :title="page.testimonials.title"
       :description="page.testimonials.description"

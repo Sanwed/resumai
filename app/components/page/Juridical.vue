@@ -36,13 +36,22 @@
   });
 
   const pageRouteName = computed(() => route.name?.toString().split('-')[0]);
+  const collectionLandingPath = computed(() => {
+    const landingPaths: Partial<Record<keyof PageCollections, string>> = {
+      privacy: '/privacy/introduction',
+      terms: '/terms/acceptance-of-terms',
+      cookies: '/cookies/introduction',
+    };
+
+    return landingPaths[props.collection] || `/${props.collection}`;
+  });
 
   useSchemaOrg(
     defineBreadcrumb({
       name: `${pageRouteName.value} breadcrumb`,
       itemListElement: [
         { name: 'Home', item: '/' },
-        { name: props.titleTemplate, item: `/${pageRouteName.value}` },
+        { name: props.titleTemplate, item: collectionLandingPath.value },
         { name: page.value?.title },
       ],
     }),

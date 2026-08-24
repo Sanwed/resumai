@@ -44,7 +44,7 @@ export function useNotification() {
     try {
       loading.value = true;
 
-      const updated = await $fetch('/api/notification/', {
+      const updated = await $fetch('/api/notification', {
         method: 'PATCH',
         body: {
           notificationIds,

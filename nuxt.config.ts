@@ -1,3 +1,9 @@
+import { permanentRedirects } from './shared/permanent-redirects';
+
+const permanentRedirectRouteRules = Object.fromEntries(
+  Object.entries(permanentRedirects).map(([path, to]) => [path, { redirect: { to, statusCode: 301 as const } }]),
+);
+
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
@@ -51,6 +57,17 @@ export default defineNuxtConfig({
     },
   },
 
+  robots: {
+    blockAiBots: false,
+    groups: [
+      {
+        userAgent: '*',
+        contentUsage: { 'train-ai': 'n' },
+        contentSignal: { 'ai-train': 'no' },
+      },
+    ],
+  },
+
   app: {
     head: {
       titleTemplate: '%s | ResumAI',
@@ -91,16 +108,13 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    ...permanentRedirectRouteRules,
+
     '/': { prerender: true },
     '/changelog': { prerender: true },
 
-    '/privacy': { redirect: '/privacy/introduction' },
     '/privacy/**': { prerender: true },
-
-    '/terms': { redirect: '/terms/acceptance-of-terms' },
     '/terms/**': { prerender: true },
-
-    '/cookies': { redirect: '/cookies/introduction' },
     '/cookies/**': { prerender: true },
 
     '/pricing': { swr: 3600 },

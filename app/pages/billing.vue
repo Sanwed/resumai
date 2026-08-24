@@ -10,6 +10,7 @@
 
   useSeoMeta({
     title: 'Purchase AI Resume Analysis Tokens',
+    robots: 'noindex, nofollow',
     description:
       'Purchase flexible ResumAI token packs for AI resume analysis, candidate matching, and reports. Add credits instantly with no subscription required.',
   });

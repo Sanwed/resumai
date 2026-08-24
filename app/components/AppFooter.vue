@@ -4,15 +4,15 @@
   const items: NavigationMenuItem[] = [
     {
       label: 'Privacy Policy',
-      to: '/privacy',
+      to: '/privacy/introduction',
     },
     {
       label: 'Terms of Service',
-      to: '/terms',
+      to: '/terms/acceptance-of-terms',
     },
     {
       label: 'Cookie Policy',
-      to: '/cookies',
+      to: '/cookies/introduction',
     },
   ];
 </script>

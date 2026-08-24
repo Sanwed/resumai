@@ -11,6 +11,7 @@
 
   useSeoMeta({
     title: 'Create account',
+    robots: 'noindex, follow',
     description:
       'Create your ResumAI account to analyze resumes with AI, match candidates to job descriptions, organize hiring projects, and generate actionable reports.',
     ogImageAlt: 'ResumAI social card: account creation',
@@ -152,7 +153,8 @@
     </template>
 
     <template #footer>
-      By signing up, you agree to our <ULink to="/terms" class="text-primary font-medium">Terms of Service</ULink>.
+      By signing up, you agree to our
+      <ULink to="/terms/acceptance-of-terms" class="text-primary font-medium">Terms of Service</ULink>.
     </template>
   </UAuthForm>
 </template>
