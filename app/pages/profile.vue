@@ -15,7 +15,20 @@
       'Manage your ResumAI profile, email address, sign-in methods, account security, connected providers, and personal preferences in one secure place.',
   });
 
-  const { data: session } = await authClient.useSession(useAuthFetch);
+  const [{ data: session }, { data: avatarBlob, pending: avatarLoading, refresh }] = await Promise.all([
+    authClient.useSession(useAuthFetch),
+    useFetch<Blob>('/api/avatar', {
+      responseType: 'blob',
+      credentials: 'include',
+      server: false,
+    }),
+  ]);
+
+  const avatarSrc = computed(() => {
+    if (!avatarBlob.value) return;
+
+    return URL.createObjectURL(avatarBlob.value);
+  });
 
   const deleteConfirmationOpen = ref(false);
   const loading = ref(false);
@@ -48,7 +61,12 @@
         :links="[{ label: 'Go back', to: '/dashboard', icon: 'i-lucide-chevron-left' }]"
       />
       <UPageBody class="space-y-8">
-        <ProfileAvatar :src="session.user.image" :alt="session.user.name ?? 'Account avatar'" />
+        <ProfileAvatar
+          :src="avatarSrc"
+          :alt="session.user.name ?? 'Account avatar'"
+          :initial-loading="avatarLoading"
+          @change="refresh"
+        />
         <ProfilePersonal :default-values="{ name: session.user.name }" />
         <ProfileMail :default-mail="session.user.email" />
         <ProfileProviders :default-mail="session.user.email" />

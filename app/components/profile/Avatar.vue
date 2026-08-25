@@ -6,12 +6,16 @@
   type Props = {
     src?: string | null;
     alt: string;
+    initialLoading?: boolean;
   };
-
   defineProps<Props>();
 
+  type Emits = {
+    change: [];
+  };
+  const emit = defineEmits<Emits>();
+
   const avatarFile = ref<File | null>(null);
-  const newAvatarUrl = ref<string | null>(null);
   const loading = ref(false);
 
   const toast = useToast();
@@ -44,14 +48,13 @@
       const formData = new FormData();
       formData.append('file', newAvatar);
 
-      const url = await $fetch('/api/upload/avatar', {
+      const url = await $fetch('/api/avatar', {
         method: 'POST',
         body: formData,
       });
 
-      newAvatarUrl.value = url;
       await authClient.updateUser({ image: url });
-      toast.add({ title: 'Avatar has been changed', color: 'success' });
+      emit('change');
     } catch (e) {
       const error = e as FetchError;
       toast.add({
@@ -77,18 +80,21 @@
       <UFileUpload
         v-slot="{ open }"
         v-model="avatarFile"
-        :disabled="loading"
+        :disabled="loading || initialLoading"
         :dropzone="false"
         accept="image/*"
         class="relative"
       >
-        <div v-if="loading" class="absolute bg-slate-100/60 inset-0 flex items-center justify-center rounded-full">
+        <div
+          v-if="loading || initialLoading"
+          class="absolute bg-slate-100/60 inset-0 flex items-center justify-center rounded-full"
+        >
           <UIcon name="i-lucide-loader" size="20" class="animate-spin" />
         </div>
         <UAvatar
           as="button"
           type="button"
-          :src="(newAvatarUrl || src) ?? '/avatar-placeholder.png'"
+          :src="src ?? '/avatar-placeholder.png'"
           :alt="alt"
           class="size-20 hover:opacity-90 focus-visible:opacity-90"
           @click="open"

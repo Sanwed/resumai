@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
     return url;
   } catch (error) {
-    console.error('[POST] /api/upload/avatar', error);
+    console.error('[POST] /api/avatar', error);
 
     throw createError({
       statusCode: 500,
