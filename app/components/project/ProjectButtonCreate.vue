@@ -32,11 +32,12 @@
 
 <template>
   <UButton
-    :label="collapsed ? undefined : 'Create new'"
+    label="Create new"
     loading-auto
     loading-icon="i-lucide-loader"
     leading-icon="i-lucide-plus"
     type="button"
+    :ui="{ label: collapsed ? 'sr-only' : undefined }"
     :class="['w-max', { 'rounded-full': collapsed }]"
     @click="onCreate"
   />

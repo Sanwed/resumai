@@ -32,17 +32,19 @@
         to="https://www.linkedin.com/in/sanwed/"
         target="_blank"
         icon="i-simple-icons-linkedin"
-        aria-label="ResumAI on LinkedIn"
+        label="ResumAI on LinkedIn"
         color="neutral"
         variant="ghost"
+        :ui="{ label: 'sr-only' }"
       />
       <UButton
         to="https://github.com/Sanwed/resumai"
         target="_blank"
         icon="i-simple-icons-github"
-        aria-label="ResumAI on GitHub"
+        label="ResumAI on GitHub"
         color="neutral"
         variant="ghost"
+        :ui="{ label: 'sr-only' }"
       />
     </template>
   </UFooter>

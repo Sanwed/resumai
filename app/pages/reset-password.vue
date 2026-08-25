@@ -29,6 +29,7 @@
     {
       name: 'password',
       type: 'password' as const,
+      autocomplete: 'new-password',
       label: 'Password',
       placeholder: 'Enter new password',
       required: true,
@@ -71,12 +72,14 @@
   <UAuthForm
     :fields="fields"
     :schema="schema"
-    title="Reset password"
     loading-auto
     loading-icon="i-lucide-loader"
     icon="i-lucide-rotate-ccw"
     @submit="onSubmit"
   >
+    <template #title>
+      <h1>Reset password</h1>
+    </template>
     <template #description>Create new password</template>
   </UAuthForm>
 </template>

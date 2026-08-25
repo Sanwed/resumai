@@ -37,7 +37,7 @@
 </script>
 
 <template>
-  <UCard :ui="{ footer: 'bg-muted justify-between items-center flex' }">
+  <UCard :ui="{ footer: 'bg-muted flex gap-4 flex-col md:justify-between md:items-center md:flex-row' }">
     <template #header>
       <h2 class="font-medium text-lg">Personal information</h2>
       <p class="text-sm text-muted">Please enter your personal information in the fields below.</p>
@@ -50,12 +50,18 @@
       @submit="onSubmit"
     >
       <UFormField label="Full name" name="name">
-        <UInput v-model="formState.name" placeholder="Your name" class="w-full" />
+        <UInput v-model="formState.name" autocomplete="name" placeholder="Your name" class="w-full" />
       </UFormField>
     </UForm>
     <template #footer>
       <p>Please use {{ 255 }} characters at maximum</p>
-      <UButton label="Save changes" icon="i-lucide-check" loading-auto @click="formRef?.submit" />
+      <UButton
+        label="Save changes"
+        icon="i-lucide-check"
+        loading-auto
+        class="justify-center"
+        @click="formRef?.submit"
+      />
     </template>
   </UCard>
 </template>

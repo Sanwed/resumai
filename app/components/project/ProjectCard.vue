@@ -207,7 +207,12 @@
             { 'p-4': !collapsed, 'p-1 justify-center': collapsed, 'bg-primary-100': active },
           ]"
         >
-          <UIcon size="20" :name="icon" :class="[currentProject ? projectColorsClasses[currentProject.color] : '']" />
+          <UIcon
+            size="20"
+            :name="icon"
+            :class="[currentProject ? projectColorsClasses[currentProject.color] : '']"
+            aria-hidden="true"
+          />
           <template v-if="!collapsed">
             <UForm v-if="editMode" ref="editForm" :schema="projectUpdateSchema" :state="editState" @submit="onSubmit">
               <UFormField name="name">
@@ -229,9 +234,10 @@
             variant="ghost"
             color="neutral"
             icon="i-lucide-ellipsis-vertical"
+            :label="`Open menu for ${currentProject?.name ?? 'project'}`"
             type="button"
-            aria-label="Open context menu"
             :class="['group-hover:text-primary ml-auto', { 'text-primary': active }]"
+            :ui="{ label: 'sr-only' }"
             @click="onEllipsisClick"
           />
         </div>
@@ -239,22 +245,27 @@
     </template>
 
     <template #colors>
-      <UIcon v-if="loading" name="i-lucide-loader" class="mx-auto shrink-0 size-5 text-primary animate-spin" />
-      <div v-else class="flex items-center gap-2">
+      <div v-if="loading" role="status" aria-live="polite" class="flex justify-center">
+        <UIcon name="i-lucide-loader" class="shrink-0 size-5 text-primary animate-spin" aria-hidden="true" />
+        <span class="sr-only">Updating project color</span>
+      </div>
+      <div v-else>
         <URadioGroup
           v-model="selectedColor"
           :items="radioGroupItems"
+          legend="Project color"
           orientation="horizontal"
           variant="list"
-          :ui="{
-            wrapper: 'hidden',
-          }"
+          :ui="{ legend: 'sr-only' }"
         />
       </div>
     </template>
 
     <template #colors-trailing>
-      <UIcon name="i-lucide-loader" class="shrink-0 size-5 text-primary animate-spin" />
+      <span role="status" aria-live="polite">
+        <UIcon name="i-lucide-loader" class="shrink-0 size-5 text-primary animate-spin" aria-hidden="true" />
+        <span class="sr-only">Updating project color</span>
+      </span>
     </template>
   </UContextMenu>
 

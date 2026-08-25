@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <figure class="relative">
     <UPageCard variant="subtle" class="rounded-2xl">
       <video
         class="rounded-xl"
@@ -7,6 +7,10 @@
         preload="none"
         poster="https://res.cloudinary.com/nuxt/video/upload/so_3.3/v1708511800/ui-pro/video-nuxt-ui-pro_kwfbdh.jpg"
         :controls="true"
+        :muted="true"
+        playsinline
+        aria-label="Promotional product interface demonstration"
+        aria-describedby="promotional-video-description"
       >
         <source
           data-v-baf90ddd=""
@@ -25,5 +29,8 @@
         />
       </video>
     </UPageCard>
-  </div>
+    <figcaption id="promotional-video-description" class="sr-only">
+      Silent promotional interface demonstration. The surrounding page describes the product features shown.
+    </figcaption>
+  </figure>
 </template>

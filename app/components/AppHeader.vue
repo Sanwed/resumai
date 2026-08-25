@@ -24,7 +24,15 @@
     <template #right>
       <UColorModeButton />
 
-      <UButton icon="i-lucide-log-in" color="neutral" variant="ghost" to="/login" class="lg:hidden" />
+      <UButton
+        icon="i-lucide-log-in"
+        label="Sign in"
+        color="neutral"
+        variant="ghost"
+        to="/login"
+        class="lg:hidden"
+        :ui="{ label: 'sr-only' }"
+      />
 
       <UButton label="Sign in" color="neutral" variant="outline" to="/login" class="hidden lg:inline-flex" />
 

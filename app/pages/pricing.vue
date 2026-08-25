@@ -68,11 +68,12 @@
     <UPageHero :title="page.title" :description="page.description" />
 
     <UContainer>
-      <div v-if="loading" class="h-40 w-full flex items-center justify-center">
-        <UIcon name="i-lucide-loader" class="animate-spin size-8" />
+      <div v-if="loading" role="status" aria-live="polite" class="h-40 w-full flex items-center justify-center">
+        <UIcon name="i-lucide-loader" class="animate-spin size-8" aria-hidden="true" />
+        <span class="sr-only">Loading pricing plans</span>
       </div>
 
-      <UEmpty v-else-if="error" icon="i-lucide-circle-x" variant="naked" :title="error.statusMessage" />
+      <UEmpty v-else-if="error" role="alert" icon="i-lucide-circle-x" variant="naked" :title="error.statusMessage" />
 
       <UEmpty v-else-if="!products?.data.length" icon="i-lucide-circle-x" variant="naked" title="Products not found" />
       <UPricingPlans v-else orientation="vertical" compact>

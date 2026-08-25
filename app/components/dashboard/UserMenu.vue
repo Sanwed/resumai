@@ -57,13 +57,11 @@
         icon: 'i-lucide-log-out',
         color: 'error',
         onSelect: async () => {
-          await authClient.signOut({
-            fetchOptions: {
-              onSuccess: () => {
-                navigateTo('/login');
-              },
-            },
-          });
+          const { error } = await authClient.signOut();
+
+          if (!error) {
+            await navigateTo('/login', { external: true, replace: true });
+          }
         },
       },
     ],
@@ -81,7 +79,7 @@
         src: session.data?.user.image ?? '/avatar-placeholder.png',
         alt: session.data?.user.name ?? 'Account avatar',
       }"
-      :label="collapsed ? undefined : session.data?.user.name"
+      :label="collapsed ? 'Open user menu' : session.data?.user.name"
       :trailing-icon="collapsed ? undefined : 'i-lucide-chevrons-up-down'"
       color="neutral"
       variant="ghost"
@@ -89,6 +87,7 @@
       :square="collapsed"
       class="data-[state=open]:bg-elevated"
       :ui="{
+        label: collapsed ? 'sr-only' : undefined,
         trailingIcon: 'text-dimmed',
       }"
     />

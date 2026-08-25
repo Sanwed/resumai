@@ -63,11 +63,12 @@
           description="Tokens are ResumAI's currency for AI-powered work — every resume analysis, candidate comparison, and report you generate consumes tokens. Purchase a pack below and they're added to your account instantly, ready to use across all your projects."
         />
 
-        <div v-if="loading" class="h-40 w-full flex items-center justify-center">
-          <UIcon name="i-lucide-loader" class="animate-spin size-8" />
+        <div v-if="loading" role="status" aria-live="polite" class="h-40 w-full flex items-center justify-center">
+          <UIcon name="i-lucide-loader" class="animate-spin size-8" aria-hidden="true" />
+          <span class="sr-only">Loading token packages</span>
         </div>
 
-        <UEmpty v-else-if="error" icon="i-lucide-circle-x" variant="naked" :title="error.statusMessage" />
+        <UEmpty v-else-if="error" role="alert" icon="i-lucide-circle-x" variant="naked" :title="error.statusMessage" />
 
         <UEmpty
           v-else-if="!products?.data.length"

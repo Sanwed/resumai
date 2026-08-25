@@ -62,8 +62,8 @@
   <UContainer v-if="page">
     <UPage>
       <template #left>
-        <UPageAside>
-          <UContentNavigation :navigation="navigation" />
+        <UPageAside class="block">
+          <UContentNavigation :navigation="navigation" :ui="{ list: 'mx-0 mt-0' }" />
         </UPageAside>
       </template>
 

@@ -22,7 +22,8 @@
   const fields = [
     {
       name: 'email',
-      type: 'text' as const,
+      type: 'email' as const,
+      autocomplete: 'email',
       label: 'Email',
       placeholder: 'Enter your email',
       required: true,
@@ -61,16 +62,25 @@
   <UAuthForm
     :fields="fields"
     :schema="schema"
-    title="Forgot your password?"
     :submit="{ label: 'Get reset link' }"
     loading-auto
     loading-icon="i-lucide-loader"
     icon="i-lucide-rotate-ccw"
     @submit="onSubmit"
   >
+    <template #title>
+      <h1>Forgot your password?</h1>
+    </template>
     <template #description>You will receive a link to reset your password</template>
     <template #validation>
-      <UAlert v-if="sent" title="Link was sent to your email" color="success" variant="soft" />
+      <UAlert
+        v-if="sent"
+        role="status"
+        aria-live="polite"
+        title="Link was sent to your email"
+        color="success"
+        variant="soft"
+      />
     </template>
   </UAuthForm>
 </template>

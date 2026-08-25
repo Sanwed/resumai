@@ -87,15 +87,19 @@
       >
         <div
           v-if="loading || initialLoading"
+          role="status"
+          aria-live="polite"
           class="absolute bg-slate-100/60 inset-0 flex items-center justify-center rounded-full"
         >
-          <UIcon name="i-lucide-loader" size="20" class="animate-spin" />
+          <UIcon name="i-lucide-loader" size="20" class="animate-spin" aria-hidden="true" />
+          <span class="sr-only">Loading avatar</span>
         </div>
         <UAvatar
           as="button"
           type="button"
           :src="src ?? '/avatar-placeholder.png'"
           :alt="alt"
+          aria-label="Upload avatar"
           class="size-20 hover:opacity-90 focus-visible:opacity-90"
           @click="open"
         />

@@ -47,14 +47,20 @@
       @submit="onSubmit"
     >
       <UFormField label="Email" name="email">
-        <UInput v-model="formState.email" placeholder="Your email" class="w-full" />
+        <UInput v-model="formState.email" type="email" autocomplete="email" placeholder="Your email" class="w-full" />
       </UFormField>
     </UForm>
     <template #footer>
-      <p v-if="verificationSent" class="text-sm text-warning">
+      <p v-if="verificationSent" role="status" aria-live="polite" class="text-sm text-amber-800 dark:text-amber-300">
         Verification letter has been sent to your email: {{ props.defaultMail }}
       </p>
-      <UButton label="Save changes" icon="i-lucide-check" loading-auto class="ml-auto" @click="formRef?.submit" />
+      <UButton
+        label="Save changes"
+        icon="i-lucide-check"
+        loading-auto
+        class="justify-center w-full md:w-auto md:ml-auto"
+        @click="formRef?.submit"
+      />
     </template>
   </UCard>
 </template>

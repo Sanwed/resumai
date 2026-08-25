@@ -36,7 +36,8 @@
             icon="i-lucide-coins"
             class="justify-center"
           />
-          <UButton color="neutral" variant="ghost" square aria-label="Notifications" @click="open = true">
+          <UButton color="neutral" variant="ghost" square @click="open = true">
+            <span class="sr-only">Open notifications</span>
             <UChip color="error" :show="unreadNotifications.length != 0" inset>
               <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
             </UChip>

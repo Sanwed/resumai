@@ -30,13 +30,15 @@
     {
       name: 'name',
       type: 'text' as const,
+      autocomplete: 'name',
       label: 'Name',
       placeholder: 'Enter your name',
       required: true,
     },
     {
       name: 'email',
-      type: 'text' as const,
+      type: 'email' as const,
+      autocomplete: 'email',
       label: 'Email',
       placeholder: 'Enter your email',
       required: true,
@@ -45,6 +47,7 @@
       name: 'password',
       label: 'Password',
       type: 'password' as const,
+      autocomplete: 'new-password',
       placeholder: 'Enter your password',
       required: true,
     },
@@ -53,12 +56,13 @@
   const providers = [
     {
       icon: 'i-simple-icons-github',
+      label: 'Sign up with GitHub',
       square: true,
-      'aria-label': 'Sign in by GitHub',
       size: 'xl' as const,
       loadingAuto: true,
       ui: {
         base: 'w-auto rounded-full m-0',
+        label: 'sr-only',
       },
       onClick: async () => {
         try {
@@ -70,16 +74,17 @@
     },
     {
       icon: 'i-simple-icons-google',
+      label: 'Sign up with Google',
       square: true,
-      'aria-label': 'Sign in by GitHub',
       size: 'xl' as const,
       loadingAuto: true,
       ui: {
         base: 'w-auto rounded-full m-0',
+        label: 'sr-only',
       },
       onClick: async () => {
         try {
-          await signInWithProvider('github');
+          await signInWithProvider('google');
         } catch (error) {
           handleApiError(error, toast);
         }
@@ -87,12 +92,13 @@
     },
     {
       icon: 'i-simple-icons-linkedin',
+      label: 'Sign up with LinkedIn',
       square: true,
-      'aria-label': 'Sign in by LinkedIn',
       size: 'xl' as const,
       loadingAuto: true,
       ui: {
         base: 'w-auto rounded-full m-0',
+        label: 'sr-only',
       },
       onClick: async () => {
         try {
@@ -144,7 +150,6 @@
     :fields="fields"
     :schema="schema"
     :providers="providers"
-    title="Create an account"
     :submit="{ label: 'Create account' }"
     loading-auto
     loading-icon="i-lucide-loader"
@@ -152,12 +157,22 @@
     :ui="{ providers: 'flex items-center gap-2 justify-center' }"
     @submit="onSubmit"
   >
+    <template #title>
+      <h1>Create an account</h1>
+    </template>
     <template #description>
       Already have an account? <ULink to="/login" class="text-primary font-medium">Login</ULink>.
     </template>
 
     <template #validation>
-      <UAlert v-if="verificationSent" title="Check your email to verify your account" color="success" variant="soft" />
+      <UAlert
+        v-if="verificationSent"
+        role="status"
+        aria-live="polite"
+        title="Check your email to verify your account"
+        color="success"
+        variant="soft"
+      />
     </template>
 
     <template #footer>

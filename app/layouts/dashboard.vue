@@ -74,7 +74,7 @@
           aria-label="ResumAI dashboard"
           class="hover:text-primary focus-visible:text-primary transition-colors"
         >
-          <AppLogo :collapsed="collapsed" aria-hidden="true" class="h-10 max-w-full" />
+          <AppLogo :collapsed="collapsed" aria-hidden="true" class="h-7 md:h-10 max-w-full" />
         </NuxtLink>
       </template>
 
@@ -92,6 +92,8 @@
 
     <NotificationSlideover :loading="notificationsLoading" :error="notificationsError" />
 
-    <slot />
+    <UMain id="main-content" tabindex="-1" class="flex min-w-0 flex-1">
+      <slot />
+    </UMain>
   </UDashboardGroup>
 </template>

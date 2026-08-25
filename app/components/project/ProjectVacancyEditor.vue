@@ -60,22 +60,31 @@
 </script>
 
 <template>
-  <UPageCard :ui="{ container: 'sm:p-0', body: 'w-full' }">
+  <UPageCard :ui="{ container: 'p-0 sm:p-0', body: 'w-full' }">
     <template #body>
       <div v-if="!editMode" class="flex flex-col">
         <div :class="['p-1 flex justify-between items-center border-default', collapsed ? 'border-none' : 'border-b']">
-          <UButton
-            icon="i-lucide-chevron-up"
-            size="xs"
-            :class="['rounded-full transition-transform', { 'rotate-180': collapsed }]"
-            color="warning"
+          <button
+            type="button"
+            class="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-amber-500 text-neutral-950 hover:bg-amber-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-800 dark:focus-visible:outline-amber-300"
+            :aria-label="collapsed ? 'Expand vacancy description' : 'Collapse vacancy description'"
+            :aria-expanded="!collapsed"
+            :aria-controls="`vacancy-description-${projectId}`"
             @click="collapsed = !collapsed"
-          />
+          >
+            <UIcon
+              name="i-lucide-chevron-up"
+              size="16"
+              :class="['transition-transform', { 'rotate-180': collapsed }]"
+              aria-hidden="true"
+            />
+          </button>
           <p class="mr-auto ml-2 font-medium text-sm">Vacancy description</p>
           <UButton icon="i-lucide-pencil" label="Edit" size="xs" @click="editMode = true" />
         </div>
         <MdPreview
           v-if="!collapsed"
+          :id="`vacancy-description-${projectId}`"
           v-model="currentText"
           class="h-91.75! overflow-auto! border-none! bg-transparent! p-4"
         />

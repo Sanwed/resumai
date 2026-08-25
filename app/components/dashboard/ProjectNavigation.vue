@@ -32,11 +32,21 @@
 
 <template>
   <div>
-    <div v-if="loading" class="h-60 w-full flex items-center justify-center flex-col text-muted">
-      <UIcon name="i-lucide-loader" size="30" class="animate-spin" />
+    <div
+      v-if="loading"
+      role="status"
+      aria-live="polite"
+      class="h-60 w-full flex items-center justify-center flex-col text-muted"
+    >
+      <UIcon name="i-lucide-loader" size="30" class="animate-spin" aria-hidden="true" />
+      <span class="sr-only">Loading projects</span>
     </div>
-    <div v-else-if="error" class="h-60 w-full flex items-center justify-center flex-col gap-2 text-muted">
-      <UIcon name="i-lucide-circle-x" size="30" />
+    <div
+      v-else-if="error"
+      role="alert"
+      class="h-60 w-full flex items-center justify-center flex-col gap-2 text-muted"
+    >
+      <UIcon name="i-lucide-circle-x" size="30" aria-hidden="true" />
       <p class="text-lg">{{ error.statusMessage }}</p>
     </div>
     <template v-else-if="!projects?.length">

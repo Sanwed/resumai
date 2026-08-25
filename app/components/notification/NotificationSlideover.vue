@@ -85,11 +85,12 @@
 <template>
   <USlideover v-model:open="open" title="Notifications" :ui="{ body: 'flex flex-col gap-y-5' }">
     <template #body>
-      <div v-if="loading" class="flex items-center justify-center h-30">
-        <UIcon name="i-lucide-loader" class="animate-spin size-6" />
+      <div v-if="loading" role="status" aria-live="polite" class="flex items-center justify-center h-30">
+        <UIcon name="i-lucide-loader" class="animate-spin size-6" aria-hidden="true" />
+        <span class="sr-only">Loading notifications</span>
       </div>
-      <div v-else-if="error" class="flex items-center gap-x-2">
-        <UIcon name="i-lucide-circle-x" size="20" class="shrink-0" />
+      <div v-else-if="error" role="alert" class="flex items-center gap-x-2">
+        <UIcon name="i-lucide-circle-x" size="20" class="shrink-0" aria-hidden="true" />
         <p class="text-dimmed">{{ error.statusMessage }}</p>
       </div>
       <div v-else-if="!unreadNotifications.length" class="flex items-center gap-x-2">

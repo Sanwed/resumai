@@ -15,12 +15,7 @@
   const currentAnalysis = computed(() => analyses.value?.find((el) => el.fileId === selectedFileId.value));
 
   const targetProgress = computed(() => currentAnalysis.value?.progress ?? 0);
-
-  const animatedProgress = useTransition(targetProgress, {
-    duration: 600,
-  });
-
-  const roundedProgress = computed(() => Math.round(animatedProgress.value));
+  const roundedProgress = computed(() => Math.round(targetProgress.value));
 
   type CompatibilityColor = 'success' | 'warning' | 'error';
 
@@ -44,33 +39,33 @@
   const contactItems: ComputedRef<NavigationMenuItem[]> = computed(() => {
     const items = [
       {
-        'aria-label': 'Contact phone',
+        label: 'Contact phone',
         icon: 'i-lucide-phone',
         to: `tel:${currentAnalysis.value?.phone}`,
         disabled: !currentAnalysis.value?.phone,
       },
       {
-        'aria-label': 'Email',
+        label: 'Email',
         icon: 'i-lucide-mail',
         to: `mailto:${currentAnalysis.value?.email}`,
         disabled: !currentAnalysis.value?.email,
       },
       {
-        'aria-label': 'LinkedIn',
+        label: 'LinkedIn',
         icon: 'i-simple-icons-linkedin',
         to: `${currentAnalysis.value?.linkedin}`,
         disabled: !currentAnalysis.value?.linkedin,
         target: '_blank',
       },
       {
-        'aria-label': 'GitHub',
+        label: 'GitHub',
         icon: 'i-simple-icons-github',
         to: `${currentAnalysis.value?.github}`,
         disabled: !currentAnalysis.value?.github,
         target: '_blank',
       },
       {
-        'aria-label': 'Personal Website',
+        label: 'Personal website',
         icon: 'i-lucide-globe',
         to: `${currentAnalysis.value?.website}`,
         disabled: !currentAnalysis.value?.website,
@@ -84,12 +79,13 @@
 
 <template>
   <div>
-    <UCard v-if="loading" :ui="{ body: 'sm:p-4' }">
+    <UCard v-if="loading" role="status" aria-live="polite" :ui="{ body: 'sm:p-4' }">
       <div class="size-full flex justify-center items-center">
-        <UIcon name="i-lucide-loader" size="30" class="animate-spin" />
+        <UIcon name="i-lucide-loader" size="30" class="animate-spin" aria-hidden="true" />
+        <span class="sr-only">Loading analysis</span>
       </div>
     </UCard>
-    <UCard v-else-if="error" :ui="{ body: 'sm:p-4' }">
+    <UCard v-else-if="error" role="alert" :ui="{ body: 'sm:p-4' }">
       <UEmpty icon="i-lucide-x" size="xl" variant="naked" title="Error" :description="error" />
     </UCard>
     <UCard v-else-if="!selectedFileId" :ui="{ body: 'sm:p-4' }">
@@ -101,7 +97,7 @@
         description="Click on the file on the right sidebar to see analysis results"
       />
     </UCard>
-    <UCard v-else-if="!currentAnalysis" :ui="{ body: 'sm:p-4' }">
+    <UCard v-else-if="!currentAnalysis" role="status" aria-live="polite" :ui="{ body: 'sm:p-4' }">
       <UEmpty
         icon="i-lucide-file"
         loading
@@ -111,10 +107,16 @@
         title="Analysis creating"
       />
     </UCard>
-    <UCard v-else-if="currentAnalysis.status === 'failed'" :ui="{ body: 'sm:p-4' }">
+    <UCard v-else-if="currentAnalysis.status === 'failed'" role="alert" :ui="{ body: 'sm:p-4' }">
       <UEmpty icon="i-lucide-x" size="xl" variant="naked" :title="currentAnalysis.statusMessage ?? ''" />
     </UCard>
-    <UCard v-else-if="currentAnalysis.status !== 'succeed'" :ui="{ body: 'sm:p-4' }">
+    <UCard
+      v-else-if="currentAnalysis.status !== 'succeed'"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      :ui="{ body: 'sm:p-4' }"
+    >
       <UEmpty
         icon="i-lucide-file"
         loading
@@ -122,15 +124,15 @@
         size="xl"
         variant="naked"
         :title="currentAnalysis.statusMessage ?? ''"
-        :description="`${roundedProgress}%`"
+        :description="`${roundedProgress}% complete`"
       />
     </UCard>
-    <UCard v-else-if="currentAnalysis.incomplete" :ui="{ body: 'sm:p-4' }">
+    <UCard v-else-if="currentAnalysis.incomplete" role="status" aria-live="polite" :ui="{ body: 'sm:p-4' }">
       <UEmpty icon="i-lucide-circle-x" size="xl" variant="naked" :title="currentAnalysis.incompleteReason ?? ''" />
     </UCard>
-    <UCard v-else :ui="{ header: 'sm:py-2 sm:px-4', body: 'sm:p-4', footer: 'bg-muted' }">
+    <UCard v-else :ui="{ header: 'p-2 sm:py-2 sm:px-4', body: 'sm:p-4', footer: 'bg-muted' }">
       <template #header>
-        <div class="flex items-center justify-between gap-3">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div class="flex items-center gap-2 min-w-0">
             <UAvatar :alt="currentAnalysis.candidateName ?? 'Candidate'" icon="i-lucide-user-round" class="shrink-0" />
             <div>
@@ -146,8 +148,11 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-2">
-            <UNavigationMenu :items="contactItems" :ui="{ link: 'p-1', linkLeadingIcon: 'size-4' }" />
+          <div class="flex items-center justify-between gap-2">
+            <UNavigationMenu
+              :items="contactItems"
+              :ui="{ link: 'p-1', linkLeadingIcon: 'size-6 lg:size-4', linkLabel: 'sr-only', item: 'py-0' }"
+            />
             <UBadge :color="compatibilityMeta.color" variant="subtle" class="shrink-0">
               {{ currentAnalysis.compatibility }}%
             </UBadge>
@@ -157,7 +162,13 @@
 
       <div class="flex flex-col gap-4">
         <div>
-          <UProgress :model-value="currentAnalysis.compatibility" :color="compatibilityMeta.color" size="sm" />
+          <UProgress
+            :model-value="currentAnalysis.compatibility"
+            :color="compatibilityMeta.color"
+            size="sm"
+            aria-label="Candidate compatibility"
+            :aria-valuetext="`${currentAnalysis.compatibility}% — ${compatibilityMeta.label}`"
+          />
           <p class="text-xs text-muted mt-1">{{ compatibilityMeta.label }}</p>
         </div>
 
@@ -175,7 +186,12 @@
                 :key="index"
                 class="flex items-start gap-1.5 text-sm"
               >
-                <UIcon name="i-lucide-check" class="text-success shrink-0 mt-0.5" size="16" />
+                <UIcon
+                  name="i-lucide-check"
+                  class="text-emerald-800 dark:text-emerald-300 shrink-0 mt-0.5"
+                  size="16"
+                  aria-hidden="true"
+                />
                 <span class="text-toned">{{ strength }}</span>
               </li>
             </ul>
@@ -184,7 +200,12 @@
             <p class="text-xs font-medium text-muted uppercase tracking-wide">Gaps</p>
             <ul class="flex flex-col gap-1">
               <li v-for="(gap, index) in currentAnalysis.gaps" :key="index" class="flex items-start gap-1.5 text-sm">
-                <UIcon name="i-lucide-minus" class="text-warning shrink-0 mt-0.5" size="16" />
+                <UIcon
+                  name="i-lucide-minus"
+                  class="text-amber-800 dark:text-amber-300 shrink-0 mt-0.5"
+                  size="16"
+                  aria-hidden="true"
+                />
                 <span>{{ gap }}</span>
               </li>
             </ul>
@@ -200,10 +221,15 @@
         <USeparator />
 
         <div v-if="currentAnalysis.redFlags.length" class="flex flex-col gap-1.5">
-          <p class="text-xs font-medium text-error uppercase tracking-wide">Red flags</p>
+          <p class="text-xs font-medium text-red-800 dark:text-red-300 uppercase tracking-wide">Red flags</p>
           <ul class="flex flex-col gap-1">
             <li v-for="(flag, index) in currentAnalysis.redFlags" :key="index" class="flex items-start gap-1.5 text-sm">
-              <UIcon name="i-lucide-triangle-alert" class="text-error shrink-0 mt-0.5" size="16" />
+              <UIcon
+                name="i-lucide-triangle-alert"
+                class="text-red-800 dark:text-red-300 shrink-0 mt-0.5"
+                size="16"
+                aria-hidden="true"
+              />
               <span>{{ flag }}</span>
             </li>
           </ul>

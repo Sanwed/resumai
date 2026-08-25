@@ -72,11 +72,11 @@
         <ProfileProviders :default-mail="session.user.email" />
         <UCard variant="soft">
           <template #header>
-            <h3 class="text-base font-semibold text-error">Danger zone</h3>
+            <h3 class="text-base font-semibold text-red-800 dark:text-red-300">Danger zone</h3>
             <p class="text-sm text-muted">Irreversible and destructive actions.</p>
           </template>
 
-          <div class="flex items-center justify-between">
+          <div class="flex gap-4 flex-col md:flex-row md:items-center justify-between">
             <div>
               <p class="text-sm font-medium">Delete account</p>
               <p class="text-xs text-muted">
@@ -88,6 +88,7 @@
               color="error"
               variant="outline"
               icon="i-lucide-trash-2"
+              class="justify-center"
               @click="deleteConfirmationOpen = true"
             />
           </div>
@@ -110,11 +111,11 @@
           </p>
         </template>
         <template #help>
-          <p v-if="verificationSent" class="text-error">
+          <p v-if="verificationSent" role="status" aria-live="polite" class="text-red-800 dark:text-red-300">
             Verification email has been sent to your email: {{ session.user.email }}
           </p>
         </template>
-        <UInput v-model="deleteMessage" type="text" size="xs" />
+        <UInput v-model="deleteMessage" type="text" autocomplete="off" size="xs" />
       </UFormField>
     </AppConfirmation>
   </UContainer>

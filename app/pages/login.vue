@@ -27,7 +27,8 @@
   const fields = [
     {
       name: 'email',
-      type: 'text' as const,
+      type: 'email' as const,
+      autocomplete: 'email',
       label: 'Email',
       placeholder: 'Enter your email',
       required: true,
@@ -36,6 +37,7 @@
       name: 'password',
       label: 'Password',
       type: 'password' as const,
+      autocomplete: 'current-password',
       placeholder: 'Enter your password',
       required: true,
     },
@@ -49,12 +51,13 @@
   const providers = [
     {
       icon: 'i-simple-icons-github',
+      label: 'Sign in with GitHub',
       square: true,
-      'aria-label': 'Sign in by GitHub',
       size: 'xl' as const,
       loadingAuto: true,
       ui: {
         base: 'w-auto rounded-full m-0',
+        label: 'sr-only',
       },
       onClick: async () => {
         try {
@@ -66,16 +69,17 @@
     },
     {
       icon: 'i-simple-icons-google',
+      label: 'Sign in with Google',
       square: true,
-      'aria-label': 'Sign in by GitHub',
       size: 'xl' as const,
       loadingAuto: true,
       ui: {
         base: 'w-auto rounded-full m-0',
+        label: 'sr-only',
       },
       onClick: async () => {
         try {
-          await signInWithProvider('github');
+          await signInWithProvider('google');
         } catch (error) {
           handleApiError(error, toast);
         }
@@ -83,12 +87,13 @@
     },
     {
       icon: 'i-simple-icons-linkedin',
+      label: 'Sign in with LinkedIn',
       square: true,
-      'aria-label': 'Sign in by LinkedIn',
       size: 'xl' as const,
       loadingAuto: true,
       ui: {
         base: 'w-auto rounded-full m-0',
+        label: 'sr-only',
       },
       onClick: async () => {
         try {
@@ -137,17 +142,19 @@
     :providers="providers"
     loading-auto
     loading-icon="i-lucide-loader"
-    title="Login to your account"
     icon="i-lucide-log-in"
     :ui="{ providers: 'flex items-center gap-2 justify-center' }"
     @submit="onSubmit"
   >
+    <template #title>
+      <h1>Login to your account</h1>
+    </template>
     <template #description>
       Don't have an account? <ULink to="/signup" class="text-primary font-medium">Sign up</ULink>.
     </template>
 
     <template #password-hint>
-      <ULink to="/forgot-password" class="text-primary font-medium" tabindex="-1">Forgot password?</ULink>
+      <ULink to="/forgot-password" class="text-primary font-medium">Forgot password?</ULink>
     </template>
 
     <template #footer>

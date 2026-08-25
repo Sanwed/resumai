@@ -89,7 +89,6 @@ const auth = betterAuth({
   },
   account: {
     accountLinking: {
-      disableImplicitLinking: true,
       allowDifferentEmails: false,
     },
     encryptOAuthTokens: true,

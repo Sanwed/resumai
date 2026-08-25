@@ -43,6 +43,13 @@
     :content="{ align: 'end', side: 'bottom' }"
     :ui="{ content: 'min-w-40' }"
   >
-    <UButton label="Export" variant="ghost" color="info" icon="i-lucide-download" :disabled="disabled" />
+    <UButton
+      label="Export"
+      variant="ghost"
+      color="info"
+      icon="i-lucide-download"
+      :disabled="disabled"
+      :ui="{ label: 'sr-only md:not-sr-only' }"
+    />
   </UDropdownMenu>
 </template>
