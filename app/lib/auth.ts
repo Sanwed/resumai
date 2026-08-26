@@ -170,4 +170,4 @@ const auth = betterAuth({
   },
 });
 
-export { auth, resend, prisma };
+export { auth, resend };

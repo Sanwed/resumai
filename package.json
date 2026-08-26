@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.30",
-    "@better-auth/prisma-adapter": "^1.6.25",
+    "@better-auth/prisma-adapter": "^1.7.1",
     "@iconify-json/lucide": "^1.2.120",
     "@iconify-json/simple-icons": "^1.2.92",
     "@nuxt/a11y": "1.0.0-alpha.1",
@@ -43,7 +43,7 @@
     "@vueuse/core": "^14.4.0",
     "@vueuse/nuxt": "^14.3.0",
     "ai": "^7.0.51",
-    "better-auth": "^1.6.25",
+    "better-auth": "^1.7.1",
     "inngest": "^4.15.0",
     "mammoth": "^1.12.1",
     "md-editor-v3": "^6.5.5",
