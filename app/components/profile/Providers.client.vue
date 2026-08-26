@@ -67,7 +67,7 @@
 
   const unlinkProvider = async (providerId: string) => {
     try {
-      await authClient.unlinkAccount({ providerId });
+      await authClient.unlinkAccount({ accountId: providerId });
       await fetchLinkedAccounts();
     } catch (e) {
       handleApiError(e, toast);
