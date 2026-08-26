@@ -53,23 +53,12 @@
   });
 
   type FileListItem = (typeof items.value)[number];
-
-  const getFileStatusLabel = (item: FileListItem) => {
-    if (item.incomplete) return 'Analysis incomplete';
-    if (item.status === 'failed') return 'Analysis failed';
-    if (item.status === 'succeed') return 'Analysis complete';
-    if (item.status) return `Analyzing — ${Math.round(item.progress)}% complete`;
-    return 'Analysis not started';
-  };
-
   const getFileActionLabel = (item: FileListItem) => {
-    const status = getFileStatusLabel(item);
-
     if (selectMode.value) {
-      return `${selectedFileIds.value.includes(item.id) ? 'Deselect' : 'Select'} ${item.title}. ${status}`;
+      return `${selectedFileIds.value.includes(item.id) ? 'Deselect' : 'Select'} ${item.title}`;
     }
 
-    return `Open analysis for ${item.title}. ${status}`;
+    return `Open analysis for ${item.title}`;
   };
 
   const selectMode = ref(false);
@@ -349,7 +338,7 @@
             v-model="item.progress"
             animation="swing"
             :class="[
-              'absolute bottom-0 left-0 right-0 transition-opacity',
+              'absolute -bottom-2 -left-2 w-[calc(100%+16px)] transition-opacity',
               { 'opacity-0': item.status === 'failed' || item.status === 'succeed' },
             ]"
             size="sm"
@@ -361,13 +350,10 @@
           <div>
             <p class="break-all">{{ item.title }}</p>
             <p class="text-muted text-xs">{{ formatFileSize(item.size) }}</p>
-            <p class="text-neutral-800 dark:text-neutral-200 text-xs font-medium">
-              {{ getFileStatusLabel(item) }}
-            </p>
           </div>
         </div>
         <UBadge
-          v-if="item.rate !== undefined"
+          v-if="item.rate"
           :label="`${item.rate}% match`"
           variant="soft"
           class="absolute bottom-0 right-0 pointer-events-none"

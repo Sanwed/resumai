@@ -33,4 +33,3 @@ certs
 
 # Prisma
 /app/generated/prisma
-/prisma/migrations

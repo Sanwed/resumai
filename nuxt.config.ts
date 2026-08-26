@@ -5,17 +5,7 @@ const permanentRedirectRouteRules = Object.fromEntries(
 );
 
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/image',
-    '@nuxt/ui',
-    '@nuxt/content',
-    '@vueuse/nuxt',
-    'nuxt-og-image',
-    '@nuxt/a11y',
-    '@nuxtjs/device',
-    '@nuxtjs/seo',
-  ],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/ui', '@nuxt/content', '@vueuse/nuxt', '@nuxtjs/seo'],
 
   devtools: {
     enabled: true,

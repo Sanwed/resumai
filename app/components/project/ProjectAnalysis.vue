@@ -132,7 +132,7 @@
     </UCard>
     <UCard v-else :ui="{ header: 'p-2 sm:py-2 sm:px-4', body: 'sm:p-4', footer: 'bg-muted' }">
       <template #header>
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
           <div class="flex items-center gap-2 min-w-0">
             <UAvatar :alt="currentAnalysis.candidateName ?? 'Candidate'" icon="i-lucide-user-round" class="shrink-0" />
             <div>

@@ -9,13 +9,25 @@
 
   const session = authClient.useSession();
 
+  const { data: avatarBlob } = await useFetch<Blob>('/api/avatar', {
+    responseType: 'blob',
+    credentials: 'include',
+    server: false,
+  });
+
+  const avatarSrc = computed(() => {
+    if (!avatarBlob.value) return;
+
+    return URL.createObjectURL(avatarBlob.value);
+  });
+
   const items = computed<DropdownMenuItem[][]>(() => [
     [
       {
         type: 'label',
         label: session.value.data?.user.name,
         avatar: {
-          src: session.value.data?.user.image ?? '/avatar-placeholder.png',
+          src: avatarSrc.value ?? '/avatar-placeholder.png',
           alt: session.value.data?.user.name ?? 'Account avatar',
         },
       },
@@ -76,7 +88,7 @@
   >
     <UButton
       :avatar="{
-        src: session.data?.user.image ?? '/avatar-placeholder.png',
+        src: avatarSrc ?? '/avatar-placeholder.png',
         alt: session.data?.user.name ?? 'Account avatar',
       }"
       :label="collapsed ? 'Open user menu' : session.data?.user.name"

@@ -15,6 +15,7 @@ sections:
     description: Create hiring projects, analyze resumes with AI, and receive detailed insights that help recruiters and candidates make better decisions.
     id: features
     orientation: horizontal
+    image: /images/home/ai-powered-resume-analysis.png
     features:
       - name: Project-Based Hiring
         description: Organize every hiring process into dedicated projects with job descriptions, candidate lists, and analysis history in one place.
@@ -31,6 +32,7 @@ sections:
     description: Whether you're building a stronger team or improving your career opportunities, ResumAI provides the insights you need to make confident decisions.
     orientation: horizontal
     reverse: true
+    image: /images/home/recruiters-and-job-seekers.png
     features:
       - name: Faster Resume Screening
         description: Save hours of manual review by automatically ranking candidates and highlighting the most qualified applicants first.

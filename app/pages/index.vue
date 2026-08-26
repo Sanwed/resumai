@@ -16,17 +16,19 @@
 <template>
   <div v-if="page">
     <UPageHero :title="page.title" :description="page.description" :links="page.hero.links" class="relative">
-      <template #top>
-        <div
-          class="bg-radial to-transparent from-primary/20 dark:from-primary/30 pointer-events-none h-full max-h-screen w-full absolute top-0"
-        />
-      </template>
-
       <template #title>
         <MDC :value="page.title" unwrap="p" />
       </template>
 
-      <PromotionalVideo />
+      <NuxtImg
+        src="/images/home/resumai-dashboard-hero.png"
+        alt="ResumAI dashboard showing candidate match score, strengths, skills, and secure resume processing"
+        width="1536"
+        height="1024"
+        sizes="100vw sm:640px md:768px lg:1024px xl:1152px"
+        class="mx-auto w-full max-w-7xl"
+        preload
+      />
     </UPageHero>
 
     <UPageSection
@@ -38,6 +40,14 @@
       :reverse="section.reverse"
       :features="section.features"
     >
+      <NuxtImg
+        :src="section.image"
+        :alt="section.description"
+        width="1254"
+        height="1254"
+        sizes="100vw sm:576px lg:640px"
+        class="mx-auto w-full max-w-2xl"
+      />
     </UPageSection>
 
     <UPageSection :title="page.features.title" :description="page.features.description">

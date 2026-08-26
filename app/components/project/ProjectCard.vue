@@ -204,7 +204,7 @@
         <div
           :class="[
             'flex items-center gap-2 w-full rounded-lg',
-            { 'p-4': !collapsed, 'p-1 justify-center': collapsed, 'bg-primary-100': active },
+            { 'p-4 lg:p-2 xl:p-4': !collapsed, 'p-1 justify-center': collapsed, 'bg-primary-100': active },
           ]"
         >
           <UIcon

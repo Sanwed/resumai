@@ -1,19 +1,12 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { PrismaClient } from '@/generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
 import { Resend } from 'resend';
 import { stripe } from '../../server/lib/stripe';
 import { MIN_PASSWORD_LENGTH } from '~/constants';
 import { del } from '@vercel/blob';
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
-
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const prisma = new PrismaClient({ adapter });
 const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
