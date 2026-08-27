@@ -119,6 +119,9 @@
         rememberMe: payload.data.rememberMe,
         callbackURL: '/dashboard',
         fetchOptions: {
+          onSuccess: () => {
+            navigateTo('/dashboard');
+          },
           onError: (event) => {
             console.error(event.error);
             toast.add({

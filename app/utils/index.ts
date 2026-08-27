@@ -7,6 +7,11 @@ export async function signInWithProvider(provider: Provider, errorCallbackURL = 
     provider,
     callbackURL: '/dashboard',
     errorCallbackURL: errorCallbackURL,
+    fetchOptions: {
+      onSuccess: () => {
+        navigateTo('/dashboard');
+      },
+    },
   });
 }
 

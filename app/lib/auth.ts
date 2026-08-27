@@ -11,7 +11,7 @@ const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
-  trustedOrigins: process.env.NUXT_PUBLIC_SITE_URL ? [process.env.NUXT_PUBLIC_SITE_URL] : [],
+  trustedOrigins: [process.env.NUXT_PUBLIC_SITE_URL!, 'http://localhost:3000'],
   advanced: {
     cookiePrefix: 'resumai',
     disableCSRFCheck: false,
