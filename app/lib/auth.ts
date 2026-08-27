@@ -80,6 +80,7 @@ const auth = betterAuth({
   },
   account: {
     accountLinking: {
+      requireLocalEmailVerified: false,
       allowDifferentEmails: false,
     },
     encryptOAuthTokens: true,

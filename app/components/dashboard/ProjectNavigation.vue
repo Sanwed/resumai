@@ -41,17 +41,13 @@
       <UIcon name="i-lucide-loader" size="30" class="animate-spin" aria-hidden="true" />
       <span class="sr-only">Loading projects</span>
     </div>
-    <div
-      v-else-if="error"
-      role="alert"
-      class="h-60 w-full flex items-center justify-center flex-col gap-2 text-muted"
-    >
+    <div v-else-if="error" role="alert" class="h-60 w-full flex items-center justify-center flex-col gap-2 text-muted">
       <UIcon name="i-lucide-circle-x" size="30" aria-hidden="true" />
       <p class="text-lg">{{ error.statusMessage }}</p>
     </div>
     <template v-else-if="!projects?.length">
       <ProjectButtonCreate :collapsed="collapsed" />
-      <UEmpty icon="i-lucide-file" variant="naked" title="Projects not found" />
+      <UEmpty v-if="!collapsed" icon="i-lucide-file" variant="naked" title="Projects not found" />
     </template>
     <div v-else class="flex flex-col gap-4">
       <ProjectButtonCreate :collapsed="collapsed" />
