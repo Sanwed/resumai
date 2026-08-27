@@ -20,8 +20,9 @@
         <MDC :value="page.title" unwrap="p" />
       </template>
 
-      <NuxtImg
+      <AppThemeImage
         src="/images/home/resumai-dashboard-hero.png"
+        dark-src="/images/home/resumai-dashboard-hero-dark.png"
         alt="ResumAI dashboard showing candidate match score, strengths, skills, and secure resume processing"
         width="1536"
         height="1024"
@@ -40,8 +41,9 @@
       :reverse="section.reverse"
       :features="section.features"
     >
-      <NuxtImg
+      <AppThemeImage
         :src="section.image"
+        :dark-src="section.darkImage"
         :alt="section.description"
         width="1254"
         height="1254"
@@ -79,8 +81,6 @@
 
     <USeparator />
 
-    <UPageCTA v-bind="page.cta" variant="naked" class="overflow-hidden">
-      <div class="bg-linear-to-b from-primary/20 to-transparent h-40 w-full absolute top-0 left-0" />
-    </UPageCTA>
+    <UPageCTA v-bind="page.cta" variant="naked" class="overflow-hidden" />
   </div>
 </template>

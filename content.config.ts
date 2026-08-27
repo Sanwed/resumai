@@ -49,6 +49,7 @@ export const collections = {
           id: z.string().nonempty(),
           orientation: orientationEnum.optional(),
           image: z.string().optional(),
+          darkImage: z.string().optional(),
           reverse: z.boolean().optional(),
           features: z.array(createFeatureItemSchema()),
         }),

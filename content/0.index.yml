@@ -16,6 +16,7 @@ sections:
     id: features
     orientation: horizontal
     image: /images/home/ai-powered-resume-analysis.png
+    darkImage: /images/home/ai-powered-resume-analysis-dark.png
     features:
       - name: Project-Based Hiring
         description: Organize every hiring process into dedicated projects with job descriptions, candidate lists, and analysis history in one place.
@@ -33,6 +34,7 @@ sections:
     orientation: horizontal
     reverse: true
     image: /images/home/recruiters-and-job-seekers.png
+    darkImage: /images/home/recruiters-and-job-seekers-dark.png
     features:
       - name: Faster Resume Screening
         description: Save hours of manual review by automatically ranking candidates and highlighting the most qualified applicants first.

@@ -40,10 +40,6 @@ export default defineNuxtConfig({
       twitterCard: 'summary_large_image',
       twitterSite: '@ResumAI',
       twitterCreator: '@Sanwed',
-      themeColor: [
-        { content: '#020618', media: '(prefers-color-scheme: dark)' },
-        { content: 'white', media: '(prefers-color-scheme: light)' },
-      ],
     },
   },
 
@@ -62,6 +58,10 @@ export default defineNuxtConfig({
     head: {
       titleTemplate: '%s | ResumAI',
       htmlAttrs: { lang: 'en' },
+      meta: [
+        { name: 'theme-color', content: '#FFFFFF', media: '(prefers-color-scheme: light)' },
+        { name: 'theme-color', content: '#0F1115', media: '(prefers-color-scheme: dark)' },
+      ],
     },
     layoutTransition: {
       name: 'layout',
@@ -102,12 +102,11 @@ export default defineNuxtConfig({
 
     '/': { prerender: true },
     '/changelog': { prerender: true },
+    '/pricing': { prerender: true },
 
     '/privacy/**': { prerender: true },
     '/terms/**': { prerender: true },
     '/cookies/**': { prerender: true },
-
-    '/pricing': { swr: 3600 },
 
     '/dashboard': { prerender: false },
     '/dashboard/**': { prerender: false },

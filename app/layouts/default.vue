@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  const cookieConsentToastId = 'cookie-consent-banner';
   const toast = useToast();
 
   onMounted(async () => {
@@ -8,6 +9,7 @@
     }
 
     toast.add({
+      id: cookieConsentToastId,
       title: 'We use first-party cookies to enhance your experience on our website.',
       duration: 0,
       color: 'info',
@@ -22,6 +24,7 @@
           class: 'min-w-30 justify-center',
           onClick: () => {
             cookie.value = 'accepted';
+            toast.remove(cookieConsentToastId);
           },
         },
       ],
