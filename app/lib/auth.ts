@@ -69,8 +69,6 @@ const auth = betterAuth({
     },
   },
   emailVerification: {
-    sendOnSignUp: true,
-    sendOnSignIn: true,
     sendVerificationEmail: async ({ user, url }) => {
       void resend.emails.send({
         from: 'onboarding@resend.dev',
