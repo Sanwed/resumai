@@ -14,10 +14,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
   }
 
-  if (!authSession.user.emailVerified) {
-    throw createError({ statusCode: 403, statusMessage: 'Email verification required' });
-  }
-
   const query = await getValidatedQuery(event, (query) => querySchema.safeParse(query));
 
   if (query.error) {

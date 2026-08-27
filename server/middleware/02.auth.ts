@@ -20,9 +20,5 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
   }
 
-  if (!session.user.emailVerified) {
-    throw createError({ statusCode: 403, statusMessage: 'Email verification required' });
-  }
-
   event.context.user = session.user;
 });
