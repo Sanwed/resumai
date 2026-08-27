@@ -108,6 +108,15 @@ export default defineNuxtConfig({
     '/cookies/**': { prerender: true },
 
     '/pricing': { swr: 3600 },
+
+    '/dashboard': { prerender: false },
+    '/dashboard/**': { prerender: false },
+    '/profile': { prerender: false },
+    '/billing': { prerender: false },
+    '/login': { prerender: false },
+    '/signup': { prerender: false },
+    '/forgot-password': { prerender: false },
+    '/reset-password': { prerender: false },
   },
 
   compatibilityDate: '2026-06-30',
