@@ -16,7 +16,9 @@ export default defineEventHandler(async (event) => {
       select: { url: true },
     });
 
-    await del(filesToDelete.map((el) => el.url));
+    if (filesToDelete.length > 0) {
+      await del(filesToDelete.map((el) => el.url));
+    }
 
     const deletedProject = await prisma.project.delete({
       where: {

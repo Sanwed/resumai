@@ -4,23 +4,12 @@
 
   type Props = {
     collapsed?: boolean;
+    avatarSrc?: string;
   };
-  defineProps<Props>();
+  const props = defineProps<Props>();
 
   const toast = useToast();
   const session = authClient.useSession();
-
-  const { data: avatarBlob } = await useFetch<Blob>('/api/avatar', {
-    responseType: 'blob',
-    credentials: 'include',
-    server: false,
-  });
-
-  const avatarSrc = computed(() => {
-    if (!avatarBlob.value) return;
-
-    return URL.createObjectURL(avatarBlob.value);
-  });
 
   const items = computed<DropdownMenuItem[][]>(() => [
     [
@@ -28,7 +17,7 @@
         type: 'label',
         label: session.value.data?.user.name,
         avatar: {
-          src: avatarSrc.value ?? '/avatar-placeholder.png',
+          src: props.avatarSrc ?? '/avatar-placeholder.png',
           alt: session.value.data?.user.name ?? 'Account avatar',
         },
       },

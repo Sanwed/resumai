@@ -1,14 +1,28 @@
 <script lang="ts" setup>
   import type { CommandPaletteItem } from '@nuxt/ui';
 
-  const [{ data: projects, pending: loading, error }, { pending: notificationsLoading, error: notificationsError }] =
-    await Promise.all([
-      useLazyFetch('/api/project', { key: 'projects' }),
-      useLazyFetch('/api/notification', {
-        key: 'notifications',
-        query: { read: false },
-      }),
-    ]);
+  const [
+    { data: projects, pending: loading, error },
+    { pending: notificationsLoading, error: notificationsError },
+    { data: avatarBlob },
+  ] = await Promise.all([
+    useLazyFetch('/api/project', { key: 'projects' }),
+    useLazyFetch('/api/notification', {
+      key: 'notifications',
+      query: { read: false },
+    }),
+    useFetch<Blob>('/api/avatar', {
+      responseType: 'blob',
+      credentials: 'include',
+      server: false,
+    }),
+  ]);
+
+  const avatarSrc = computed(() => {
+    if (!avatarBlob.value) return;
+
+    return URL.createObjectURL(avatarBlob.value);
+  });
 
   const sidebarOpen = ref(false);
 
@@ -84,7 +98,7 @@
       </template>
 
       <template #footer="{ collapsed }">
-        <DashboardUserMenu :collapsed="collapsed" />
+        <DashboardUserMenu :collapsed="collapsed" :avatar-src="avatarSrc" />
       </template>
     </UDashboardSidebar>
 

@@ -37,6 +37,19 @@
   });
   const form = useTemplateRef('editForm');
   const formInput = useTemplateRef('editInput');
+  const renameOnContextClose = ref(false);
+
+  const onContextCloseAutoFocus = (event: Event) => {
+    if (!renameOnContextClose.value) return;
+
+    event.preventDefault();
+    renameOnContextClose.value = false;
+    editMode.value = true;
+
+    nextTick(() => {
+      formInput.value?.inputRef?.focus();
+    });
+  };
 
   const onBlur = async () => {
     if (editState.name.trim() === currentProject.value?.name) {
@@ -50,6 +63,8 @@
   type Schema = z.output<typeof projectUpdateSchema>;
   const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     try {
+      if (currentProject.value?.name === event.data.name) return;
+
       const updated = await update(props.projectId, event.data);
 
       if (projects.value && updated) {
@@ -165,12 +180,8 @@
         icon: 'i-lucide-pen',
         disabled: props.collapsed,
         onSelect: () => {
+          renameOnContextClose.value = true;
           contextOpen.value = false;
-          editMode.value = true;
-
-          setTimeout(() => {
-            formInput.value?.inputRef?.focus();
-          }, 200);
         },
       },
     ],
@@ -193,7 +204,12 @@
 </script>
 
 <template>
-  <UContextMenu v-model:open="contextOpen" :items="contextMenuItems" :ui="{ content: 'min-w-45' }">
+  <UContextMenu
+    v-model:open="contextOpen"
+    :items="contextMenuItems"
+    :content="{ onCloseAutoFocus: onContextCloseAutoFocus }"
+    :ui="{ content: 'min-w-45' }"
+  >
     <template #default>
       <UTooltip
         :delay-duration="0"
@@ -212,10 +228,11 @@
             :name="icon"
             :class="[currentProject ? projectColorsClasses[currentProject.color] : '']"
             aria-hidden="true"
+            class="shrink-0"
           />
           <template v-if="!collapsed">
             <UForm v-if="editMode" ref="editForm" :schema="projectUpdateSchema" :state="editState" @submit="onSubmit">
-              <UFormField name="name">
+              <UFormField name="name" :ui="{ error: 'text-sm mt-1' }">
                 <UInput
                   ref="editInput"
                   v-model="editState.name"
