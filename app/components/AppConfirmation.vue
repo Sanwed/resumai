@@ -21,7 +21,7 @@
 
 <template>
   <UModal v-model:open="open" :title="title" :description="description">
-    <template #body>
+    <template v-if="$slots.default" #body>
       <slot />
     </template>
     <template #footer>
