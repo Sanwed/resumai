@@ -22,9 +22,11 @@
 
   const onSubmit = async (event: FormSubmitEvent<z.output<typeof userUpdateSchema>>) => {
     try {
-      await authClient.updateUser({
+      const { error } = await authClient.updateUser({
         name: event.data.name,
       });
+
+      if (error) handleApiError(error, toast);
     } catch (e) {
       const error = e as FetchError;
       toast.add({

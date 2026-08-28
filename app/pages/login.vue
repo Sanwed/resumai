@@ -113,25 +113,19 @@
 
   async function onSubmit(payload: FormSubmitEvent<z.output<typeof schema>>) {
     try {
-      await authClient.signIn.email({
+      const { error } = await authClient.signIn.email({
         email: payload.data.email,
         password: payload.data.password,
         rememberMe: payload.data.rememberMe,
         callbackURL: '/dashboard',
-        fetchOptions: {
-          onSuccess: () => {
-            navigateTo('/dashboard');
-          },
-          onError: (event) => {
-            console.error(event.error);
-            toast.add({
-              description: event.error.message,
-              icon: 'i-lucide-circle-x',
-              color: 'error',
-            });
-          },
-        },
       });
+
+      if (error) {
+        handleApiError(error, toast);
+        return;
+      }
+
+      await navigateTo('/dashboard', { external: true, replace: true });
     } catch (error) {
       handleApiError(error, toast);
     }

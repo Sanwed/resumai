@@ -7,6 +7,7 @@
   };
   defineProps<Props>();
 
+  const toast = useToast();
   const session = authClient.useSession();
 
   const { data: avatarBlob } = await useFetch<Blob>('/api/avatar', {
@@ -71,9 +72,12 @@
         onSelect: async () => {
           const { error } = await authClient.signOut();
 
-          if (!error) {
-            await navigateTo('/login', { external: true, replace: true });
+          if (error) {
+            handleApiError(error, toast);
+            return;
           }
+
+          await navigateTo('/login', { external: true, replace: true });
         },
       },
     ],

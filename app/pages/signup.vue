@@ -124,21 +124,14 @@
         email: payload.data.email,
         password: payload.data.password,
         callbackURL: '/dashboard',
-        fetchOptions: {
-          onError: (event) => {
-            console.error(event.error);
-            toast.add({
-              description: event.error.message,
-              icon: 'i-lucide-circle-x',
-              color: 'error',
-            });
-          },
-        },
       });
 
-      if (!error) {
-        await navigateTo('/dashboard', { external: true, replace: true });
+      if (error) {
+        handleApiError(error, toast);
+        return;
       }
+
+      await navigateTo('/dashboard', { external: true, replace: true });
     } catch (error) {
       handleApiError(error, toast);
     }

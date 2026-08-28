@@ -46,22 +46,17 @@
 
   async function onSubmit(payload: FormSubmitEvent<Schema>) {
     try {
-      await authClient.resetPassword({
+      const { error } = await authClient.resetPassword({
         newPassword: payload.data.password,
         token,
-        fetchOptions: {
-          onSuccess: () => {
-            navigateTo({ path: '/login', query: { 'message-success': 'Password successfully changed' } });
-          },
-          onError: (event) => {
-            toast.add({
-              description: event.error.message,
-              icon: 'i-lucide-circle-x',
-              color: 'error',
-            });
-          },
-        },
       });
+
+      if (error) {
+        handleApiError(error, toast);
+        return;
+      }
+
+      await navigateTo({ path: '/login', query: { 'message-success': 'Password successfully changed' } });
     } catch (error) {
       handleApiError(error, toast);
     }

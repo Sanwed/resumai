@@ -40,9 +40,15 @@
 
     try {
       loading.value = true;
-      await authClient.deleteUser({
+      const { error } = await authClient.deleteUser({
         callbackURL: '/login',
       });
+
+      if (error) {
+        handleApiError(error, toast);
+        return;
+      }
+
       verificationSent.value = true;
     } catch (e) {
       handleApiError(e, toast);

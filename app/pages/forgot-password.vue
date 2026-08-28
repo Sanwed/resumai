@@ -38,19 +38,16 @@
 
   async function onSubmit(payload: FormSubmitEvent<Schema>) {
     try {
-      await authClient.requestPasswordReset({
+      const { error } = await authClient.requestPasswordReset({
         email: payload.data.email,
         redirectTo: resetPasswordURL,
-        fetchOptions: {
-          onError: (event) => {
-            toast.add({
-              description: event.error.message,
-              icon: 'i-lucide-circle-x',
-              color: 'error',
-            });
-          },
-        },
       });
+
+      if (error) {
+        handleApiError(error, toast);
+        return;
+      }
+
       sent.value = true;
     } catch (error) {
       handleApiError(error, toast);

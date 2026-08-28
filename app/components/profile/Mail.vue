@@ -22,10 +22,16 @@
   const onSubmit = async (event: FormSubmitEvent<z.output<typeof userUpdateSchema>>) => {
     try {
       if (!event.data.email || event.data.email === props.defaultMail) return;
-      await authClient.changeEmail({
+      const { error } = await authClient.changeEmail({
         newEmail: event.data.email,
         callbackURL: '/profile',
       });
+
+      if (error) {
+        handleApiError(error, toast);
+        return;
+      }
+
       verificationSent.value = true;
     } catch (e) {
       handleApiError(e, toast);

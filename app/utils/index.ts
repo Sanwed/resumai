@@ -3,23 +3,35 @@ import { authClient } from '~/lib/auth-client';
 
 type Provider = 'github' | 'google' | 'linkedin';
 export async function signInWithProvider(provider: Provider, errorCallbackURL = '/login') {
-  await authClient.signIn.social({
+  const { error } = await authClient.signIn.social({
     provider,
     callbackURL: '/dashboard',
     errorCallbackURL: errorCallbackURL,
   });
+
+  if (error) throw error;
 }
 
 export function handleApiError(error: unknown, toast: ReturnType<typeof useToast>) {
-  if (isAPIError(error)) {
-    console.error(error);
-    toast.add({
-      title: error.name,
-      description: error.message,
-      icon: 'i-lucide-circle-x',
-      color: 'error',
-    });
-  }
+  if (typeof error !== 'object' || error === null) return;
+
+  const authError = error as Record<string, unknown>;
+  const description =
+    typeof authError.message === 'string'
+      ? authError.message
+      : typeof authError.statusText === 'string'
+        ? authError.statusText
+        : undefined;
+
+  if (!description) return;
+
+  console.error(error);
+  toast.add({
+    title: isAPIError(error) ? error.name : typeof authError.code === 'string' ? authError.code : undefined,
+    description,
+    icon: 'i-lucide-circle-x',
+    color: 'error',
+  });
 }
 
 export function createObjectUrl(file: File): string {

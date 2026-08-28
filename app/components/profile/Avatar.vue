@@ -53,7 +53,13 @@
         body: formData,
       });
 
-      await authClient.updateUser({ image: url });
+      const { error } = await authClient.updateUser({ image: url });
+
+      if (error) {
+        handleApiError(error, toast);
+        return;
+      }
+
       emit('change');
     } catch (e) {
       const error = e as FetchError;
