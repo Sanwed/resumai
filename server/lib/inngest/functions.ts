@@ -60,6 +60,7 @@ export const analyzeResume = inngest.createFunction(
           userId: event.data.userId,
           title: 'Analysis error',
           message: `File with id ${event.data.fileId} was not found`,
+          link: `/dashboard/${event.data.projectId}`,
         }),
       );
 
@@ -116,6 +117,7 @@ export const analyzeResume = inngest.createFunction(
           userId: event.data.userId,
           title: 'Analysis error',
           message: `Could not create an analysis`,
+          link: `/dashboard/${event.data.projectId}`,
         }),
       );
 
@@ -177,6 +179,7 @@ export const analyzeResume = inngest.createFunction(
           userId: event.data.userId,
           title: 'Analysis error',
           message: `Project not found. Maybe it was deleted or incorrect data was sent`,
+          link: `/dashboard/${event.data.projectId}`,
         }),
       );
 
@@ -265,6 +268,7 @@ export const analyzeResume = inngest.createFunction(
           userId: event.data.userId,
           title: 'Analysis error',
           message: `Impossible to parse file to text`,
+          link: `/dashboard/${event.data.projectId}`,
         }),
       );
 
@@ -329,6 +333,7 @@ export const analyzeResume = inngest.createFunction(
           userId: event.data.userId,
           title: 'Analysis error',
           message: 'Insufficient tokens for analysis',
+          link: `/dashboard/${event.data.projectId}`,
         }),
       );
 
@@ -412,6 +417,7 @@ export const analyzeResume = inngest.createFunction(
           userId: event.data.userId,
           title: 'Analysis error',
           message: `Error while analyzing with AI`,
+          link: `/dashboard/${event.data.projectId}`,
         }),
       );
 
