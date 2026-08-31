@@ -104,7 +104,7 @@
         </div>
         <ProjectFileUpload
           :project-id="currentProject.id"
-          :has-vacancy-text="!currentProject.vacancyText"
+          :has-vacancy-text="!!currentProject.vacancyText"
           :loading="loading"
           :error="error"
           class="self-start lg:sticky lg:top-0 w-full md:w-80 shrink-0"

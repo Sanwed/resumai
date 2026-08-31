@@ -201,47 +201,85 @@
       });
     }
   };
+
+  const tooltipOpen = ref(false);
+  const tooltipAnchor = ref({ x: 0, y: 0 });
+
+  const tooltipReference = computed(() => ({
+    getBoundingClientRect: () =>
+      ({
+        width: 0,
+        height: 0,
+        left: tooltipAnchor.value.x,
+        right: tooltipAnchor.value.x,
+        top: tooltipAnchor.value.y,
+        bottom: tooltipAnchor.value.y,
+        ...tooltipAnchor.value,
+      }) as DOMRect,
+  }));
 </script>
 
 <template>
   <div class="flex flex-col gap-1">
-    <UFileUpload
-      v-model="files"
-      multiple
-      :disabled="hasVacancyText || loading || fileLoading"
-      label="Click or drop your files"
-      :description="`${Object.keys(AllowedFileFormats).join(', ')} (max ${MAX_RESUME_FILE_SIZE / 1024 ** 2}MB each, ${MAX_RESUME_FILES_PER_UPLOAD} files)`"
-      size="lg"
-      :accept="Object.values(AllowedFileFormats).join(',')"
-      :icon="fileLoading ? 'i-lucide-loader' : 'i-lucide-upload'"
-      :aria-busy="fileLoading"
-      :ui="{ root: 'w-full', files: 'block', icon: fileLoading ? 'animate-spin' : '' }"
-      @update:model-value="(value) => onChange(value)"
+    <UTooltip
+      :disabled="hasVacancyText"
+      :open="tooltipOpen"
+      :reference="tooltipReference"
+      :delay-duration="0"
+      text="Add vacancy text first"
+      :content="{ side: 'top', sideOffset: 12, updatePositionStrategy: 'always' }"
+      :ui="{ content: 'hidden lg:block' }"
     >
-      <template #files>
-        <div class="flex flex-col items-center justify-center text-center px-4 py-3">
-          <span
-            class="inline-flex items-center justify-center select-none rounded-full align-middle bg-elevated size-9 text-lg shrink-0"
-          >
-            <UIcon
-              :name="fileLoading ? 'i-lucide-loader' : 'i-lucide-upload'"
-              size="18"
-              :class="{ 'animate-spin': fileLoading }"
-              aria-hidden="true"
-            />
-          </span>
-          <p class="font-medium text-default mt-2">Click or drop your files</p>
-          <p class="text-muted mt-1">
-            {{ Object.keys(AllowedFileFormats).join(', ') }} (max {{ formatFileSize(MAX_RESUME_FILE_SIZE) }} each,
-            {{ MAX_RESUME_FILES_PER_UPLOAD }} files)
-          </p>
-        </div>
-      </template>
-    </UFileUpload>
+      <div
+        @pointerenter="tooltipOpen = true"
+        @pointerleave="tooltipOpen = false"
+        @pointermove="
+          (ev: PointerEvent) => {
+            tooltipAnchor.x = ev.clientX;
+            tooltipAnchor.y = ev.clientY;
+          }
+        "
+      >
+        <UFileUpload
+          v-model="files"
+          multiple
+          :disabled="!hasVacancyText || loading || fileLoading"
+          label="Click or drop your files"
+          :description="`${Object.keys(AllowedFileFormats).join(', ')} (max ${MAX_RESUME_FILE_SIZE / 1024 ** 2}MB each, ${MAX_RESUME_FILES_PER_UPLOAD} files)`"
+          size="lg"
+          :accept="Object.values(AllowedFileFormats).join(',')"
+          :icon="fileLoading ? 'i-lucide-loader' : 'i-lucide-upload'"
+          :aria-busy="fileLoading"
+          :ui="{ root: 'w-full', files: 'block', icon: fileLoading ? 'animate-spin' : '' }"
+          @update:model-value="(value) => onChange(value)"
+        >
+          <template #files>
+            <div class="flex flex-col items-center justify-center text-center px-4 py-3">
+              <span
+                class="inline-flex items-center justify-center select-none rounded-full align-middle bg-elevated size-9 text-lg shrink-0"
+              >
+                <UIcon
+                  :name="fileLoading ? 'i-lucide-loader' : 'i-lucide-upload'"
+                  size="18"
+                  :class="{ 'animate-spin': fileLoading }"
+                  aria-hidden="true"
+                />
+              </span>
+              <p class="font-medium text-default mt-2">Click or drop your files</p>
+              <p class="text-muted mt-1">
+                {{ Object.keys(AllowedFileFormats).join(', ') }} (max {{ formatFileSize(MAX_RESUME_FILE_SIZE) }} each,
+                {{ MAX_RESUME_FILES_PER_UPLOAD }} files)
+              </p>
+            </div>
+          </template>
+        </UFileUpload>
+      </div>
+    </UTooltip>
     <span v-if="fileLoading" role="status" aria-live="polite" class="sr-only">Uploading candidate files</span>
     <p v-if="error" role="alert" class="text-sm text-red-800 dark:text-red-300">
       {{ error.statusMessage ?? 'Candidate files could not be loaded' }}
     </p>
+    <p v-if="!hasVacancyText" class="text-xs text-error lg:hidden">Add vacancy text first</p>
     <p class="text-xs text-muted">AI can make mistakes. Please double-check responses.</p>
     <div class="flex flex-col gap-1 mb-1">
       <div class="flex items-center gap-2">
