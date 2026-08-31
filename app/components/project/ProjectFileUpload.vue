@@ -160,6 +160,9 @@
   };
 
   const restart = async (fileIds: string[]) => {
+    selectedFileIds.value = [];
+    selectMode.value = false;
+
     await createAnalysis(props.projectId, fileIds);
   };
 
@@ -223,7 +226,7 @@
   <div class="flex flex-col gap-1">
     <UTooltip
       :disabled="hasVacancyText"
-      :open="tooltipOpen"
+      :open="!hasVacancyText && tooltipOpen"
       :reference="tooltipReference"
       :delay-duration="0"
       text="Add vacancy text first"
@@ -344,7 +347,7 @@
       aria-label="Candidate files"
       shadow
       virtualize
-      class="h-full max-h-90"
+      class="h-full max-h-110"
     >
       <UCard
         role="listitem"
@@ -354,9 +357,9 @@
             'group border border-2 border-transparent relative w-full text-left bg-neutral-200 mb-2 hover:bg-primary-100 active:bg-primary-200',
             item.active ? 'bg-primary-100 border-primary-500' : '',
             selectedFileIds.includes(item.id) ? 'bg-primary-200! border-primary-400' : '',
-            item.status === 'succeed' ? 'bg-success-200 hover:bg-success-100 focus-visible:bg-success-100' : '',
+            item.status === 'succeed' ? 'bg-success-200 hover:bg-success-100 has-focus-visible:bg-success-100' : '',
             item.status === 'failed' || item.incomplete
-              ? 'bg-error-200 hover:bg-error-100 focus-visible:bg-error-100'
+              ? 'bg-error-200 hover:bg-error-100 has-focus-visible:bg-error-100'
               : '',
           ],
           body: 'p-2 sm:p-2 group',
@@ -399,6 +402,7 @@
 
         <div class="absolute z-10 top-0 right-0 flex items-center gap-1">
           <UButton
+            v-if="item.status === 'succeed' || item.status === 'failed' || item.incomplete"
             size="xs"
             square
             variant="soft"

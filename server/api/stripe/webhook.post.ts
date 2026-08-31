@@ -46,40 +46,43 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 500, statusMessage: 'Invalid payment metadata' });
       }
 
-      const credited = await prisma.$transaction(async (tx) => {
-        const purchase = await tx.tokenPurchase.createMany({
-          data: {
-            stripeEventId: stripeEvent.id,
-            stripePaymentIntentId: paymentIntent.id,
-            stripeCustomerId: customerId,
-            amount: paymentIntent.amount_received,
-            currency: paymentIntent.currency,
-            tokens,
-            userId,
-          },
-          skipDuplicates: true,
-        });
-
-        if (purchase.count === 0) return false;
-
-        const user = await tx.user.updateMany({
-          where: {
-            id: userId,
-            customerId,
-          },
-          data: {
-            tokens: {
-              increment: tokens,
+      const credited = await prisma.$transaction(
+        async (tx) => {
+          const purchase = await tx.tokenPurchase.createMany({
+            data: {
+              stripeEventId: stripeEvent.id,
+              stripePaymentIntentId: paymentIntent.id,
+              stripeCustomerId: customerId,
+              amount: paymentIntent.amount_received,
+              currency: paymentIntent.currency,
+              tokens,
+              userId,
             },
-          },
-        });
+            skipDuplicates: true,
+          });
 
-        if (user.count !== 1) {
-          throw createError({ statusCode: 500, statusMessage: 'Unable to credit token purchase' });
-        }
+          if (purchase.count === 0) return false;
 
-        return true;
-      });
+          const user = await tx.user.updateMany({
+            where: {
+              id: userId,
+              customerId,
+            },
+            data: {
+              tokens: {
+                increment: tokens,
+              },
+            },
+          });
+
+          if (user.count !== 1) {
+            throw createError({ statusCode: 500, statusMessage: 'Unable to credit token purchase' });
+          }
+
+          return true;
+        },
+        { maxWait: 10000 },
+      );
 
       if (!credited) {
         console.info('[POST] /api/stripe/webhook Duplicate payment ignored', {

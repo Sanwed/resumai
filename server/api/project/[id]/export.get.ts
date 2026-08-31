@@ -1,18 +1,17 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import PDFDocument from 'pdfkit';
 import type { Analysis, Project } from '~/generated/prisma/client';
 
 type ProjectWithAnalyses = Project & { analyses: Analysis[] };
+type ProjectReportFonts = {
+  regular: Uint8Array;
+  bold: Uint8Array;
+};
 
-const FONT_REGULAR_PATH = join(process.cwd(), 'server/assets/fonts/NotoSans-Regular.ttf');
-const FONT_BOLD_PATH = join(process.cwd(), 'server/assets/fonts/NotoSans-Bold.ttf');
-
-export function generateProjectReportPdf(project: ProjectWithAnalyses) {
+export function generateProjectReportPdf(project: ProjectWithAnalyses, fonts: ProjectReportFonts) {
   const doc = new PDFDocument({ margin: 50, bufferPages: true });
 
-  doc.registerFont('NotoSans Regular', readFileSync(FONT_REGULAR_PATH));
-  doc.registerFont('NotoSans Bold', readFileSync(FONT_BOLD_PATH));
+  doc.registerFont('NotoSans Regular', fonts.regular);
+  doc.registerFont('NotoSans Bold', fonts.bold);
 
   doc.font('NotoSans Regular');
 
@@ -101,6 +100,15 @@ export default defineEventHandler(async (event) => {
     'X-Robots-Tag': 'noindex, nofollow',
   });
 
-  const doc = generateProjectReportPdf(project);
+  const [regularFont, boldFont] = await Promise.all([
+    useStorage('assets:server').getItemRaw<Uint8Array>('fonts/NotoSans-Regular.ttf'),
+    useStorage('assets:server').getItemRaw<Uint8Array>('fonts/NotoSans-Bold.ttf'),
+  ]);
+
+  if (!regularFont || !boldFont) {
+    throw createError({ statusCode: 500, statusMessage: 'PDF fonts are unavailable' });
+  }
+
+  const doc = generateProjectReportPdf(project, { regular: regularFont, bold: boldFont });
   return sendStream(event, doc);
 });
